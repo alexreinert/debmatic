@@ -1,0 +1,18 @@
+[Unit]
+Description=debmatic update lgw firmware
+PartOf=debmatic.service
+After=debmatic.service
+After=network.target
+Before=debmatic-updatelgwkey.service
+Before=debmatic-rfd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/debmatic/bin/update_lgw_firmware.sh
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-updatelgwkey.service
+WantedBy=debmatic-rfd.service
+

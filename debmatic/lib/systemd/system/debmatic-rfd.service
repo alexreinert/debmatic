@@ -1,0 +1,24 @@
+[Unit]
+Description=debmatic rfd
+PartOf=debmatic.service
+After=debmatic.service
+Before=debmatic-hmserver.service
+Before=debmatic-rega.service
+ConditionPathExists=!/var/status/debmatic_avoid_rfd
+
+[Service]
+Type=forking
+Environment=LOGLEVEL_RFD=5
+EnvironmentFile=/var/hm_mode
+EnvironmentFile=-/etc/config/syslog
+TimeoutStartSec=122
+PIDFile=/var/status/rfd.status
+ExecStart=/usr/share/debmatic/bin/start_rfd.sh 
+ExecStopPre=/bin/rm -f /var/run/rfd.pid
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-hmserver.service
+WantedBy=debmatic-rega.service
+WantedBy=debmatic-startupfinished.service
+

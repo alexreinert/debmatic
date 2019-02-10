@@ -1,0 +1,11 @@
+[Unit]
+Description=debmatic
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/debmatic/bin/initsystem.sh
+
+[Install]
+WantedBy=multi-user.target
+

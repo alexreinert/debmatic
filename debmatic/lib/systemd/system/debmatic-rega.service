@@ -1,0 +1,22 @@
+[Unit]
+Description=debmatic rega
+PartOf=debmatic.service
+After=debmatic.service
+After=network.target
+After=debmatic-hmserver.service
+After=debmatic-rfd.service
+After=debmatic-hs485d.service
+
+[Service]
+Type=forking
+Environment=LOGLEVEL_REGA=2
+EnvironmentFile=/var/hm_mode
+EnvironmentFile=-/etc/config/syslog
+ExecStart=/usr/share/debmatic/bin/start_rega.sh
+ExecStopPre=/bin/rm -f /var/run/ReGaHss.pid
+ExecStop=/usr/share/debmatic/bin/stop_rega.sh
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-startupfinished.service
+

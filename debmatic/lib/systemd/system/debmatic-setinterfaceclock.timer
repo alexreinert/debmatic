@@ -1,0 +1,8 @@
+[Unit]
+ 
+[Timer]
+OnCalendar=hourly
+ 
+[Install]
+WantedBy=debmatic.service
+

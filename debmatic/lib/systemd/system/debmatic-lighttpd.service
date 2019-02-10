@@ -1,0 +1,26 @@
+[Unit]
+Description=debmatic lighttpd
+PartOf=debmatic.service
+Requires=lighttpd.service
+After=debmatic.service
+After=lighttpd.service
+Before=debmatic-rfd.service
+Before=debmatic-hs485d.service
+Before=debmatic-hmserver.service
+Before=debmatic-rega.service
+
+[Service]
+Type=forking
+Environment=LD_LIBRARY_PATH=/usr/share/debmatic/bin/lighttpd/lib
+PIDFile=/var/run/lighttpd-debmatic.pid
+ExecStartPre=/bin/rm -f /var/tmp/api_ipc.cache
+ExecStart=/usr/sbin/lighttpd -f /etc/debmatic/lighttpd/lighttpd.conf
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-rfd.service
+WantedBy=debmatic-hs485d.service
+WantedBy=debmatic-hmserver.service
+WantedBy=debmatic-rega.service
+WantedBy=debmatic-startupfinished.service
+

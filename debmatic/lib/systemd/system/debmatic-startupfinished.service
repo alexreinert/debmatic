@@ -1,0 +1,13 @@
+[Unit]
+Description=debmatic startup finished
+PartOf=debmatic.service
+After=debmatic.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/touch /var/status/startupFinished
+
+[Install]
+WantedBy=debmatic.service
+

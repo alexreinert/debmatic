@@ -1,0 +1,7 @@
+[Unit]
+After=debmatic-rfd.service
+ 
+[Service]
+Type=oneshot
+ExecStart=/bin/SetInterfaceClock
+

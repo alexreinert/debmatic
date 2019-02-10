@@ -1,0 +1,15 @@
+[Unit]
+Description=debmatic update lgw key
+PartOf=debmatic.service
+After=debmatic.service
+After=network.target
+Before=debmatic-rfd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/debmatic/bin/update_lgw_key.sh
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-rfd.service

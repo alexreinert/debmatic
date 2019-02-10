@@ -1,0 +1,18 @@
+[Unit]
+Description=debmatic HssLED
+PartOf=debmatic.service
+After=debmatic.service
+
+[Service]
+Type=simple
+EnvironmentFile=/var/hm_mode
+ExecStartPre=/usr/share/debmatic/bin/load_led_modules.sh
+ExecStart=/bin/hss_led -l 4
+ExecStopPost=-/sbin/rmmod rpi_rf_mod_led
+ExecStopPost=-/sbin/rmmod dummy_rx8130
+ExecStopPost=-/sbin/rmmod ledtrig-timer
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-startupfinished.service
+

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    systemctl stop debmatic.service
+
+    for timer in `ls /lib/systemd/system/debmatic*.timer | xargs -n 1 basename`
+    do
+      systemctl disable $timer
+    done
+    for service in `ls /lib/systemd/system/debmatic*.service | xargs -n 1 basename`
+    do
+      if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
+        systemctl disable $service
+      fi
+    done
+
+    lighttpd-disable-mod debmatic
+    systemctl force-reload lighttpd.service
+
+    rm -f /usr/sbin/debmatic-*
+    ;;
+
+  failed-upgrade)
+    ;;
+esac

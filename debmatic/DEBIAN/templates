@@ -1,0 +1,9 @@
+Template: debmatic/has_backup
+Type: boolean
+Description: 
+ A new CCU firmware version is to be installed.
+ .
+ It is recommended that you create a backup before installing a new CCU firmware version.
+ .
+ Do you have a backup?
+

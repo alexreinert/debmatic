@@ -1,0 +1,24 @@
+[Unit]
+Description=debmatic multimacd
+PartOf=debmatic.service
+After=debmatic.service
+Before=debmatic-rfd.service
+ConditionPathExists=!/var/status/debmatic_avoid_multimacd
+
+[Service]
+Type=forking
+EnvironmentFile=/var/hm_mode
+TimeoutStartSec=22
+PIDFile=/var/status/multimacd.status
+ExecStartPre=/sbin/sysctl -w kernel.sched_rt_runtime_us=-1
+ExecStartPre=/sbin/modprobe eq3_char_loop
+ExecStart=/usr/share/debmatic/bin/start_multimacd.sh
+ExecStopPre=/bin/rm -f /var/run/multimacd.pid
+ExecStopPost=/bin/sleep 5
+ExecStopPost=/sbin/rmmod eq3_char_loop
+
+[Install]
+WantedBy=debmatic.service
+RequiredBy=debmatic-rfd.service
+WantedBy=debmatic-startupfinished.service
+

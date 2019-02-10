@@ -1,0 +1,40 @@
+#!/bin/bash
+CONFIGFILE=/etc/default/debmatic
+
+. /usr/share/debconf/confmodule
+
+set -e
+
+case "$1" in
+  configure|reconfigure)
+    if [ ! -e /usr/sbin/debmatic-info ]; then
+      ln -s /usr/share/debmatic/bin/debmatic-info.sh /usr/sbin/debmatic-info
+    fi
+    if [ ! -e /usr/sbin/debmatic-backup ]; then
+      ln -s /usr/share/debmatic/bin/debmatic-backup.sh /usr/sbin/debmatic-backup
+    fi
+
+    systemctl daemon-reload
+
+    for service in `ls /lib/systemd/system/debmatic*.service | xargs -n 1 basename`
+    do
+      if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
+        systemctl enable $service
+      fi
+    done
+    for timer in `ls /lib/systemd/system/debmatic*.timer | xargs -n 1 basename`
+    do
+      systemctl enable $timer
+    done
+
+    lighttpd-enable-mod debmatic
+    systemctl force-reload lighttpd.service
+
+    systemctl start debmatic.service
+    ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+esac
+

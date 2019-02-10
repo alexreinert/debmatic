@@ -1,0 +1,721 @@
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/api/methods/user/restarthmipserver.tcl occu-3.41.11.patched/WebUI/www/api/methods/user/restarthmipserver.tcl
+--- occu-3.41.11/WebUI/www/api/methods/user/restarthmipserver.tcl	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/api/methods/user/restarthmipserver.tcl	2019-02-06 09:37:04.444853627 +0100
+@@ -7,6 +7,6 @@
+ #
+ # Rückgabewert: true
+ 
+-exec /etc/init.d/S62HMServer start
++exec systemctl restart debmatic-hmserver.service
+ 
+-jsonrpc_response true
+\ No newline at end of file
++jsonrpc_response true
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/api/methods/user/restartlighttpd.tcl occu-3.41.11.patched/WebUI/www/api/methods/user/restartlighttpd.tcl
+--- occu-3.41.11/WebUI/www/api/methods/user/restartlighttpd.tcl	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/api/methods/user/restartlighttpd.tcl	2019-02-06 09:36:54.332775329 +0100
+@@ -7,7 +7,8 @@
+ #
+ # Rückgabewert: true
+ 
+-exec -- /usr/bin/nohup /etc/init.d/S50lighttpd restart >/dev/null
++exec systemctl restart lighttpd.service
++exec systemctl restart debmatic-lighttpd.service
+ 
+ #exec /etc/init.d/S50lighttpd restart
+ 
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/config/control_panel.cgi occu-3.41.11.patched/WebUI/www/config/control_panel.cgi
+--- occu-3.41.11/WebUI/www/config/control_panel.cgi	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/config/control_panel.cgi	2019-02-06 09:46:38.989299911 +0100
+@@ -102,16 +102,6 @@
+   }
+ }
+     
+-puts { 
+-    <!-- Netzwerkeinstellungen -->
+-    <td>
+-      <div class="cpButton">
+-        <div class="StdTableBtn CLASS21701" onclick="showNetworkCP()">${btnSysConfNetworkConfig}</div>
+-        <div class="StdTableBtnHelp"><img id="showNetworkCPHelp" src="/ise/img/help.png"></div>
+-      </div>
+-    </td>
+-}
+-
+ if {![isOldCCU]} {
+   puts {
+     </tr>
+@@ -119,14 +109,6 @@
+   }
+ }
+ puts {
+-    <!-- Firewall Konfiguration -->
+-    <td>
+-      <div class="cpButton">
+-        <div class="StdTableBtn CLASS21701" onclick="new FirewallConfigDialog();">${btnSysConfFirewallConfig}</div>
+-        <div class="StdTableBtnHelp"><img id="newFirewallConfigDialogHelp" src="/ise/img/help.png"></div>
+-      </div>
+-    </td>
+-
+     <!-- BidCoS-RF Konfiguration -->
+     <td>
+ }
+@@ -150,14 +132,6 @@
+       </div>
+     </td>
+ 
+-    <!-- Zusatzsoftware -->
+-    <td>
+-      <div class="cpButton">
+-        <div  class="StdTableBtn CLASS21701" onclick="showSoftwareCP();">${btnSysConfAdditionalSoft}</div>
+-        <div class="StdTableBtnHelp"><img id="showSoftwareCPHelp" src="/ise/img/help.png"></div>
+-      </div>
+-    </td>
+-
+     <!-- Storage Settings -->
+     <td>
+       <div class="cpButton">
+@@ -179,17 +153,6 @@
+       </td>
+     }
+   }
+-
+-  if {[getProduct] >= 3} {
+-    puts {
+-      <!-- Button Security Wizard - slimmed down InstallWizard without the admin password dialog -->
+-
+-      <td>
+-        <div  class="StdTableBtn CLASS21701" onclick="new DialogChooseSecuritySettings();">${btnSecuritySettings}</div>
+-        <div class="StdTableBtnHelp"><img id="showSecuritySettingsCPHelp" src="/ise/img/help.png"></div>
+-      </td>
+-    }
+-  }
+ 
+   puts {
+     <!-- Kopplungen -->
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/config/cp_maintenance.cgi occu-3.41.11.patched/WebUI/www/config/cp_maintenance.cgi
+--- occu-3.41.11/WebUI/www/config/cp_maintenance.cgi	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/config/cp_maintenance.cgi	2019-02-06 16:22:11.424609055 +0100
+@@ -385,155 +385,14 @@
+               }
+               table_data {id="availableSWVersion"} {
+                 # This doesn´t work properly
+-                # puts [iframe "$REMOTE_FIRMWARE_SCRIPT?cmd=check_version&version=$cur_version&serial=$serial&lang=de&product=HM-CCU2" marginheight=0 marginwidth=0 frameborder=0 width=100 height=20 {scrolling="no"} ]
++                # puts [iframe "$REMOTE_FIRMWARE_SCRIPT?cmd=check_version&version=$cur_version&serial=$serial&lang=de&product=HM-CCU3" marginheight=0 marginwidth=0 frameborder=0 width=100 height=20 {scrolling="no"} ]
+                 # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
+               }
+             }
+-            table_row {
+-              table_data {align="left"} {colspan="3"} {
+-                #puts "[bold "Software-Update durchführen"]"
+-                puts "<b>\${dialogSettingsCMLblPerformSoftwareUpdate}</b>"
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep1}"
+-              }
+-              table_data {
+-                division {class="popupControls CLASS20905"} {
+-                  table {
+-                    table_row {
+-                      table_data {
+-                        division {class="CLASS20908" style="display: none"} {id="btnFwDownload"} {} "onClick=\"window.location.href='$REMOTE_FIRMWARE_SCRIPT?cmd=download&version=$cur_version&serial=$serial&lang=de&product=HM-CCU2';\"" {}
+-                        division {class="CLASS20908"}  "onClick=\"showCCULicense();\"" {puts "\${dialogSettingsCMBtnPerformSoftwareUpdateDownload}"}
+-                      }
+-                    }
+-                  }
+-                }
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {colspan="2"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep2}"
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {colspan="2"} {
+-                form "$env(SCRIPT_NAME)?sid=$sid" name=firmware_form {target=firmware_upload_iframe} enctype=multipart/form-data method=post {
+-                  export action=firmware_upload
+-                  export downloadOnly=$downloadOnly
+-                  file_button firmware_file size=30 maxlength=1000000
+-                }
+-                puts {<iframe name="firmware_upload_iframe" style="display: none;"></iframe>}
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep3}"
+-              }
+-              table_data {
+-                division {class="popupControls CLASS20905"} {
+-                  table {
+-                    table_row {
+-                      table_data {
+-                        division {class="CLASS20919"} {onClick="document.firmware_form.submit();showUserHint();"} {
+-                          puts "\${dialogSettingsCMBtnPerformSoftwareUpdateUpload}"
+-                        }
+-                      }
+-                    }
+-                  }
+-                }
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {colspan="2"} {class="CLASS20920"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep4}"
+-              }
+-            }
+-          }
+-        }
+-        table_data {align="left"} {class="CLASS20921"} {
+-          puts "\${dialogSettingsCMHintSoftwareUpdate1}"
+-          number_list {class="j_noForcedUpdate"} {
+-            li {
+-              ${dialogSettingsCMHintSoftwareUpdate2}            }
+-            li {
+-               ${dialogSettingsCMHintSoftwareUpdate3}
+-            }
+-            li {
+-               ${dialogSettingsCMHintSoftwareUpdate3a}
+-            }
+-            set bat_level [get_bat_level]
+-            if {$bat_level < 50} {
+-              set msg " \${dialogSettingsCMHintSoftwareUpdate4a} $bat_level%. "
+-              append msg  \${dialogSettingsCMHintSoftwareUpdate4b}
+-              li $msg
+-            }
+-          }
+-
+-          division {class="j_forcedUpdate" style="padding:10px;"} {
+-            puts "<br/>\${dialogSettingsCMHintSoftwareUpdate2}"
+-          }
+-        }
+-      }
+-      table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
+-        table_data {class="CLASS20903"} $styleMaxWidth {
+-          #puts "Zentralen-<br>"
+-          #puts "Neustart"
+-          puts "\${dialogSettingsCMTDCCURestart}"
+-
+-        }
+-        table_data {class="CLASS20904"} {
+-          division {class="popupControls CLASS20905"} {
+-            division {class="CLASS20910"} {onClick="OnReboot();"} {
+-              puts "\${dialogSettingsCMBtnCCURestart}"
+-            }
+           }
+         }
+         table_data {align="left"} {class="CLASS20904"} {
+-          puts "\${dialogSettingsCMHintRestart}"
+-        }
+-      }
+-
+-      if {[getProduct] >= 3} {
+-        table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
+-          table_data {class="CLASS20903"} $styleMaxWidth {
+-            puts "\${dialogSettingsCMTDCCUShutdown}"
+-          }
+-          table_data {class="CLASS20904"} {
+-            division {class="popupControls CLASS20905"} {
+-              division {class="CLASS20910"} {onClick="OnShutdown();"} {
+-                puts "\${dialogSettingsCMBtnCCUShutdown}"
+-              }
+-            }
+-          }
+-          table_data {align="left"} {class="CLASS20904"} {
+-            puts "\${dialogSettingsCMHintShutdown}"
+-          }
+-        }
+-      }
+-
+-      # Abgesicherter Modus
+-      table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
+-        table_data {class="CLASS20903"} $styleMaxWidth {
+-          #puts "Abgesicherter<br>"
+-          #puts "Modus"
+-          puts "\${dialogSettingsCMTDCCUSafeMode}"
+-        }
+-        table_data {class="CLASS20904"} {
+-          division {class="popupControls CLASS20905"} {
+-            division {class="CLASS20910 colorGradient50px"} {onClick="OnEnterSafeMode();"} {
+-              puts "\${dialogSettingsCMBtnCCURestartSafe}"
+-            }
+-          }
+-        }
+-        table_data {align="left"} {class="CLASS20904"} {
+-          puts "\${dialogSettingsCMHintRestartSafeMode}"
++          puts "\${dialogSettingsDebmaticDonateHint}"
+         }
+       }
+ 
+@@ -688,14 +547,6 @@
+                     }
+                   }
+                   table_row {
+-                    table_data {align="left"} {
+-                      puts "\${dialogSettingsCMLblLogSysLogServerAddress}"
+-                    }
+-                    table_data {align="right"} {
+-                      catch {cgi_text log_server=[get_logserver] {size="25"} {id="text_log_server"}}
+-                    }
+-                  }
+-                  table_row {
+                     table_data {
+                     }
+                     table_data {align="left"} {
+@@ -754,8 +605,8 @@
+         pb += "&level_hs485d="+document.getElementById("select_log_hs485d").value;
+         //pb += "&level_pfmd="+document.getElementById("select_log_pfmd").value;
+         pb += "&level_rega="+document.getElementById("select_log_rega").value;
+-        pb += "&log_server="+document.getElementById("text_log_server").value;
+-        
++        pb += "&log_server=";
++
+         var opts = {
+           postBody: pb,
+           sendXML: false,
+@@ -1195,16 +1046,16 @@
+     puts "Failure"
+     return
+   }
+-  catch {exec killall syslogd}
+-  catch {exec killall klogd}
+-  exec /etc/init.d/S07logging start
++#  catch {exec killall syslogd}
++#  catch {exec killall klogd}
++#  exec /etc/init.d/S07logging start
+   puts "Success -confirm"
+ }
+ 
+ proc action_download_logfile {} {
+   set HOSTNAME [exec hostname]
+   set iso8601_date [exec date -Iseconds]
+-  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
++  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
+   
+   puts "Content-Type:application/x-download"
+   puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/config/cp_security.cgi occu-3.41.11.patched/WebUI/www/config/cp_security.cgi
+--- occu-3.41.11/WebUI/www/config/cp_security.cgi	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/config/cp_security.cgi	2019-02-10 12:34:35.206717256 +0100
+@@ -296,7 +296,6 @@
+     } else {
+       exec touch /usr/local/.doFactoryReset
+     }
+-    exec kill -SIGQUIT 1
+   }]} {
+ 
+     # TWIST-22
+@@ -765,23 +764,9 @@
+   set source_minor [lindex $source_version 1]
+   set source_patch [lindex $source_version 2]
+ 
+-  # Check if a backup with HmIP support can be used without problems - A CCU with a version < 2.17.14 had no HmIP support. Therefore we don't check such backups
+-  if {($source_major >= 3) || (($source_major == 2)  && ($source_minor > 17)) || (($source_major == 2) && ($source_minor == 17) && ($source_patch >= 14))} {
+-    set checkBackupState [checkUserBackupValidility $migration_mode]
+-    if {$checkBackupState != 10} {
+-      # It's not possible to use the backup
+-      set backuperror true
+-
+-      # Start /etc/init.d/S62HMServer start
+-      cgi_javascript {puts "homematic('User.restartHmIPServer');"}
+-      put_message "\${dialogSettingsSecurityMessageSysBackupErrorTitle}" "\${dialogSettingsSecurityMessageSysBackupErrorContent} [getBackupErrorMessage $checkBackupState $migration_mode]"
+-    }
+-  }
+   cgi_javascript {puts "MessageBox.close();"}
+ 
+   if { "false" == $backuperror } {
+-    exec mount -o remount,ro /usr/local
+-    exec mount -o remount,rw /usr/local
+     division {class="popupTitle"} {
+       puts "\${dialogSettingsSecurityMessageSysBackupRestartSystemTitle}"
+     }
+@@ -1094,150 +1079,6 @@
+         puts "\${dialogSettingsSecurityHintSessionTimeout2}"
+       }
+       }
+-
+-      # activate ssh
+-      table_row {class="CLASS20806"} {
+-      table_data {class="CLASS20807"} {
+-        puts "\${dialogSettingsSecurityTDSSH}"
+-      }
+-
+-      table_data {class="CLASS20808"} {
+-        table {class="CLASS20817"} {width="100%"} {
+-        table_row {
+-          table_data {align="left"}  {
+-          puts "\${dialogSettingsSecurityLblActivateSSH}"
+-          }
+-          set checked ""
+-          #set checked "checked=true"
+-          table_data {class="CLASS21112"} {align="left"}  {
+-            cgi_checkbox ssh=unknown {id="sshActive"} $checked
+-          }
+-        }
+-
+-        table_row {
+-          table_data {align="left"} {
+-          puts "\${dialogSettingsSecurityLblPassword}"
+-          }
+-
+-          table_data {align="left"} {
+-            cgi_text key1= {size="16"} {id="sshPasswd0"} {type="password"}
+-          }
+-
+-        }
+-        table_row {
+-          table_data {align="left"} {
+-          puts "\${dialogSettingsSecurityLblPasswordRepeat}"
+-          }
+-          table_data {align="left"} {
+-            cgi_text key1= {size="16"} {id="sshPasswd1"} {type="password"}
+-          }
+-        }
+-
+-        table_row {
+-          table_data {align="right"} {class="CLASS20812"} {colspan="3"} {
+-            division {class="popupControls CLASS20811"} {
+-              division {class="CLASS20813"} {onClick="saveSSHConfig()"} {
+-                puts "\${dialogSettingsSecuritySSHSaveConfig}"
+-              }
+-            }
+-          }
+-        }
+-        }
+-      }
+-
+-      table_data {align="left"} {class="CLASS20808"} {
+-        puts "\${dialogSettingsSecuritySSHDescription}"
+-      }
+-      }
+-      # auth
+-      if { [getProduct]  >= 3 } {
+-        table_row {class="CLASS20806"} {
+-          table_data {class="CLASS20807"} {
+-            puts "\${dialogSettingsSecurityTDAuth}"
+-          }
+-          table_data {class="CLASS20808"} {
+-            division {} {
+-              table {
+-                table_row {
+-                  table_data {align="left"}  {
+-                    puts "\${dialogSettingsSecurityLblActivateAuthRemoteXML}"
+-                  }
+-                  set checked ""
+-                  #set checked "checked=true"
+-                  table_data {class="CLASS21112"} {align="left"}  {
+-                    cgi_checkbox authState=unknown {id="userAuthActive"} {onClick=setUserAuth();} $checked
+-                  }
+-                }
+-              }
+-            }
+-          }
+-          table_data {class="CLASS20808"} {
+-            puts "\${dialogSettingsSecurityTDExplanation}"
+-          }
+-        }
+-      }
+-      # SNMP <-- may if getProduct check if needed for ccu2 too
+-      if { [getProduct]  >= 3 } { 
+-        table_row {class="CLASS20806"} {
+-          table_data {class="CLASS20807"} {
+-            puts "\${dialogSettingsSecurityTDSNMP}"
+-          }
+-          table_data {class="CLASS20808"} {
+-            division {} {
+-              table {
+-                table_row {
+-                  table_data {align="left"}  {
+-                    puts "\${dialogSettingsSecurityLblActivateSNMP}"
+-                  }
+-                  set checked ""
+-                  #set checked "checked=true"
+-                  table_data {class="CLASS21112"} {align="left"}  {
+-                    cgi_checkbox snmpState=unknown {id="snmpEnabled"} $checked
+-                  }
+-                }
+-                table_row {
+-                  table_data {align="left"} {
+-                  puts "\${lblUserName}"
+-                  }
+-
+-                  table_data {align="left"} {
+-                    cgi_text key1= {size="16"} {id="snmpUser"} {type="text"}
+-                  }
+-                }
+-                table_row {
+-                  table_data {align="left"} {
+-                  puts "\${dialogSettingsSecurityLblPassword}"
+-                  }
+-
+-                  table_data {align="left"} {
+-                    cgi_text key1= {size="16"} {id="snmpPasswd0"} {type="password"}
+-                  }
+-                }
+-                table_row {
+-                  table_data {align="left"} {
+-                  puts "\${dialogSettingsSecurityLblPasswordRepeat}"
+-                  }
+-                  table_data {align="left"} {
+-                    cgi_text key1= {size="16"} {id="snmpPasswd1"} {type="password"}
+-                  }
+-                }
+-                table_row {
+-                  table_data {align="right"} {class="CLASS20812"} {colspan="3"} {
+-                    division {class="popupControls CLASS20811"} {
+-                      division {class="CLASS20813"} {onClick="onSNMPSaveBtn()"} {
+-                        puts "\${dialogSettingsSecuritySSHSaveConfig}"
+-                      }
+-                    }
+-                  }
+-                }
+-              }
+-            }
+-          }
+-          table_data {class="CLASS20808"} {
+-            puts "\${dialogSettingsSecurityTDSNMPExplanation}"
+-          }
+-        }
+-      }
+     }
+   }
+   division {class="popupControls"} {
+@@ -1429,11 +1270,11 @@
+ proc action_create_backup {} {
+   set HOSTNAME [exec hostname]
+   set iso8601_date [exec date -Iseconds]
+-  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
++  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
+   #save DOM
+   rega system.Save()
+   cd /
+-  exec tar czf /tmp/usr_local.tar.gz usr/local
++  exec tar czf /tmp/usr_local.tar.gz etc/config --transform "s/^/usr\\/local\\//g"
+   cd /tmp/
+   #sign the configuration with the current key
+   exec crypttool -s -t 1 <usr_local.tar.gz >signature
+@@ -1489,7 +1330,7 @@
+ }
+ 
+ proc action_reboot {} {
+-  exec /sbin/reboot
++  exec systemctl restart debmatic.service
+ }
+ 
+ proc _version_compare { v1 v2 } {
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/config/cp_time.cgi occu-3.41.11.patched/WebUI/www/config/cp_time.cgi
+--- occu-3.41.11/WebUI/www/config/cp_time.cgi	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/config/cp_time.cgi	2019-02-05 08:51:51.284199217 +0100
+@@ -144,7 +144,7 @@
+     global env LOCATIONS TIMEZONES
+     
+     set iso8601_date [exec date -Iseconds]
+-    regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
++    regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
+ 	
+ 	puts "<div id=\"dragTime\">"
+ 
+@@ -155,100 +155,6 @@
+ 	
+     division {class="CLASS21500"} {
+         table {class="popupTable"} {border="1"} {
+-            table_row {class="CLASS21502"} {
+-                table_data {class="CLASS21503"} {
+-                    puts "\${dialogSettingsTimePositionTDTime}"
+-                }
+-                table_data {class="CLASS21504"} {
+-                    table {class="CLASS21505"} {
+-                        table_row {
+-                            table_data {
+-                                table {class="CLASS21505"} {
+-                                    table_row {
+-                                        table_data {align="left"} {
+-                                            #puts "Uhrzeit (hh:mm:ss):"
+-                                            puts "\${dialogSettingsTimePositionLblTime}"
+-                                        }
+-                                        table_data {align="right"} {
+-                                            cgi_text hour=$hour {size="2"} {maxlength="2"} {id="text_hour"}
+-                                            puts ":"
+-                                            cgi_text minute=$minute {size="2"} {maxlength="2"} {id="text_minute"}
+-                                            puts ":"
+-                                            cgi_text second=$second {size="2"} {maxlength="2"} {id="text_second"}
+-                                        }
+-                                        table_data {}
+-                                    }
+-                                    table_row {
+-                                        table_data {align="left"} {
+-                                            #puts "Datum (tt.mm.jjjj):"
+-                                            puts "\${dialogSettingsTimePositionLblDate}"
+-                                        }
+-                                        table_data {align="right"} {
+-                                            cgi_text day=$day {size="2"} {maxlength="2"} {id="text_day"}
+-                                            puts "."
+-                                            cgi_text month=$month {size="2"} {maxlength="2"} {id="text_month"}
+-                                            puts "."
+-                                            cgi_text year=$year {size="4"} {maxlength="4"} {id="text_year"}
+-                                        }
+-                                        table_data {align="left"} {
+-                                            division {class="popupControls CLASS21506"} {
+-                                                division {class="CLASS21507"} {onClick="apply_time()"} {
+-                                                    #puts "Uhrzeit &uuml;bernehmen"
+-                                                    puts "\${dialogSettingsTimePositionBtnSaveTime}"
+-                                                }
+-                                            }
+-                                        }
+-                                    }
+-                                    table_row {
+-                                        table_data {colspan="2"} {}
+-                                        table_data {align="left"} {class="CLASS21510"} {
+-                                            division {class="popupControls CLASS21506"} {
+-                                                division {class="CLASS21507"} {onClick="time_from_pc()"} {
+-                                                    #puts "Zeit vom PC &uuml;bernehmen"
+-                                                    puts "\${dialogSettingsTimePositionBtnGetPCTime}"
+-                                                }
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-                            }
+-                        }
+-                    }
+-                }
+-            }
+-            table_row {class="CLASS21502"} {
+-                table_data {class="CLASS21503"} {
+-                    #puts "NTP-Server"
+-                    puts "\${dialogSettingsTimePositionTDNTPServer}"
+-                }
+-                table_data {class="CLASS21504"} {
+-                    table {class="CLASS21505"} {
+-                        table_row {
+-                            table_data {
+-                                table {class="CLASS21505"} {
+-                                    table_row {
+-                                        table_data {align="left"} {
+-                                            #puts "NTP Zeitserver Adressen:"
+-                                            puts "\${dialogSettingsTimePositionLblNTPServer}"
+-                                        }
+-                                        table_data {align="right"} {
+-                                            cgi_text ntp_servers=[get_timeservers] {size="25"} {id="text_ntp_servers"}
+-                                        }
+-                                        table_data {align="left"} {
+-                                            division {class="popupControls CLASS21506"} {
+-                                                division {class="CLASS21507"} {onClick="apply_timeserver()"} {
+-                                                    #puts "Zeitserver &uuml;bernehmen"
+-                                                    puts "\${dialogSettingsTimePositionBtnNTPServer}"
+-                                                }
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-                            }
+-                        }
+-                    }
+-                }
+-            }
+             set country ""
+             foreach location $LOCATIONS {
+                 if { [lindex $location 0] == "-" } {
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/config/help.cgi occu-3.41.11.patched/WebUI/www/config/help.cgi
+--- occu-3.41.11/WebUI/www/config/help.cgi	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/config/help.cgi	2019-02-06 12:32:02.848248112 +0100
+@@ -3,8 +3,8 @@
+ source common.tcl
+ load tclrega.so
+ 
+-set PRODUCT_NAME "Zentrale"
+-set PRODUCT_ID "CCU[getProduct]"
++set PRODUCT_NAME "debmatic"
++set PRODUCT_ID "CCU"
+ set HOMEMATIC_URL "http://www.homematic.com"
+ set HOMEMATIC_IP_URL "https://www.homematic-ip.com"
+ 
+@@ -57,6 +57,7 @@
+                 puts "<li><h1 class='helpTitle'><u>\${menuHelpPage}</u></h1></li>"
+                 puts "<li><a target='_blank' href=\'$HELP_URL\'>\${dialogHelpLinkOnlineHelpA}</a></li>"
+                 puts "<li><a target='_blank' href=\'$HELP_IP_URL\'>\${dialogHelpLinkOnlineHelpB}</a></li>"
++                puts "<li><a target='_blank' href='https://www.debmatic.de/'>debmatic</a></li>"
+                 puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
+               puts "</ul>"
+       puts "</td>"
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/config/ic_common.tcl occu-3.41.11.patched/WebUI/www/config/ic_common.tcl
+--- occu-3.41.11/WebUI/www/config/ic_common.tcl	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/config/ic_common.tcl	2019-02-05 08:55:07.541654817 +0100
+@@ -23,10 +23,10 @@
+ set GL_FLAG_RECEIVER_UNKNOWN     0x8
+ 
+ set HTMLTITLE "HomeMatic Interne Konfiguration"
+-set INTERFACES_FILE "/opt/hm/etc/config/InterfacesList.xml"
++set INTERFACES_FILE "/etc/config/InterfacesList.xml"
+ 
+ if { ![info exists env(CONFIG_ROOT)] } {
+-    set env(CONFIG_ROOT) "/opt/hm/etc/config"
++    set env(CONFIG_ROOT) "/etc/config"
+ }
+ 
+ set USERPROFILESPATH "$env(CONFIG_ROOT)/userprofiles"
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/rega/pages/index.htm occu-3.41.11.patched/WebUI/www/rega/pages/index.htm
+--- occu-3.41.11/WebUI/www/rega/pages/index.htm	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/rega/pages/index.htm	2019-02-06 11:47:38.120372690 +0100
+@@ -71,7 +71,7 @@
+     /*########################################################################*/
+ 
+     PLATFORM = "Central";
+-    WEBUI_VERSION = "2.40.0-TRUNK";
++    WEBUI_VERSION = "{PKG_VERSION}";
+   
+     /**
+      * Flags
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/webui/js/lang/de/translate.lang.js occu-3.41.11.patched/WebUI/www/webui/js/lang/de/translate.lang.js
+--- occu-3.41.11/WebUI/www/webui/js/lang/de/translate.lang.js	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/webui/js/lang/de/translate.lang.js	2019-02-06 15:30:23.872958327 +0100
+@@ -453,6 +453,7 @@
+     "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
+     "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
+     "dialogSettingsCMLblActualSoftwareVersion" : "Aktuelle Software-Version:",
++    "dialogSettingsDebmaticDonateHint" : "Bitte unterst%FCtzen Sie die Entwicklung von debmatic mit einer Spende via <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=WUC7QU84EU7DA' rel='nofollow'>PayPal</a> oder eine Aufmerksamkeit auf meinem <a href='https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1'>Amazon Wunschzettel</a>.",
+     "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
+     "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
+     "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/webui/js/lang/en/translate.lang.js occu-3.41.11.patched/WebUI/www/webui/js/lang/en/translate.lang.js
+--- occu-3.41.11/WebUI/www/webui/js/lang/en/translate.lang.js	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/webui/js/lang/en/translate.lang.js	2019-02-06 15:30:42.717100504 +0100
+@@ -452,6 +452,7 @@
+     "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
+     "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
+     "dialogSettingsCMLblActualSoftwareVersion" : "Current software version:",
++    "dialogSettingsDebmaticDonateHint" : "Please support the development of idebmatic with a donation via <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=WUC7QU84EU7DA' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1'>Amazom wishlist</a>.",
+     "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
+     "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
+     "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
+diff -ruN --no-dereference occu-3.41.11/WebUI/www/webui/webui.js occu-3.41.11.patched/WebUI/www/webui/webui.js
+--- occu-3.41.11/WebUI/www/webui/webui.js	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/WebUI/www/webui/webui.js	2019-02-06 15:20:37.988538316 +0100
+@@ -5862,12 +5862,8 @@
+         if (action == 1) {
+           WebUI.resize();
+           jQuery(".Layer0").show();
+-          if (getProduct() >= 3) {
+-            new InstallWizard();
+-          } else {
+             WebUI.enter(StartPage);
+             homematic("CCU.setSecurityHint");
+-          }
+         }
+       }, "html");
+     });
+@@ -20169,7 +20165,7 @@
+     var script = document.createElement("script");
+     script.id = "homematic_com_script";
+     script.type = "text/javascript";
+-    script.src = this.m_URLServer + "/firmware/download?cmd=js_check_version&version="+WEBUI_VERSION+"&product="+this.m_product+"&serial=" + serial;
++    script.src = "https://www.debmatic.de/latestVersion?version="+WEBUI_VERSION+"&product="+this.m_product+"&serial=" + serial;
+     $("body").appendChild(script);
+   },
+ 

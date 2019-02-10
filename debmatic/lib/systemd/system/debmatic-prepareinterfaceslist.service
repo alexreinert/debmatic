@@ -1,0 +1,25 @@
+[Unit]
+Description=debmatic prepare InterfacesList.xml
+PartOf=debmatic.service
+After=debmatic.service
+After=network.target
+Before=debmatic-lighttpd.service
+Before=debmatic-updatelgwfirmware.service
+Before=debmatic-rega.service
+ConditionPathExists=/etc/config/hs485d.conf
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+Environment=LOGLEVEL_HS485D=5
+EnvironmentFile=/var/hm_mode
+EnvironmentFile=-/etc/config/syslog
+ExecStart=/usr/share/debmatic/bin/prepare_interfaceslist.sh
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-lighttpd.service
+WantedBy=debmatic-rega.service
+WantedBy=debmatic-updatelgwfirmware.service
+WantedBy=debmatic-startupfinished.service
+

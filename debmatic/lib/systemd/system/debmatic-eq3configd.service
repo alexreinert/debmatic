@@ -1,0 +1,16 @@
+[Unit]
+Description=debmatic eq3configd
+PartOf=debmatic.service
+After=debmatic.service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/eq3configd
+ExecStartPost=/usr/share/debmatic/bin/create_pid_file /var/run/eq3configd.pid /bin/eq3configd
+ExecStopPre=/bin/rm -f /var/run/eq3configd.pid
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-startupfinished.service
+

@@ -1,0 +1,16 @@
+[Unit]
+Description=debmatic update rf firmware
+PartOf=debmatic.service
+After=debmatic.service
+Before=debmatic-multimacd.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/var/hm_mode
+RemainAfterExit=yes
+ExecStart=/usr/share/debmatic/bin/update_rf_firmware.sh
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-multimacd.service
+

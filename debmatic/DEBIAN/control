@@ -1,0 +1,12 @@
+Package: debmatic
+Version: {PKG_VERSION}
+Architecture: {PKG_ARCH}
+Maintainer: Alexander Reinert <alex@areinert.de>
+{DEPENDS}
+Conflicts: pivccu, pivccu3
+Section: misc
+Priority: extra
+Homepage: https://github.com/alexreinert/debmatic
+Description: debmatic - Homematic CCU on debian based distributions
+  This package contains debmatic - a Homematic CCU on debian based distributions
+
