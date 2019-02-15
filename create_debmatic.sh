@@ -44,6 +44,7 @@ do
 
   mkdir -p $TARGET_DIR/firmware
   cp -pR repo/firmware/* $TARGET_DIR/firmware/
+  mv $TARGET_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update-2.8.4.eq3
 
   mkdir -p $TARGET_DIR/opt/HMServer
   cp -pR repo/HMserver/opt/HMServer/* $TARGET_DIR/opt/HMServer/
