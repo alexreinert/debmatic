@@ -4,7 +4,7 @@ CCU_VERSION=3.41.11
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$CCU_VERSION.tar.gz"
 
-PKG_BUILD=2
+PKG_BUILD=3
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)

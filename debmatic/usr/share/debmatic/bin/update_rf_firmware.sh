@@ -5,7 +5,7 @@ if [[ -e /etc/config/no-coprocessor-update ]]; then
 fi
 
 if [ "$HM_HMRF_DEV" == "HM-MOD-RPI-PCB" ]; then
-  NEW_VERSION=`grep '^CCU2\s\s*coprocessor_update.eq3' /firmware/HM-MOD-UART/fwmap | awk '{print $3}'`
+  NEW_VERSION=`grep 'dualcopro_si1002_update_blhm.eq3' /firmware/HM-MOD-UART/fwmap | awk '{print $3}'`
 
   if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
     echo "Starting update of HM-MOD-RPI-PCB to version $NEW_VERSION..."
