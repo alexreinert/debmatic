@@ -6,7 +6,9 @@ if [ $EUID != 0 ]; then
   exit 1
 fi
 
-. /etc/default/debmatic
+if [ -e /etc/default/debmatic ]; then
+  . /etc/default/debmatic
+fi
 
 modprobe -a eq3_char_loop &> /dev/null
 if [ $? -eq 0 ]; then

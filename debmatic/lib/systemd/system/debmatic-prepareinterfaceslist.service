@@ -6,7 +6,6 @@ After=network.target
 Before=debmatic-lighttpd.service
 Before=debmatic-updatelgwfirmware.service
 Before=debmatic-rega.service
-ConditionPathExists=/etc/config/hs485d.conf
 
 [Service]
 Type=oneshot

@@ -10,5 +10,7 @@ if [[ -z "${HM_HMRF_DEV}" ]] && ( [[ ! -f /etc/config/rfd.conf ]] || ! egrep -q 
   sed -En '1h;1!H;${;g;s/\s*<ipc>\s*<name>BidCos-RF<\/name>(\s*<[^\/[^>]+>[^>]+>)*\s*<\/ipc>//g;p;}' -i /etc/config/InterfacesList.xml
 fi
 
-/bin/hs485dLoader -l ${LOGLEVEL_HS485D} -ds -dd /etc/config/hs485d.conf
+if [ -e /etc/config/hs485d.conf ]; then
+  /bin/hs485dLoader -l ${LOGLEVEL_HS485D} -ds -dd /etc/config/hs485d.conf
+fi
 
