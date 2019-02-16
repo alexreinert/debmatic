@@ -1,3 +1,16 @@
+diff -ruN --no-dereference occu-3.41.11/firmware/HM-MOD-UART/fwmap occu-3.41.11.patched/firmware/HM-MOD-UART/fwmap
+--- occu-3.41.11/firmware/HM-MOD-UART/fwmap	2018-11-14 18:01:33.000000000 +0100
++++ occu-3.41.11.patched/firmware/HM-MOD-UART/fwmap	2019-02-16 07:03:15.669299962 +0100
+@@ -1,7 +1,7 @@
+ #Type           Filename                Version
+ 
+ #Coprozessor
+-CCU2                    coprocessor_update.eq3                         	1.4.1		# CoProzessor HM-MOD-UART
++#CCU2                    coprocessor_update.eq3                         	1.4.1		# CoProzessor HM-MOD-UART
+ 
+-#CCU2			dualcopro_si1002_update_blhm.eq3		2.8.6		# Dual CoProzessor HM-MOD-UART
++CCU2			dualcopro_si1002_update_blhm.eq3		2.8.6		# Dual CoProzessor HM-MOD-UART
+ 
 diff -ruN --no-dereference occu-3.41.11/WebUI/www/api/methods/user/restarthmipserver.tcl occu-3.41.11.patched/WebUI/www/api/methods/user/restarthmipserver.tcl
 --- occu-3.41.11/WebUI/www/api/methods/user/restarthmipserver.tcl	2018-11-14 18:01:33.000000000 +0100
 +++ occu-3.41.11.patched/WebUI/www/api/methods/user/restarthmipserver.tcl	2019-02-06 09:37:04.444853627 +0100

@@ -126,14 +126,12 @@ elif ping -q -W 5 -c 1 google.com >/dev/null 2>/dev/null; then
   touch /var/status/hasInternet
 fi
 
-if [ `route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $8}'` == ${IFACE} ]; then
-  ADDR=`ip -o -4 addr show eth0 | awk '{print $4}'`
-  IP=`ipcalc -n -b 192.168.1.7/24 | grep "Address:" | awk '{print $2}'`
-  NETMASK=`ipcalc -n -b 192.168.1.7/24 | grep "Netmask:" | awk '{print $2}'`
-  GATEWAY=`route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $2}'`
+ADDR=`ip -o -4 addr show $IFACE | awk '{print $4}'`
+IP=`ipcalc -n -b $ADDR | grep "Address:" | awk '{print $2}'`
+NETMASK=`ipcalc -n -b $ADDR | grep "Netmask:" | awk '{print $2}'`
+GATEWAY=`route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $2}'`
 
-  eq3configcmd netconfigcmd -i "$IP" -g "$GATEWAY" -n "$NETMASK" -d1 "" -d2 ""
-fi
+eq3configcmd netconfigcmd -i "$IP" -g "$GATEWAY" -n "$NETMASK" -d1 "" -d2 ""
 
 mkdir -p /media/usb0/measurement
 touch /var/status/hasUSB

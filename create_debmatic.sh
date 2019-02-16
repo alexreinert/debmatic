@@ -4,7 +4,7 @@ CCU_VERSION=3.41.11
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$CCU_VERSION.tar.gz"
 
-PKG_BUILD=3
+PKG_BUILD=4
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -69,7 +69,7 @@ do
 
   cp -pR $CURRENT_DIR/debmatic/* $TARGET_DIR 
 
-  echo "VERSION=$CCU_VERSION.$PKG_BUILD" > $TARGET_DIR/boot/VERSION
+  echo "VERSION=$CCU_VERSION.$PKG_BUILD" > $TARGET_DIR/usr/share/debmatic/VERSION
 
   cat > $TARGET_DIR/VERSION << EOF
 VERSION=$CCU_VERSION.$PKG_BUILD
@@ -78,7 +78,7 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, pivccu-modules-dkms"
+    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, pivccu-modules-dkms"
     if [ "$ARCH" == amd64 ]; then
       DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
     fi

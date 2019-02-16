@@ -10,7 +10,7 @@ if [ "$HM_HMRF_DEV" == "HM-MOD-RPI-PCB" ]; then
   if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
     echo "Starting update of HM-MOD-RPI-PCB to version $NEW_VERSION..."
 
-    /bin/eq3configcmd update-coprocessor -p $HM_HOST_GPIO_UART -t HM-MOD-UART -u -d /firmware/HM-MOD-UART/fwmap
+    /bin/eq3configcmd update-coprocessor -p $HM_HOST_GPIO_UART -t HM-MOD-UART -u -d /firmware/HM-MOD-UART
 
     HM_HMRF_VERSION=`/bin/eq3configcmd update-coprocessor -p $HM_HOST_GPIO_UART -t HM-MOD-UART -c -v 2>&1 | grep "Version:" | cut -d' ' -f5`
 

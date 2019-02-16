@@ -6,13 +6,15 @@ CONFIGFILE=/etc/default/debmatic
 set -e
 
 case "$1" in
-  configure|reconfigure)
+  configure)
     if [ ! -e /usr/sbin/debmatic-info ]; then
       ln -s /usr/share/debmatic/bin/debmatic-info.sh /usr/sbin/debmatic-info
     fi
     if [ ! -e /usr/sbin/debmatic-backup ]; then
       ln -s /usr/share/debmatic/bin/debmatic-backup.sh /usr/sbin/debmatic-backup
     fi
+
+    cp /usr/share/debmatic/VERSION /boot/VERSION
 
     systemctl daemon-reload
 

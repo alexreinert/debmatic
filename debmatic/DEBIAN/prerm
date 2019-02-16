@@ -21,6 +21,8 @@ case "$1" in
     systemctl force-reload lighttpd.service
 
     rm -f /usr/sbin/debmatic-*
+
+    rm -f /boot/VERSION
     ;;
 
   failed-upgrade)
