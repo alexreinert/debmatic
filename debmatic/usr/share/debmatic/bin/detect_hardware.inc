@@ -29,9 +29,9 @@ do
       fi
     else
       HM_HMRF_DEV='HM-MOD-RPI-PCB'
-      HM_HMRF_SERIAL=`/bin/eq3configcmd update-coprocessor -p /dev/raw-uart -t HM-MOD-UART -c -se 2>&1 | grep "SerialNumber:" | cut -d' ' -f5`
-      HM_HMRF_VERSION=`/bin/eq3configcmd update-coprocessor -p /dev/raw-uart -t HM-MOD-UART -c -v 2>&1 | grep "Version:" | cut -d' ' -f5`
-      HM_HMIP_SGTIN=`/bin/eq3configcmd update-coprocessor -p /dev/raw-uart -t HM-MOD-UART -c -sg 2>&1 | grep "SGTIN:" | cut -d' ' -f5`
+      HM_HMRF_SERIAL=`/bin/eq3configcmd update-coprocessor -p /dev/$UART_DEV -t HM-MOD-UART -c -se 2>&1 | grep "SerialNumber:" | cut -d' ' -f5`
+      HM_HMRF_VERSION=`/bin/eq3configcmd update-coprocessor -p /dev/$UART_DEV -t HM-MOD-UART -c -v 2>&1 | grep "Version:" | cut -d' ' -f5`
+      HM_HMIP_SGTIN=`/bin/eq3configcmd update-coprocessor -p /dev/$UART_DEV -t HM-MOD-UART -c -sg 2>&1 | grep "SGTIN:" | cut -d' ' -f5`
     fi
 
     if [ ! -z "$HM_HMRF_DEV" ]; then
