@@ -1,10 +1,12 @@
 #!/bin/bash
 
-CCU_VERSION=3.41.11
+CCU_VERSION=3.43.15
 
-OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$CCU_VERSION.tar.gz"
+ARCHIVE_TAG=$CCU_VERSION
 
-PKG_BUILD=5
+OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
+
+PKG_BUILD=6
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -15,7 +17,7 @@ cd $WORK_DIR
 
 wget -O occu.tar.gz $OCCU_DOWNLOAD_URL
 tar xzf occu.tar.gz
-mv occu-$CCU_VERSION repo
+mv occu-$ARCHIVE_TAG repo
 
 cd repo
 patch -l -p1 < $CURRENT_DIR/occu.patch
