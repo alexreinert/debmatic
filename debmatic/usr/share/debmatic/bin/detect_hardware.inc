@@ -40,22 +40,7 @@ do
   fi
 done
 
-if [ -z "$HM_HMRF_DEV" ]; then
-  if [ -z "$DEBMATIC_SERIAL" ]; then
-    DEBMATIC_SERIAL=`shuf -i 1-9999999 -n 1`
-    DEBMATIC_SERIAL=`printf "DEB%07d" $DEBMATIC_SERIAL`
-    echo "DEBMATIC_SERIAL=\"$DEBMATIC_SERIAL\"" >> /etc/default/debmatic
-  fi
-
-  if [ -z "$DEBMATIC_ADDRESS" ]; then
-    DEBMATIC_ADDRESS=`shuf -i 1-16777215 -n 1`
-    DEBMATIC_ADDRESS=`printf "0x%06x" $DEBMATIC_ADDRESS`
-    echo "DEBMATIC_ADDRESS=\"$DEMATIC_ADDRESS\"" >> /etc/default/debmatic
-  fi
-
-  HM_HMRF_SERIAL=$DEBMATIC_SERIAL
-  HM_HMRF_ADDRESS=$DEBMATIC_RADIO_MAC
-else
+if [ ! -z "$HM_HMRF_DEV" ]; then
   HM_HOST_RAW_UART="$UART_DEV"
   HM_HOST_GPIO_UART="/dev/$UART_DEV"
   HM_HMRF_DEVNODE="/dev/mmd_bidcos"
