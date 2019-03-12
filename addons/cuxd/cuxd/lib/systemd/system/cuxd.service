@@ -1,0 +1,21 @@
+[Unit]
+Description=CUxD
+PartOf=debmatic.service
+After=debmatic.service
+After=debmatic-prepareinterfaceslist.service
+Before=debmatic-lighttpd.service
+Before=debmatic-rega.service
+
+[Service]
+Type=forking
+Environment=LD_LIBRARY_PATH=/usr/local/addons/cuxd
+ExecStartPre=/bin/touch /etc/config/hm_addons.cfg 
+ExecStartPre=/usr/local/addons/cuxd/update_addon cuxd /usr/local/addons/cuxd/cuxd_addon.cfg
+ExecStartPre=/bin/ln -sf /usr/local/addons/cuxd /usr/local/etc/config/addons/www
+ExecStart=/usr/local/addons/cuxd/cuxd
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-rega.service
+WantedBy=debmatic-startupfinished.service
+

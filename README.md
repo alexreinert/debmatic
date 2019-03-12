@@ -65,6 +65,10 @@ Ein Backup kann entweder über die WebUI erfolgen oder auf der Konsole über
 sudo debmatic-backup
 ```
 
+### Addons
+Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
+* [CUxD](http://www.cuxd.de/) (Paketname cuxd)
+
 ### Restore
 Backups können über die WebUI eingespielt werden.
 
