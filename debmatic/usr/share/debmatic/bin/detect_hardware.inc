@@ -15,6 +15,9 @@ do
   if [ -e "/dev/$UART_DEV" ]; then
     echo 1 > /sys/class/raw-uart/$UART_DEV/reset_radio_module
 
+    sleep 1
+    /bin/eq3configcmd update-coprocessor -p /dev/$UART_DEV -t HM-MOD-UART -c -app &> /dev/null
+
     HM_HMRF_ADDRESS=`/bin/eq3configcmd read-default-rf-address -f /dev/$UART_DEV -h 2>&1 | grep "^0x"`
 
     if [ -z "$HM_HMRF_ADDRESS" ] || [ "$HM_HMRF_ADDRESS" == "0x00ffff" ]; then

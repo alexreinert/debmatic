@@ -1,12 +1,12 @@
 #!/bin/bash
 
-CCU_VERSION=3.43.15
+CCU_VERSION="3.43.15"
 
-ARCHIVE_TAG=$CCU_VERSION
+ARCHIVE_TAG="9f6b975722fe3ff68b78ddfdc419b3856d88ddd5"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=6
+PKG_BUILD=7
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
