@@ -23,7 +23,7 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
 
 ### Vorraussetzung
 * Debian basiertes System (Debian, Ubuntu, Raspbian, Armbian)
-* Mindestens Kernel 4.14
+* Mindestens Kernel 4.9
 
 ### Vorraussetzung für HM-MOD-RPI-PCB und RPI-RF-MOD 
 * Unterstützter Single Board Computer

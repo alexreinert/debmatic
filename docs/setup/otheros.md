@@ -1,7 +1,7 @@
 ### Vorraussetzung
 
 * Debian oder Ubuntu
-* Mind. Kernel 4.14
+* Mind. Kernel 4.9
 
 ### Installation
 0. Volles Backup des Systems erstellen
