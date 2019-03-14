@@ -4,6 +4,11 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
+lsusb -d 0403:6f70 &> /dev/null
+if [ "$?" -eq 0 ]; then
+  modprobe -a hb_rf_usb &> /dev/null
+fi
+
 for dev_no in {0..5}
 do
   if [ $dev_no -eq 0 ]; then
@@ -54,10 +59,13 @@ if [ ! -z "$HM_HMRF_DEV" ]; then
   HM_HMIP_VERSION="$HM_HMRF_VERSION"
 fi
 
-modprobe -a cp210x &> /dev/null
+lsusb -d 1b1f:c020 &> /dev/null
+if [ "$?" -eq 0 ]; then
+  modprobe -a cp210x &> /dev/null
 
-if [ `grep -c "1b1f c020" /sys/bus/usb-serial/drivers/cp210x/new_id` -eq 0 ]; then
-  echo "1b1f c020" > /sys/bus/usb-serial/drivers/cp210x/new_id
+  if [ `grep -c "1b1f c020" /sys/bus/usb-serial/drivers/cp210x/new_id` -eq 0 ]; then
+    echo "1b1f c020" > /sys/bus/usb-serial/drivers/cp210x/new_id
+  fi
 fi
 
 for syspath in $(find /sys/bus/usb/devices/usb*/ -name ttyUSB*); do
