@@ -100,3 +100,5 @@ done
 
 cp debmatic-*.deb $CURRENT_DIR
 
+echo "Please clean-up the work dir temp folder $WORK_DIR, e.g. by doing rm -R $WORK_DIR"
+
