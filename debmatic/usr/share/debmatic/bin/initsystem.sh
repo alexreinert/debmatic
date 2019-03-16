@@ -26,6 +26,7 @@ for file in `ls /etc/config_templates`; do
     \cp /etc/config_templates/$file /etc/config/
   fi
 done
+mkdir -p /etc/config/addons/www
 
 rm -f /var/status/debmatic_*
 

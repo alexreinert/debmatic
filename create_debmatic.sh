@@ -6,7 +6,7 @@ ARCHIVE_TAG="9f6b975722fe3ff68b78ddfdc419b3856d88ddd5"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=9
+PKG_BUILD=10
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -80,7 +80,7 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, pivccu-modules-dkms"
+    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync, pivccu-modules-dkms"
     if [ "$ARCH" == amd64 ]; then
       DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
     fi
