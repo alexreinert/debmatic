@@ -69,6 +69,7 @@ sudo debmatic-backup
 ### Addons
 Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [CUxD](http://www.cuxd.de/) (Paketname cuxd)
+* [JP HB Devices](https://github.com/jp112sdl/JP-HB-Devices-addon) (Paketname jp-hb-devices)
 
 ### Restore
 Backups können über die WebUI eingespielt werden.

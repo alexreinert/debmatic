@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    cd /usr/local/addons/jp-hb-devices-addon
+    for f in /usr/local/addons/jp-hb-devices-addon/uninstall_* ; do echo "  - $(basename $f)"; ./$(basename $f); done
+      
+    cd /www
+    patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch 
+
+    [[ -f ./webui/webui.js.orig ]] && rm ./webui/webui.js.orig
+    [[ -f ./rega/esp/datapointconfigurator.fn.orig ]] && rm ./rega/esp/datapointconfigurator.fn.orig
+    [[ -f ./rega/esp/functions.fn.orig ]] && rm ./rega/esp/functions.fn.orig
+    [[ -f ./rega/esp/side.inc.orig ]] && rm ./rega/esp/side.inc.orig
+    [[ -f ./rega/pages/tabs/admin/views/programs.htm.orig ]] && rm ./rega/pages/tabs/admin/views/programs.htm.orig
+    [[ -f ./config/ic_common.tcl.orig ]] && rm ./config/ic_common.tcl.orig
+    [[ -f ./webui/js/extern/jp_webui_inc.js ]] && rm ./webui/js/extern/jp_webui_inc.js
+
+    systemctl disable jp-hb-devices.service
+    systemctl restart debmatic.service
+    ;;
+
+  failed-upgrade)
+    ;;
+esac
