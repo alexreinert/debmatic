@@ -6,7 +6,7 @@ ARCHIVE_TAG="9f6b975722fe3ff68b78ddfdc419b3856d88ddd5"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=10
+PKG_BUILD=11
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -20,7 +20,8 @@ tar xzf occu.tar.gz
 mv occu-$ARCHIVE_TAG repo
 
 cd repo
-patch -l -p1 < $CURRENT_DIR/occu.patch
+patch -l -p1 < $CURRENT_DIR/occu-ccu.patch
+patch -l -p1 < $CURRENT_DIR/debmatic.patch
 
 cd $WORK_DIR
 
@@ -46,14 +47,13 @@ do
 
   mkdir -p $TARGET_DIR/firmware
   cp -pR repo/firmware/* $TARGET_DIR/firmware/
-  mv $TARGET_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update-2.8.4.eq3
+  mv $TARGET_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update-2.8.6.eq3
 
   mkdir -p $TARGET_DIR/opt/HMServer
   cp -pR repo/HMserver/opt/HMServer/* $TARGET_DIR/opt/HMServer/
 
   mkdir -p $TARGET_DIR/opt/HmIP
   cp -pR repo/HMserver/opt/HmIP/* $TARGET_DIR/opt/HmIP/
-  cp -pR repo/$ARCH_SOURCE_DIR/packages-eQ-3/RFD/opt/HmIP/* $TARGET_DIR/opt/HmIP/
 
   mkdir -p $TARGET_DIR/www
   cp -pR repo/WebUI/www/* $TARGET_DIR/www/
