@@ -43,20 +43,30 @@ do
     fi
 
     if [ ! -z "$HM_HMRF_DEV" ]; then
+      HM_HOST_RAW_UART="$UART_DEV"
+      HM_HOST_GPIO_UART="/dev/$UART_DEV"
+      HM_HMRF_DEVNODE="/dev/mmd_bidcos"
+      HM_HMIP_DEV="$HM_HMRF_DEV"
+      HM_HMIP_DEVNODE="/dev/mmd_hmip"
+      HM_HMIP_ADDRESS="$HM_HMRF_ADDRESS"
+      HM_HMIP_SERIAL="$HM_HMRF_SERIAL"
+      HM_HMIP_VERSION="$HM_HMRF_VERSION"
+    
       break;
     fi
   fi
 done
 
-if [ ! -z "$HM_HMRF_DEV" ]; then
-  HM_HOST_RAW_UART="$UART_DEV"
-  HM_HOST_GPIO_UART="/dev/$UART_DEV"
-  HM_HMRF_DEVNODE="/dev/mmd_bidcos"
-  HM_HMIP_DEV="$HM_HMRF_DEV"
-  HM_HMIP_DEVNODE="/dev/mmd_hmip"
-  HM_HMIP_ADDRESS="$HM_HMRF_ADDRESS"
-  HM_HMIP_SERIAL="$HM_HMRF_SERIAL"
-  HM_HMIP_VERSION="$HM_HMRF_VERSION"
+lsusb -d 1b1f:c00f &> /dev/null
+if [ "$?" -eq 0 ]; then
+  HM_HMRF_DEV="HM-CFG-USB-2"
+
+  for syspath in $(find /sys/bus/usb/devices); do
+    if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c00f" ]; then
+      HM_HMRF_SERIAL=`cat $syspath/serial`
+      break
+    fi 
+  done
 fi
 
 lsusb -d 1b1f:c020 &> /dev/null
@@ -66,21 +76,20 @@ if [ "$?" -eq 0 ]; then
   if [ `grep -c "1b1f c020" /sys/bus/usb-serial/drivers/cp210x/new_id` -eq 0 ]; then
     echo "1b1f c020" > /sys/bus/usb-serial/drivers/cp210x/new_id
   fi
-fi
 
-for syspath in $(find /sys/bus/usb/devices/usb*/ -name ttyUSB*); do
-  if [ -e $syspath/dev ]; then
-    eval "$(udevadm info -q property --export -p $syspath)"
-    if [ "$ID_VENDOR_ID $ID_MODEL_ID" == "1b1f c020" ]; then
-      HM_HMIP_DEV="HMIP-RFUSB"
-      HM_HMIP_DEVNODE="$DEVNAME"
-      HMIP_RFUSB_INFO=`timeout 20 /usr/bin/java -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -v -a 2>&1`
-      HM_HMIP_ADDRESS=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
-      HM_HMIP_SGTIN=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p'`
-      HM_HMIP_SERIAL=`echo -n "$HM_HMIP_SGTIN" | tail -c 10`
-      HM_HMIP_VERSION=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Application version = \([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'`
-      break
+  for syspath in $(find /sys/bus/usb/devices/usb*/ -name ttyUSB*); do
+    if [ -e $syspath/dev ]; then
+      eval "$(udevadm info -q property --export -p $syspath)"
+      if [ "$ID_VENDOR_ID $ID_MODEL_ID" == "1b1f c020" ]; then
+        HM_HMIP_DEV="HMIP-RFUSB"
+        HM_HMIP_DEVNODE="$DEVNAME"
+        HMIP_RFUSB_INFO=`timeout 20 /usr/bin/java -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -v -a 2>&1`
+        HM_HMIP_ADDRESS=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
+        HM_HMIP_SGTIN=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p'`
+        HM_HMIP_SERIAL=`echo -n "$HM_HMIP_SGTIN" | tail -c 10`
+        HM_HMIP_VERSION=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Application version = \([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'`
+        break
+      fi
     fi
-  fi
-done
-
+  done
+fi

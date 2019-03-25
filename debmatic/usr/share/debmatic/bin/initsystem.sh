@@ -31,12 +31,12 @@ mkdir -p /etc/config/addons/www
 rm -f /var/status/debmatic_*
 
 \cp -f /etc/config_templates/InterfacesList.xml /etc/config/
-if [ -z "$HM_HMRF_DEV" ]; then
+if [ -z "$HM_HOST_RAW_UART" ]; then
   touch /var/status/debmatic_avoid_multimacd
+fi
 
-  if [ `egrep -c '^Type = (HMLGW2|Lan Interface)' /etc/config/rfd.conf` == 0 ]; then
-    touch /var/status/debmatic_avoid_rfd
-  fi
+if [ -z "$HM_HMRF_DEV" ] && [ `egrep -c '^Type = (HMLGW2|Lan Interface)' /etc/config/rfd.conf` == 0 ]; then
+  touch /var/status/debmatic_avoid_rfd
 fi
 
 cat > /var/hm_mode << EOF
@@ -94,9 +94,6 @@ fi
 if [ ! -e /etc/config/crypttool.cfg ]; then
   touch /etc/config/crypttool.cfg
 fi
-
-sed -i 's/^AccessFile/#AccessFile/' /etc/config/rfd.conf || true
-sed -i 's/^ResetFile/#ResetFile/' /etc/config/rfd.conf || true
 
 mkdir -p /etc/config/hs485d
 

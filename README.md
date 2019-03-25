@@ -12,11 +12,12 @@ debmatic befindet sich momentan noch im Betastatus!
 * Unterstützung für Homematic und Homematic IP
 * Einfache Installation und Update per apt
 * Unterstützung für 
-  * HM-MOD-RPI-PCB (HmRF + HmIP),
-  * RPI-RF-MOD (HmRF + HmIP)
-  * HmIP-RFUSB (nur HmIP)
+  * HM-MOD-RPI-PCB (HmRF + HmIP Funk)
+  * RPI-RF-MOD (HmRF, HmIP Funk + HmIP Wired)
+  * HmIP-RFUSB (nur HmIP Funk)
+  * HM-CFG-USB-2 (nur HmRF)
   * HM-LGW-O-TW-W-EU (nur HmRF)
-  * [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) (HmRF + HmIP)
+  * [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) (abhängig von Funkmodul)
 
 ### Unterstützung [![Spenden](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA)
 Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1).
