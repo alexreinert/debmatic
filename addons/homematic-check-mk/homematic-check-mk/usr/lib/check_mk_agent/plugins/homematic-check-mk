@@ -1,0 +1,92 @@
+#!/bin/tclsh
+load tclrega.so
+load tclrpc.so
+
+proc get_homematic_check_result { } {
+  array set result [rega_script {
+    string _svcId;
+    object _svc;
+    string _devId;
+    object _dev;
+    string _chId;
+    object _ch;
+    string _dpId;
+    object _dp;
+    string _name;
+
+    foreach (_svcId, dom.GetObject(ID_SERVICES).EnumUsedIDs()) {
+      _svc = dom.GetObject(_svcId);
+      if (_svc && _svc.AlState() == asOncoming) {
+        _dp = dom.GetObject(_svc.AlTriggerDP());
+        _ch = dom.GetObject(_dp.Channel());
+        _dev = dom.GetObject(_ch.Device());
+        
+        WriteLine("SVC_MSG;" # _dev.Name() # ";" # _svc.Name().StrValueByIndex (".", 1).StrValueByIndex ("-", 0) # ";" # _dp.Timestamp());
+      }
+    }
+
+    _svc = dom.GetObject("Monitored");
+    if (_svc) {
+      foreach (_chId, _svc.EnumUsedIDs()) {
+        _ch = dom.GetObject(_chId);
+
+        _dev = dom.GetObject(_ch.Device());
+        WriteLine(_ch.Name() # ";HSSTYPE;" # _dev.HssType());
+
+        foreach (_dpId, _ch.DPs()) {
+          _dp = dom.GetObject(_dpId);
+
+          if (_dp.Value()) {
+            _name = _dp.Name().StrValueByIndex(".", 2);
+            WriteLine(_ch.Name() # ";" # _name # ";" # _dp.Value() # ";" # _dp.Timestamp());
+          }
+        }
+      }
+    }
+  }]
+  return $result(STDOUT)
+}
+
+proc split_dev { dev } {
+  set key ""
+  set value ""
+
+  foreach { str } [split $dev] {
+    if { $key == "" } {
+      set key $str
+    } else {
+      if { $str == "\{\}" } {
+        set str ""
+      }
+      if { [string index $str 0] == "\{" } {
+        set value [string range $str 1 end]
+	continue
+      } elseif { [string index $str end] == "\}" } {
+        set str "$value [string range $str 0 end-1]"
+      } elseif { $value != "" } {
+        append value " " $str
+        continue
+      }
+
+      set values($key) $str
+      set key ""
+      set value ""
+    }
+  }
+
+  return [array get values]
+}
+
+puts "<<<homematic:sep(59)>>>"
+puts [string trim [get_homematic_check_result]]
+
+foreach dev [xmlrpc http://127.0.0.1:32001/ listBidcosInterfaces] {
+  array set values [split_dev $dev]
+  set address $values(ADDRESS)
+  foreach key [array names values] {
+    if { $key != "ADDRESS" } {
+      puts "$address;$key;$values($key)"
+    }
+  }
+}
+

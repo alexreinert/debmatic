@@ -1,0 +1,10 @@
+Package: homematic-check-mk
+Version: {PKG_VERSION}
+Architecture: all
+Maintainer: Alexander Reinert <alex@areinert.de>
+Depends: debmatic, check-mk-agent
+Section: debmatic-addons
+Priority: extra
+Homepage: https://github.com/alexreinert/homematic_check_mk
+Description: Homematic check_mk addon for debmatic
+
