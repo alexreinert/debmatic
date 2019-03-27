@@ -63,18 +63,18 @@ HM_HMIP_ADDRESS='$HM_HMIP_ADDRESS'
 EOF
 
 if [ -n "${HM_HMRF_SERIAL}" ]; then
-  echo "${HM_HMRF_SERIAL}" > /var/board_serial
-  echo "${HM_HMRF_VERSION}" > /var/rf_firmware_version
-  echo "${HM_HMRF_ADDRESS}" > /var/rf_address
+  BOARD_SERIAL=${HM_HMRF_SERIAL}
+  FIRMWARE_VERSION=${HM_HMRF_VERSION}
+  RF_ADDRESS=${HM_HMRF_ADDRESS}
 elif [ -n "${HM_HMIP_SERIAL}" ]; then
-  echo "${HM_HMIP_SERIAL}" > /var/board_serial
-  echo "${HM_HMIP_VERSION}" > /var/rf_firmware_version
-  echo "${HM_HMIP_ADDRESS}" > /var/rf_address
-else
-  echo "" > /var/board_serial
-  echo "" > /var/rf_firmware_version
-  echo "" > /var/rf_address
+  BOARD_SERIAL=${HM_HMIP_SERIAL}
+  FIRMWARE_VERSION=${HM_HMIP_VERSION}
+  RF_ADDRESS=${HM_HMIP_ADDRESS}
 fi
+
+echo "${BOARD_SERIAL}" > /var/board_serial
+echo "${FIRMWARE_VERSION}" > /var/rf_firmware_version
+echo "${RF_ADDRESS}" > /var/rf_address
 
 echo "${HM_HMIP_SERIAL}" > /var/hmip_board_serial
 echo "${HM_HMIP_VERSION}" > /var/hmip_firmware_version
@@ -83,12 +83,17 @@ echo "${HM_HMIP_SGTIN}" > /var/board_sgtin
 echo "${HM_HMIP_SGTIN}" > /var/hmip_board_sgtin
 
 cat > /var/ids << EOF
-BidCoS-Address=$HM_HMRF_ADDRESS
-SerialNumber=$HM_HMRF_SERIAL
+BidCoS-Address=${RF_ADDRESS}
+SerialNumber=${BOARD_SERIAL}
 EOF
 
 if [ ! -e /etc/config/ids ]; then
   cp /var/ids /etc/config/ids
+else
+  . /etc/config/ids
+  if [ -z "${SerialNumber}" ]; then
+    cp /var/ids /etc/config/ids
+  fi
 fi
 
 if [ ! -e /etc/config/crypttool.cfg ]; then
