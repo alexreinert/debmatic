@@ -6,7 +6,7 @@ ARCHIVE_TAG="9f6b975722fe3ff68b78ddfdc419b3856d88ddd5"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=14
+PKG_BUILD=15
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
