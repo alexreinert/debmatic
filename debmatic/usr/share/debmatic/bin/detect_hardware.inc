@@ -7,6 +7,13 @@ fi
 lsusb -d 0403:6f70 &> /dev/null
 if [ "$?" -eq 0 ]; then
   modprobe -a hb_rf_usb &> /dev/null
+  for try in {0..30}
+  do
+    if [ `lsmod | grep hb_rf_usb | wc -l` -eq 1 ]; then
+      break
+    fi
+    sleep 1
+  done
 fi
 
 for dev_no in {0..5}
@@ -52,7 +59,7 @@ do
       HM_HMIP_SERIAL="$HM_HMRF_SERIAL"
       HM_HMIP_VERSION="$HM_HMRF_VERSION"
     
-      break;
+      break
     fi
   fi
 done
