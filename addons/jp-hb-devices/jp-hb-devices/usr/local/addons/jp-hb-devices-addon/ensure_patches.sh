@@ -2,6 +2,7 @@
 ADDON_NAME=jp-hb-devices-addon
 
 ADDON_DIR=/usr/local/addons/${ADDON_NAME}
+PATCH_DIR=${ADDON_DIR}/patch
 WWW_DIR=/etc/config/addons/www/${ADDON_NAME}
 LOGFILE=/var/log/$ADDON_NAME.log
 ERRFILE=/var/log/$ADDON_NAME.err
@@ -9,6 +10,22 @@ FIRMWARE_DIR=/firmware/rftypes
 CUSTOMIZED_FIRMWARE_DIR=${ADDON_DIR}/customized_firmware
 RC_DIR=/usr/local/etc/config/rc.d
 CK_FIRMWARE_FILE=${FIRMWARE_DIR}/hb-uni-sen-cap-moist.xml
+
+PATCHVERSION=0
+check_ccu_fw_version()
+{
+ model=`grep VERSION /boot/VERSION   | awk -F'[=.]' {'print $2'}`
+ version=`grep VERSION /boot/VERSION | awk -F'[=.]' {'print $3'}`
+ build=`grep VERSION /boot/VERSION   | awk -F'[=.]' {'print $4'}`
+
+ if [ $model -ge 2 ] && [ $version -ge 45 ]; then
+  PATCHVERSION=2
+ else
+  PATCHVERSION=1
+ fi
+ 
+ echo "Found firmware version $model.$version.$build - using patchversion $PATCHVERSION" | tee -a $LOGFILE
+}
 
 if [ ! -f ${ADDON_DIR}/installed ] || [ ! -f ${CK_FIRMWARE_FILE} ]; then      
   cd ${ADDON_DIR}
@@ -21,14 +38,33 @@ if [ ! -f ${ADDON_DIR}/installed ] || [ ! -f ${CK_FIRMWARE_FILE} ]; then
   chmod 755 /www/ise/img/icons_hm_dis_ep_wm55/24/*
   
   ### Patch some files ###
+  check_ccu_fw_version
+
   cd /www
 
-  patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch 
-  patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/hb-dis-ep-42bw.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/hb-dis-ep-42bw.patch
-  patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/hb-ou-mp3-led_side.inc.not_used.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/hb-ou-mp3-led_side.inc.not_used.patch
-  patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/hb-uni-sen-rfid-rc.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/hb-uni-sen-rfid-rc.patch
-  patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/programs_wrong_encodeStringStatusDisplay.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/programs_wrong_encodeStringStatusDisplay.patch
-  patch -N -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch 
+  for patchfile in `ls ${PATCH_DIR}/revoke/ | sort`; do 
+    echo "### Rejecting patch file $patchfile" | tee -a $LOGFILE | tee -a $ERRFILE
+    patch --dry-run -R -s -f -p3 -i ${PATCH_DIR}/revoke/$patchfile && patch -R -p3 -i ${PATCH_DIR}/revoke/$patchfile >> $LOGFILE 2>>$ERRFILE 
+  done
+
+  echo "######## APPLY COMMON PATCHES ########" | tee -a $LOGFILE
+  patchsubdir=common
+  for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
+    echo "### Applying $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE | tee -a $ERRFILE
+    patch -N -p3 -i $patchfile >> $LOGFILE 2>>$ERRFILE
+  done
+
+  echo "######## APPLY VERSION DEPENDEND PATCHES ########" | tee -a $LOGFILE
+  if [ $PATCHVERSION -le 1 ]; then
+    patchsubdir=le_343
+  else
+    patchsubdir=ge_345
+  fi
+
+  for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
+    echo "Applying $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
+    patch -N -p3 -i $patchfile >> $LOGFILE 2>>$ERRFILE
+  done
 
   [[ -f ./config/ic_common.tcl.orig ]] && rm ./config/ic_common.tcl.orig
   [[ -f ./rega/esp/side.inc.orig ]] && rm ./rega/esp/side.inc.orig

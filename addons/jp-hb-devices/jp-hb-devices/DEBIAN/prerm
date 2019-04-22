@@ -8,7 +8,25 @@ case "$1" in
     for f in /usr/local/addons/jp-hb-devices-addon/uninstall_* ; do echo "  - $(basename $f)"; ./$(basename $f); done
       
     cd /www
-    patch --dry-run -R -s -f -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch && patch -R -p3 -i /usr/local/addons/jp-hb-devices-addon/patch/jp.patch 
+
+    patchsubdir=common
+    for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
+      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
+      patch -R -p3 -i $patchfile
+      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile
+    done
+
+    patchsubdir=le_343
+    for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
+      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
+      patch -R -p3 -i $patchfile
+      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile      done
+
+    patchsubdir=ge_345
+    for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
+      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
+      patch -R -p3 -i $patchfile
+      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile      done
 
     [[ -f ./webui/webui.js.orig ]] && rm ./webui/webui.js.orig
     [[ -f ./rega/esp/datapointconfigurator.fn.orig ]] && rm ./rega/esp/datapointconfigurator.fn.orig
