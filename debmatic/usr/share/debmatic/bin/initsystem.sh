@@ -90,7 +90,7 @@ EOF
 if [ ! -e /etc/config/ids ]; then
   cp /var/ids /etc/config/ids
 else
-  if [ `grep -c "BidCos-Address \?= \?[a-zA-Z0-9]\+" /etc/config/ids` -eq 0 ]; then
+  if [ `grep -c "BidCoS-Address \?= \?[a-zA-Z0-9]\+" /etc/config/ids` -eq 0 ]; then
     cp /var/ids /etc/config/ids
   fi
 fi
