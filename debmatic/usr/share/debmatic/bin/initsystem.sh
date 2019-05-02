@@ -108,15 +108,15 @@ if [ -e /etc/config/hs485d.conf ]; then
 fi
 sed -i -e 's/:2001/:32001/' -e 's/:9292/:39292/' -e 's/:2010/:32010/' /etc/config/InterfacesList.xml
 
-rm -f /var/hasInternet
-rm -f /var/hasIP
-rm -f /var/hasLink
+rm -f /var/status/hasInternet
+rm -f /var/status/hasIP
+rm -f /var/status/hasLink
 
 IFACE=`route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $8}'`
 for i in {1..6}
 do
   if [ "$(cat /sys/class/net/${IFACE}/carrier)" == "1" ]; then
-    touch /var/hasLink
+    touch /var/status/hasLink
     break
   else
     sleep 2
@@ -128,7 +128,7 @@ do
   if [ "$(ip -o -4 addr show ${IFACE} | wc -l)" == "0" ]; then
     sleep 2
   else
-    touch /var/hasIP
+    touch /var/status/hasIP
     break
   fi
 done
