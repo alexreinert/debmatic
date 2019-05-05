@@ -4,8 +4,10 @@ ADDON_NAME=jp-hb-devices-addon
 ADDON_DIR=/usr/local/addons/${ADDON_NAME}
 PATCH_DIR=${ADDON_DIR}/patch
 WWW_DIR=/etc/config/addons/www/${ADDON_NAME}
-LOGFILE=/var/log/$ADDON_NAME.log
-ERRFILE=/var/log/$ADDON_NAME.err
+LOG_DIR=${ADDON_DIR}/log
+GLOBAL_LOGFILE=$LOG_DIR/inst.log
+GLOBAL_ERRFILE=$LOG_DIR/inst.err
+PATCH_REVOKE_ERRFILE=$ADDON_DIR/log/revoke.err
 FIRMWARE_DIR=/firmware/rftypes
 CUSTOMIZED_FIRMWARE_DIR=${ADDON_DIR}/customized_firmware
 RC_DIR=/usr/local/etc/config/rc.d
@@ -24,7 +26,7 @@ check_ccu_fw_version()
   PATCHVERSION=1
  fi
  
- echo "Found firmware version $model.$version.$build - using patchversion $PATCHVERSION" | tee -a $LOGFILE
+ echo "Found firmware version $model.$version.$build - using patchversion $PATCHVERSION" | tee -a $GLOBAL_LOGFILE
 }
 
 if [ ! -f ${ADDON_DIR}/installed ] || [ ! -f ${CK_FIRMWARE_FILE} ]; then      
@@ -42,28 +44,43 @@ if [ ! -f ${ADDON_DIR}/installed ] || [ ! -f ${CK_FIRMWARE_FILE} ]; then
 
   cd /www
 
-  for patchfile in `ls ${PATCH_DIR}/revoke/ | sort`; do 
-    echo "### Rejecting patch file $patchfile" | tee -a $LOGFILE | tee -a $ERRFILE
-    patch --dry-run -R -s -f -p3 -i ${PATCH_DIR}/revoke/$patchfile && patch -R -p3 -i ${PATCH_DIR}/revoke/$patchfile >> $LOGFILE 2>>$ERRFILE 
-  done
-
-  echo "######## APPLY COMMON PATCHES ########" | tee -a $LOGFILE
+  ########################	REVOKE  	######################
+  echo "######## REVOKE COMMON APPLIED PATCHES ########" | tee -a $GLOBAL_LOGFILE
   patchsubdir=common
-  for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
-    echo "### Applying $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE | tee -a $ERRFILE
-    patch -N -p3 -i $patchfile >> $LOGFILE 2>>$ERRFILE
+  for patchfile in `ls ${PATCH_DIR}/revoke/$patchsubdir/* | sort`; do 
+    echo "### Rejecting $patchsubdir patch file $patchfile" | tee -a $GLOBAL_LOGFILE | tee -a $PATCH_REVOKE_ERRFILE
+    patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile >> $GLOBAL_LOGFILE 2>>$PATCH_REVOKE_ERRFILE
   done
-
-  echo "######## APPLY VERSION DEPENDEND PATCHES ########" | tee -a $LOGFILE
+        
+  echo "######## REVOKE VERSION DEPENDEND PATCHES ########" | tee -a $GLOBAL_LOGFILE
   if [ $PATCHVERSION -le 1 ]; then
     patchsubdir=le_343
   else
     patchsubdir=ge_345
   fi
-
+  for patchfile in `ls ${PATCH_DIR}/revoke/$patchsubdir/* | sort`; do 
+    echo "### Rejecting $patchsubdir patch file $patchfile" | tee -a $GLOBAL_LOGFILE | tee -a $PATCH_REVOKE_ERRFILE
+          patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile >> $GLOBAL_LOGFILE 2>>$PATCH_REVOKE_ERRFILE
+  done
+        
+  ########################	APPLY   	######################
+  echo "######## APPLY COMMON PATCHES ########" | tee -a $GLOBAL_LOGFILE
+  patchsubdir=common
   for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
-    echo "Applying $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
-    patch -N -p3 -i $patchfile >> $LOGFILE 2>>$ERRFILE
+    echo "### Applying $patchsubdir patch file $(basename $patchfile)" | tee -a $GLOBAL_LOGFILE | tee -a $GLOBAL_ERRFILE
+    patch -N -p3 -i $patchfile >> $GLOBAL_LOGFILE 2>>$GLOBAL_ERRFILE
+  done
+        
+  echo "######## APPLY VERSION DEPENDEND PATCHES ########" | tee -a $GLOBAL_LOGFILE
+  if [ $PATCHVERSION -le 1 ]; then
+    patchsubdir=le_343
+  else
+    patchsubdir=ge_345
+  fi
+      
+  for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
+    echo "Applying $patchsubdir patch file $(basename $patchfile)" | tee -a $GLOBAL_LOGFILE
+    patch -N -p3 -i $patchfile >> $GLOBAL_LOGFILE 2>>$GLOBAL_ERRFILE
   done
 
   [[ -f ./config/ic_common.tcl.orig ]] && rm ./config/ic_common.tcl.orig
@@ -74,18 +91,19 @@ if [ ! -f ${ADDON_DIR}/installed ] || [ ! -f ${CK_FIRMWARE_FILE} ]; then
   [[ -f ./webui/webui.js.orig ]] && rm ./webui/webui.js.orig
 
   ### Create Symlink to include own js file
-  ln -s /usr/local/addons/jp-hb-devices-addon/js/jp_webui_inc.js /www/webui/js/extern/jp_webui_inc.js
-      
+  echo "(Re-)Creating symlinks for jp_webui_inc.js..." | tee -a $GLOBAL_LOGFILE
+  [[ ! -f /www/webui/js/extern/jp_webui_inc.js ]] && ln -s /usr/local/addons/jp-hb-devices-addon/js/jp_webui_inc.js /www/webui/js/extern/jp_webui_inc.js
+ 
   cd ${ADDON_DIR}
-  echo "Running scripts..."    
-  for f in ${ADDON_DIR}/install_* ; do echo "  - $(basename $f)"; ./$(basename $f) > $LOGFILE 2>$ERRFILE; done
+  echo "Running scripts..." | tee -a $GLOBAL_LOGFILE
+  for f in ${ADDON_DIR}/install_* ; do echo "  - $(basename $f)"; ./$(basename $f) >> $GLOBAL_LOGFILE 2>>$GLOBAL_ERRFILE; done
 
-  echo "Copying customized firmware files..."
+  echo "Copying customized firmware files..." | tee -a $GLOBAL_LOGFILE
   if [ -d ${CUSTOMIZED_FIRMWARE_DIR} ]; then
     cp ${CUSTOMIZED_FIRMWARE_DIR}/* ${ADDON_DIR}${FIRMWARE_DIR}/
   fi
 
-  echo "Creating symlinks for firmware files..."
+  echo "(Re-)Creating symlinks for firmware files..." | tee -a $GLOBAL_LOGFILE
   for f in ${ADDON_DIR}${FIRMWARE_DIR}/* ; do rm -f ${FIRMWARE_DIR}/$(basename $f); ln -s $f ${FIRMWARE_DIR}/$(basename $f); echo "  - $(basename $f)"; done
 
   touch ${ADDON_DIR}/installed

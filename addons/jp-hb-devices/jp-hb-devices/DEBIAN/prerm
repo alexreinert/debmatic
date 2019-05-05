@@ -2,6 +2,20 @@
 
 set -e
 
+ADDON_NAME=jp-hb-devices-addon
+
+ADDON_DIR=/usr/local/addons/${ADDON_NAME}
+PATCH_DIR=${ADDON_DIR}/patch
+WWW_DIR=/etc/config/addons/www/${ADDON_NAME}
+LOG_DIR=${ADDON_DIR}/log
+GLOBAL_LOGFILE=$LOG_DIR/inst.log
+GLOBAL_ERRFILE=$LOG_DIR/inst.err
+PATCH_REVOKE_ERRFILE=$ADDON_DIR/log/revoke.err
+FIRMWARE_DIR=/firmware/rftypes
+CUSTOMIZED_FIRMWARE_DIR=${ADDON_DIR}/customized_firmware
+RC_DIR=/usr/local/etc/config/rc.d
+CK_FIRMWARE_FILE=${FIRMWARE_DIR}/hb-uni-sen-cap-moist.xml
+
 case "$1" in
   remove|upgrade|deconfigure)
     cd /usr/local/addons/jp-hb-devices-addon
@@ -11,22 +25,21 @@ case "$1" in
 
     patchsubdir=common
     for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
-      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
-      patch -R -p3 -i $patchfile
+      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $GLOBAL_LOGFILE
       patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile
     done
 
     patchsubdir=le_343
     for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
-      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
-      patch -R -p3 -i $patchfile
-      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile      done
+      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $GLOBAL_LOGFILE
+      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile
+    done
 
     patchsubdir=ge_345
     for patchfile in ${PATCH_DIR}/$patchsubdir/* ; do
-      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $LOGFILE
-      patch -R -p3 -i $patchfile
-      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile      done
+      echo "Rejecting $patchsubdir patch file $(basename $patchfile)" | tee -a $GLOBAL_LOGFILE
+      patch --dry-run -R -s -f -p3 -i $patchfile && patch -R -p3 -i $patchfile
+    done
 
     [[ -f ./webui/webui.js.orig ]] && rm ./webui/webui.js.orig
     [[ -f ./rega/esp/datapointconfigurator.fn.orig ]] && rm ./rega/esp/datapointconfigurator.fn.orig
