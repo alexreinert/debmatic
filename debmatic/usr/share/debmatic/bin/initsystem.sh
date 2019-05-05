@@ -70,17 +70,40 @@ elif [ -n "${HM_HMIP_SERIAL}" ]; then
   BOARD_SERIAL=${HM_HMIP_SERIAL}
   FIRMWARE_VERSION=${HM_HMIP_VERSION}
   RF_ADDRESS=${HM_HMIP_ADDRESS}
+else
+  if [ -z "$DEBMATIC_SERIAL" ]; then
+    DEBMATIC_SERIAL=`shuf -i 1-9999999 -n 1`
+    DEBMATIC_SERIAL=`printf "DEB%07d" $DEBMATIC_SERIAL`
+    echo "DEBMATIC_SERIAL=\"$DEBMATIC_SERIAL\"" >> /etc/default/debmatic
+  fi
+
+  if [ -z "$DEBMATIC_ADDRESS" ]; then
+    DEBMATIC_ADDRESS=`shuf -i 1-16777215 -n 1`
+    DEBMATIC_ADDRESS=`printf "0x%06x" $DEBMATIC_ADDRESS`
+    echo "DEBMATIC_ADDRESS=\"$DEBMATIC_ADDRESS\"" >> /etc/default/debmatic
+  fi
+
+  BOARD_SERIAL=$DEBMATIC_SERIAL
+  RF_ADDRESS=$DEBMATIC_ADDRESS
 fi
 
 echo "${BOARD_SERIAL}" > /var/board_serial
 echo "${FIRMWARE_VERSION}" > /var/rf_firmware_version
 echo "${RF_ADDRESS}" > /var/rf_address
 
-echo "${HM_HMIP_SERIAL}" > /var/hmip_board_serial
-echo "${HM_HMIP_VERSION}" > /var/hmip_firmware_version
-echo "${HM_HMIP_ADDRESS}" > /var/hmip_address
-echo "${HM_HMIP_SGTIN}" > /var/board_sgtin
-echo "${HM_HMIP_SGTIN}" > /var/hmip_board_sgtin
+rm -f /var/hmip_*
+rm -f /var/board_sgtin
+rm -f /var/hmip_board_sgtin
+
+if [ -n ${HM_HMIP_SERIAL} ]; then
+  echo "${HM_HMIP_SERIAL}" > /var/hmip_board_serial
+  echo "${HM_HMIP_VERSION}" > /var/hmip_firmware_version
+  echo "${HM_HMIP_ADDRESS}" > /var/hmip_address
+  if [ -n "${HM_HMIP_SGTIN}" ]; then
+    echo "${HM_HMIP_SGTIN}" > /var/board_sgtin
+    echo "${HM_HMIP_SGTIN}" > /var/hmip_board_sgtin
+  fi
+fi
 
 cat > /var/ids << EOF
 BidCoS-Address=${RF_ADDRESS}
