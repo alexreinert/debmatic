@@ -71,6 +71,8 @@ Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [CUxD](http://www.cuxd.de/) (Paketname cuxd)
 * [JP HB Devices](https://github.com/jp112sdl/JP-HB-Devices-addon) (Paketname jp-hb-devices)
 * [Homematic check_mk addon](https://github.com/alexreinert/homematic_check_mk) (Paketname homematic-check-mk)
+* [HB-UNI-Sensor1](https://github.com/TomMajor/SmartHome) (Paketname hb-uni-sensor1)
+* [HB-SEN-LJet](https://github.com/TomMajor/SmartHome) (Paketname hb-sen-ljet)
 
 ### Restore
 Backups können über die WebUI eingespielt werden.

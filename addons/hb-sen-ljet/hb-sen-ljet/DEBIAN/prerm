@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+ADDON_NAME=hb-sen-ljet
+
+source /usr/local/addons/${ADDON_NAME}/params 2>/dev/null
+source /usr/local/addons/${ADDON_NAME}/functions 2>/dev/null
+
+ADDON_DIR=/usr/local/addons/${ADDON_NAME}
+WWW_DIR=/etc/config/addons/www/${ADDON_NAME}
+RC_DIR=/usr/local/etc/config/rc.d
+CUSTOM_FIRMWARE_DIR=${ADDON_DIR}/custom_firmware
+
+LOGFILE=$ADDON_DIR/inst.log
+ERRFILE=$ADDON_DIR/inst.err
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    cd ${ADDON_DIR}
+    ./uninstall >> $LOGFILE 2>>$ERRFILE
+    rm ${ADDON_DIR}/installed
+
+    systemctl disable hb-sen-ljet.service
+    systemctl restart debmatic.service
+    ;;
+
+  failed-upgrade)
+    ;;
+esac

@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+  configure)
+    systemctl daemon-reload
+    systemctl enable hb-uni-sensor1.service
+    systemctl restart debmatic.service
+    ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+esac
+
