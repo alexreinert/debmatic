@@ -65,7 +65,7 @@ fi
 if [ "$HM_HMIP_DEV" == "HMIP-RFUSB" ]; then
   NEW_VERSION=`ls /firmware/HmIP-RFUSB/hmip_coprocessor_update-*.eq3 | sed 's/.*-\(.*\)\.eq3/\1/' | sort | tail -1`
 
-  if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
+  if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMIP_VERSION" ]; then
     echo "Starting update of HMIP-RFUSB to version $NEW_VERSION..."
 
     HM_HMIP_VERSION=`java -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -o -f /firmware/HmIP-RFUSB/hmip_coprocessor_update-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
@@ -74,7 +74,7 @@ if [ "$HM_HMIP_DEV" == "HMIP-RFUSB" ]; then
 
     set | grep '^HM_' >/var/hm_mode
 
-    if [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
+    if [ "$NEW_VERSION" != "$HM_HMIP_VERSION" ]; then
       echo "Failed to update HMIP-RFUSB to version $NEW_VERSION."
       exit 1
     fi
