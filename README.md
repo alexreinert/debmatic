@@ -77,6 +77,7 @@ Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [Homematic check_mk addon](https://github.com/alexreinert/homematic_check_mk) (Paketname homematic-check-mk)
 * [HB-UNI-Sensor1](https://github.com/TomMajor/SmartHome) (Paketname hb-uni-sensor1)
 * [HB-SEN-LJet](https://github.com/TomMajor/SmartHome) (Paketname hb-sen-ljet)
+* [XML-API](https://github.com/jens-maus/XML-API) (Paketname xml-api)
 
 ### Restore
 Backups können über die WebUI eingespielt werden.

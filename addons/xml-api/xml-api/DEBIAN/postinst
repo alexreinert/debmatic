@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+  configure)
+    systemctl daemon-reload
+    systemctl enable xml-api.service
+    systemctl start xml-api.service
+    ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+esac
+

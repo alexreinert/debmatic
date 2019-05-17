@@ -1,0 +1,10 @@
+Package: xml-api
+Version: {PKG_VERSION}
+Architecture: all
+Maintainer: Alexander Reinert <alex@areinert.de>
+Pre-Depends: debmatic (>= 3.43.15-11)
+Section: debmatic-addons
+Priority: extra
+Homepage: https://github.com/hobbyquaker/XML-API
+Description: XML-API addon for debmatic
+

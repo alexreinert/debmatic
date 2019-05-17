@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    rm -f /usr/local/etc/config/addons/www/xmlapi
+    systemctl disable xml-api.service
+    systemctl restart debmatic.service
+    ;;
+
+  failed-upgrade)
+    ;;
+esac

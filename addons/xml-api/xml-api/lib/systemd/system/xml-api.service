@@ -1,0 +1,18 @@
+[Unit]
+Description=XML-API
+PartOf=debmatic.service
+After=debmatic.service
+After=debmatic-prepareinterfaceslist.service
+Before=debmatic-lighttpd.service
+Before=debmatic-rega.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/ln -sf /usr/local/addons/xmlapi /usr/local/etc/config/addons/www
+
+[Install]
+WantedBy=debmatic.service
+WantedBy=debmatic-rega.service
+WantedBy=debmatic-startupfinished.service
+

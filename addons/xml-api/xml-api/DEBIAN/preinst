@@ -1,0 +1,10 @@
+#!/bin/bash
+
+case "$1" in
+  install|upgrade)
+    ;;
+
+  abort-upgrade)
+    ;;
+esac
+
