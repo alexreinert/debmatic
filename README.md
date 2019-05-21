@@ -2,9 +2,6 @@
 
 debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Systemen zu betreiben.
 
-## Beta-Status
-debmatic befindet sich momentan noch im Betastatus!
-
 ### Ziele
 * Betrieb der CCU unter Debian basierten Systemen
 * Betrieb direkt ohne Nutzung einer Container Lösung
@@ -69,6 +66,7 @@ Ein Backup kann entweder über die WebUI erfolgen oder auf der Konsole über
 ```bash
 sudo debmatic-backup
 ```
+Dieses Backup enthält nur die Einstellungen der CCU und ersetzt daher nicht ein Backup des Gesamtsystems.
 
 ### Addons
 Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
@@ -81,14 +79,14 @@ Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 ### Restore
 Backups können über die WebUI eingespielt werden.
 
-### Migration von Original CCU
-...
-
-### Migration von RaspberryMatic
-...
-
-### Migration von piVCCU
-...
+### Migration von Original CCU, piVCCU oder RaspberryMatic
+0. Backup des Systems machen
+1. Addons auf CCU deinstallieren
+2. Backup per WebUI erstellen
+3. CCU abschalten
+4. debmatic nach Anleitung installieren (piVCCU wird in diesem Schritt automatisch deinstalliert)
+5. Backup aus Schritt 2. per WebUI einspielen
+6. Notwendige Addons per apt nachinstallieren
 
 ### Lizenz
 debmatic selbst (die Dateien in diesem Repository) steht unter [Apache License 2.0](https://opensource.org/licenses/Apache-2.0).
