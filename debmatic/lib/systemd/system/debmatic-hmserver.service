@@ -9,7 +9,7 @@ Type=forking
 TimeoutStartSec=242
 EnvironmentFile=/var/hm_mode
 ExecStart=/usr/share/debmatic/bin/start_hmserver.sh
-ExecStopPre=/bin/rm -f /var/run/HMIPServer.pid
+ExecStopPost=/bin/rm -f /var/run/HMIPServer.pid
 
 [Install]
 WantedBy=debmatic.service

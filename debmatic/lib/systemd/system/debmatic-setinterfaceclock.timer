@@ -1,8 +1,13 @@
 [Unit]
- 
+Description=debmatic set interface clock timer
+PartOf=debmatic.service
+After=debmatic.service
+After=debmatic-startupfinished.service
+ConditionPathExists=!/var/status/debmatic_avoid_rfd
+
 [Timer]
 OnCalendar=hourly
- 
+
 [Install]
 WantedBy=debmatic.service
 

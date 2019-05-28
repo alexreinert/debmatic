@@ -1,5 +1,6 @@
 [Unit]
 Description=debmatic
+After=systemd-udev-settle.service
 
 [Service]
 Type=oneshot

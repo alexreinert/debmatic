@@ -8,7 +8,7 @@ After=network.target
 Type=simple
 ExecStart=/bin/eq3configd
 ExecStartPost=/usr/share/debmatic/bin/create_pid_file /var/run/eq3configd.pid /bin/eq3configd
-ExecStopPre=/bin/rm -f /var/run/eq3configd.pid
+ExecStopPost=/bin/rm -f /var/run/eq3configd.pid
 
 [Install]
 WantedBy=debmatic.service

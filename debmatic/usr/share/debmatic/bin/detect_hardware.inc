@@ -95,6 +95,9 @@ if [ "$?" -eq 0 ]; then
         HM_HMIP_SGTIN=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p'`
         HM_HMIP_SERIAL=`echo -n "$HM_HMIP_SGTIN" | tail -c 10`
         HM_HMIP_VERSION=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Application version = \([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'`
+        if [[ "$HM_HMIP_SGTIN" =~ "3014f5ac94" ]]; then
+          HM_HMIP_DEV="HMIP-RFUSB-TK"
+        fi
         break
       fi
     fi

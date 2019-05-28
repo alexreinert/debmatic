@@ -14,7 +14,7 @@ EnvironmentFile=-/etc/config/syslog
 TimeoutStartSec=122
 PIDFile=/var/status/rfd.status
 ExecStart=/usr/share/debmatic/bin/start_rfd.sh 
-ExecStopPre=/bin/rm -f /var/run/rfd.pid
+ExecStopPost=/bin/rm -f /var/run/rfd.pid
 
 [Install]
 WantedBy=debmatic.service

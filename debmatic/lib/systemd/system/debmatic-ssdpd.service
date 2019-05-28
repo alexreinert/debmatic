@@ -8,7 +8,7 @@ After=network.target
 Type=simple
 ExecStart=/bin/ssdpd
 ExecStartPost=/usr/share/debmatic/bin/create_pid_file /var/run/ssdpd.pid /bin/ssdpd
-ExecStopPre=/bin/rm -f /var/run/ssdpd.pid
+ExecStopPost=/bin/rm -f /var/run/ssdpd.pid
 
 [Install]
 WantedBy=debmatic.service

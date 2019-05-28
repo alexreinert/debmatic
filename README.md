@@ -15,6 +15,7 @@ debmatic befindet sich momentan noch im Betastatus!
   * HM-MOD-RPI-PCB (HmRF + HmIP Funk)
   * RPI-RF-MOD (HmRF, HmIP Funk + HmIP Wired)
   * HmIP-RFUSB (nur HmIP Funk)
+  * HmIP-RFUSB-TK (Telekom Version, nur HmIP Funk, Firmware Updates nicht möglich, Funktionalität nicht dauerhaft sichergestellt)
   * HM-CFG-USB-2 (nur HmRF)
   * HM-LGW-O-TW-W-EU (nur HmRF)
   * [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) (abhängig von Funkmodul)

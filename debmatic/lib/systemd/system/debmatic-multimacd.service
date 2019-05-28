@@ -13,9 +13,9 @@ PIDFile=/var/status/multimacd.status
 ExecStartPre=/sbin/sysctl -w kernel.sched_rt_runtime_us=-1
 ExecStartPre=/sbin/modprobe eq3_char_loop
 ExecStart=/usr/share/debmatic/bin/start_multimacd.sh
-ExecStopPre=/bin/rm -f /var/run/multimacd.pid
-ExecStopPost=/bin/sleep 5
-ExecStopPost=/sbin/rmmod eq3_char_loop
+ExecStopPost=-/bin/rm -f /var/run/multimacd.pid
+ExecStopPost=-/bin/sleep 5
+ExecStopPost=-/sbin/rmmod eq3_char_loop
 
 [Install]
 WantedBy=debmatic.service
