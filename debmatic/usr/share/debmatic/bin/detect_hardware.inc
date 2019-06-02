@@ -101,14 +101,14 @@ for syspath in $(find /sys/bus/usb/devices/); do
       fi
 
       for try in {0..30}; do
-        if [ $(find $syspath -name ttyUSB* | wc -l) -ne 0 ]; then
+        if [ $(find $syspath/ -name ttyUSB* | wc -l) -ne 0 ]; then
           break
         fi
         sleep 1
       done
     fi
 
-    for syspath in $(find /sys/bus/usb/devices/ -name ttyUSB*); do
+    for syspath in $(find $syspath/ -name ttyUSB*); do
       if [ -e $syspath/dev ]; then
         HM_HMIP_DEV="HMIP-RFUSB"
         HM_HMIP_DEVNODE="/dev/$(udevadm info -q name -p $syspath)"
