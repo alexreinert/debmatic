@@ -6,7 +6,7 @@ CONFIGFILE=/etc/default/debmatic
 set -e
 
 case "$1" in
-  configure)
+  configure|abort-upgrade)
     udevadm control --reload-rules && udevadm trigger
 
     if [ ! -e /usr/sbin/debmatic-info ]; then
@@ -37,7 +37,7 @@ case "$1" in
     systemctl start debmatic.service
     ;;
 
-  abort-upgrade|abort-remove|abort-deconfigure)
+  reconfigure|abort-remove|abort-deconfigure)
     ;;
 
 esac
