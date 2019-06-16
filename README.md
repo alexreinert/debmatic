@@ -25,7 +25,7 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
 
 ### Vorraussetzung
 * Debian basiertes System (Debian, Ubuntu, Raspbian, Armbian)
-* Mindestens Kernel 4.9
+* Mindestens Kernel 4.9 (Bei ARM64 mind. Kernel 4.14)
 
 ### Vorraussetzung für HM-MOD-RPI-PCB und RPI-RF-MOD 
 * Unterstützter Single Board Computer
@@ -45,6 +45,9 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
     :warning: WARNING: Die Stromversorgung muss über den NanoPC erfolgen auch wenn ein RPI-RF-MOD verwendet wird. Dieses darf dann nicht an ein Netzteil angeschlossen werden.
   * NanoPi M4 mit Armbian und Dev kernel (Experimental)
   * Rock64 mit Armbian und Dev kernel (Experimental) (LEDs vom RPI-RF-MOD werden hardwaremäßig nicht unterstützt)
+  * RockPro64 mit Armbian und Dev kernel (Experimental)
+
+    :warning: WARNING: Die Stromversorgung muss über den RockPro64 erfolgen auch wenn ein RPI-RF-MOD verwendet wird. Dieses darf dann nicht an ein Netzteil angeschlossen werden.
 * Nutzung auf anderen Systemen (auch x64 Systeme) kann per USB mit der Platine [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) erfolgen.
 
 ### Vorbereite Images

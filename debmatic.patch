@@ -1,28 +1,6 @@
-diff -ruN occu-3.45.7.ccu-patched/firmware/HmIP-RFUSB/fwmap occu-3.45.7.patched/firmware/HmIP-RFUSB/fwmap
---- occu-3.45.7.ccu-patched/firmware/HmIP-RFUSB/fwmap	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/firmware/HmIP-RFUSB/fwmap	2019-04-20 22:14:08.474450312 +0200
-@@ -1,4 +1,4 @@
- #Type           Filename                Version
- 
- #Coprozessor
--CCU2                    hmip_coprocessor_update.eq3                          	2.8.4 		# HmIP Only CoProzessor RPI-RF-MOD
-+CCU2                    hmip_coprocessor_update.eq3                          	2.8.6 		# HmIP Only CoProzessor RPI-RF-MOD
-diff -ruN occu-3.45.7.ccu-patched/firmware/HM-MOD-UART/fwmap occu-3.45.7.patched/firmware/HM-MOD-UART/fwmap
---- occu-3.45.7.ccu-patched/firmware/HM-MOD-UART/fwmap	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/firmware/HM-MOD-UART/fwmap	2019-04-20 22:14:08.478450338 +0200
-@@ -1,7 +1,7 @@
- #Type           Filename                Version
- 
- #Coprozessor
--CCU2                    coprocessor_update.eq3                         	1.4.1		# CoProzessor HM-MOD-UART
-+#CCU2                    coprocessor_update.eq3                         	1.4.1		# CoProzessor HM-MOD-UART
- 
--#CCU2			dualcopro_si1002_update_blhm.eq3		2.8.6		# Dual CoProzessor HM-MOD-UART
-+CCU2			dualcopro_si1002_update_blhm.eq3		2.8.6		# Dual CoProzessor HM-MOD-UART
- 
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/api/methods/user/restarthmipserver.tcl occu-3.45.7.patched/WebUI/www/api/methods/user/restarthmipserver.tcl
---- occu-3.45.7.ccu-patched/WebUI/www/api/methods/user/restarthmipserver.tcl	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/api/methods/user/restarthmipserver.tcl	2019-04-20 22:14:08.478450338 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/api/methods/user/restarthmipserver.tcl fw.3.45.7.debmatic/www/api/methods/user/restarthmipserver.tcl
+--- fw.3.45.7.orig/www/api/methods/user/restarthmipserver.tcl	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/api/methods/user/restarthmipserver.tcl	2019-06-17 09:57:18.948948563 +0200
 @@ -7,6 +7,5 @@
  #
  # Rückgabewert: true
@@ -31,9 +9,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/api/methods/user/restarthmipserver.t
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/api/methods/user/restartlighttpd.tcl occu-3.45.7.patched/WebUI/www/api/methods/user/restartlighttpd.tcl
---- occu-3.45.7.ccu-patched/WebUI/www/api/methods/user/restartlighttpd.tcl	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/api/methods/user/restartlighttpd.tcl	2019-04-20 22:14:08.478450338 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/api/methods/user/restartlighttpd.tcl fw.3.45.7.debmatic/www/api/methods/user/restartlighttpd.tcl
+--- fw.3.45.7.orig/www/api/methods/user/restartlighttpd.tcl	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/api/methods/user/restartlighttpd.tcl	2019-06-17 09:57:18.952948591 +0200
 @@ -7,8 +7,7 @@
  #
  # Rückgabewert: true
@@ -45,9 +23,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/api/methods/user/restartlighttpd.tcl
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/control_panel.cgi occu-3.45.7.patched/WebUI/www/config/control_panel.cgi
---- occu-3.45.7.ccu-patched/WebUI/www/config/control_panel.cgi	2019-04-20 22:07:02.659631092 +0200
-+++ occu-3.45.7.patched/WebUI/www/config/control_panel.cgi	2019-04-20 22:14:08.478450338 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/config/control_panel.cgi fw.3.45.7.debmatic/www/config/control_panel.cgi
+--- fw.3.45.7.orig/www/config/control_panel.cgi	2019-04-02 14:39:51.000000000 +0200
++++ fw.3.45.7.debmatic/www/config/control_panel.cgi	2019-06-17 09:57:18.984948810 +0200
 @@ -102,16 +102,6 @@
    }
  }
@@ -113,9 +91,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/control_panel.cgi occu-3.45.7
  
    puts {
      <!-- Kopplungen -->
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/cp_maintenance.cgi occu-3.45.7.patched/WebUI/www/config/cp_maintenance.cgi
---- occu-3.45.7.ccu-patched/WebUI/www/config/cp_maintenance.cgi	2019-04-20 22:07:02.659631092 +0200
-+++ occu-3.45.7.patched/WebUI/www/config/cp_maintenance.cgi	2019-04-20 22:14:08.486450390 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_maintenance.cgi fw.3.45.7.debmatic/www/config/cp_maintenance.cgi
+--- fw.3.45.7.orig/www/config/cp_maintenance.cgi	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/config/cp_maintenance.cgi	2019-06-17 09:57:18.984948810 +0200
 @@ -389,151 +389,10 @@
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
@@ -316,9 +294,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/cp_maintenance.cgi occu-3.45.
    
    puts "Content-Type:application/x-download"
    puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/cp_security.cgi occu-3.45.7.patched/WebUI/www/config/cp_security.cgi
---- occu-3.45.7.ccu-patched/WebUI/www/config/cp_security.cgi	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/config/cp_security.cgi	2019-04-20 22:14:08.486450390 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_security.cgi fw.3.45.7.debmatic/www/config/cp_security.cgi
+--- fw.3.45.7.orig/www/config/cp_security.cgi	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/config/cp_security.cgi	2019-06-17 09:57:18.984948810 +0200
 @@ -296,7 +296,6 @@
      } else {
        exec touch /usr/local/.doFactoryReset
@@ -527,9 +505,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/cp_security.cgi occu-3.45.7.p
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/cp_time.cgi occu-3.45.7.patched/WebUI/www/config/cp_time.cgi
---- occu-3.45.7.ccu-patched/WebUI/www/config/cp_time.cgi	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/config/cp_time.cgi	2019-04-20 22:14:08.490450417 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_time.cgi fw.3.45.7.debmatic/www/config/cp_time.cgi
+--- fw.3.45.7.orig/www/config/cp_time.cgi	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/config/cp_time.cgi	2019-06-17 09:57:18.984948810 +0200
 @@ -144,7 +144,7 @@
      global env LOCATIONS TIMEZONES
      
@@ -640,9 +618,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/cp_time.cgi occu-3.45.7.patch
              set country ""
              foreach location $LOCATIONS {
                  if { [lindex $location 0] == "-" } {
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/help.cgi occu-3.45.7.patched/WebUI/www/config/help.cgi
---- occu-3.45.7.ccu-patched/WebUI/www/config/help.cgi	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/config/help.cgi	2019-04-20 22:14:08.494450443 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/config/help.cgi fw.3.45.7.debmatic/www/config/help.cgi
+--- fw.3.45.7.orig/www/config/help.cgi	2019-04-02 14:39:51.000000000 +0200
++++ fw.3.45.7.debmatic/www/config/help.cgi	2019-06-17 09:57:19.056949299 +0200
 @@ -3,8 +3,8 @@
  source common.tcl
  load tclrega.so
@@ -662,9 +640,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/config/help.cgi occu-3.45.7.patched/
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/rega/pages/index.htm occu-3.45.7.patched/WebUI/www/rega/pages/index.htm
---- occu-3.45.7.ccu-patched/WebUI/www/rega/pages/index.htm	2019-04-20 22:07:02.883632574 +0200
-+++ occu-3.45.7.patched/WebUI/www/rega/pages/index.htm	2019-04-20 22:18:22.928136178 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/rega/pages/index.htm fw.3.45.7.debmatic/www/rega/pages/index.htm
+--- fw.3.45.7.orig/www/rega/pages/index.htm	2019-04-02 14:43:28.000000000 +0200
++++ fw.3.45.7.debmatic/www/rega/pages/index.htm	2019-06-17 09:57:19.068949382 +0200
 @@ -71,7 +71,7 @@
      /*########################################################################*/
  
@@ -674,9 +652,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/rega/pages/index.htm occu-3.45.7.pat
    
      /**
       * Flags
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/webui/js/lang/de/translate.lang.js occu-3.45.7.patched/WebUI/www/webui/js/lang/de/translate.lang.js
---- occu-3.45.7.ccu-patched/WebUI/www/webui/js/lang/de/translate.lang.js	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/webui/js/lang/de/translate.lang.js	2019-04-20 22:14:08.494450443 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/webui/js/lang/de/translate.lang.js fw.3.45.7.debmatic/www/webui/js/lang/de/translate.lang.js
+--- fw.3.45.7.orig/www/webui/js/lang/de/translate.lang.js	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/webui/js/lang/de/translate.lang.js	2019-06-17 09:57:19.068949382 +0200
 @@ -458,6 +458,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -685,9 +663,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/webui/js/lang/de/translate.lang.js o
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/webui/js/lang/en/translate.lang.js occu-3.45.7.patched/WebUI/www/webui/js/lang/en/translate.lang.js
---- occu-3.45.7.ccu-patched/WebUI/www/webui/js/lang/en/translate.lang.js	2019-04-19 09:56:36.000000000 +0200
-+++ occu-3.45.7.patched/WebUI/www/webui/js/lang/en/translate.lang.js	2019-04-20 22:14:08.494450443 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/webui/js/lang/en/translate.lang.js fw.3.45.7.debmatic/www/webui/js/lang/en/translate.lang.js
+--- fw.3.45.7.orig/www/webui/js/lang/en/translate.lang.js	2019-04-02 14:39:54.000000000 +0200
++++ fw.3.45.7.debmatic/www/webui/js/lang/en/translate.lang.js	2019-06-17 09:57:19.068949382 +0200
 @@ -457,6 +457,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -696,9 +674,9 @@ diff -ruN occu-3.45.7.ccu-patched/WebUI/www/webui/js/lang/en/translate.lang.js o
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
-diff -ruN occu-3.45.7.ccu-patched/WebUI/www/webui/webui.js occu-3.45.7.patched/WebUI/www/webui/webui.js
---- occu-3.45.7.ccu-patched/WebUI/www/webui/webui.js	2019-04-20 22:07:02.979633209 +0200
-+++ occu-3.45.7.patched/WebUI/www/webui/webui.js	2019-04-20 22:14:08.502450495 +0200
+diff -ruN --no-dereference fw.3.45.7.orig/www/webui/webui.js fw.3.45.7.debmatic/www/webui/webui.js
+--- fw.3.45.7.orig/www/webui/webui.js	2019-04-02 14:39:55.000000000 +0200
++++ fw.3.45.7.debmatic/www/webui/webui.js	2019-06-17 09:57:19.076949438 +0200
 @@ -6105,12 +6105,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();

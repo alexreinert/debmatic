@@ -1,0 +1,22 @@
+diff -ruN occu-3.45.7.orig/firmware/HmIP-RFUSB/fwmap occu-3.45.7.patched/firmware/HmIP-RFUSB/fwmap
+--- occu-3.45.7.orig/firmware/HmIP-RFUSB/fwmap	2019-04-19 09:56:36.000000000 +0200
++++ occu-3.45.7.patched/firmware/HmIP-RFUSB/fwmap	2019-04-20 22:14:08.474450312 +0200
+@@ -1,4 +1,4 @@
+ #Type           Filename                Version
+ 
+ #Coprozessor
+-CCU2                    hmip_coprocessor_update.eq3                          	2.8.4 		# HmIP Only CoProzessor RPI-RF-MOD
++CCU2                    hmip_coprocessor_update.eq3                          	2.8.6 		# HmIP Only CoProzessor RPI-RF-MOD
+diff -ruN occu-3.45.7.orig/firmware/HM-MOD-UART/fwmap occu-3.45.7.patched/firmware/HM-MOD-UART/fwmap
+--- occu-3.45.7.orig/firmware/HM-MOD-UART/fwmap	2019-04-19 09:56:36.000000000 +0200
++++ occu-3.45.7.patched/firmware/HM-MOD-UART/fwmap	2019-04-20 22:14:08.478450338 +0200
+@@ -1,7 +1,7 @@
+ #Type           Filename                Version
+ 
+ #Coprozessor
+-CCU2                    coprocessor_update.eq3                         	1.4.1		# CoProzessor HM-MOD-UART
++#CCU2                    coprocessor_update.eq3                         	1.4.1		# CoProzessor HM-MOD-UART
+ 
+-#CCU2			dualcopro_si1002_update_blhm.eq3		2.8.6		# Dual CoProzessor HM-MOD-UART
++CCU2			dualcopro_si1002_update_blhm.eq3		2.8.6		# Dual CoProzessor HM-MOD-UART
+ 
