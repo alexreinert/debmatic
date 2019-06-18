@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -f /usr/local/addons/jp-hb-devices-addon/installed
+

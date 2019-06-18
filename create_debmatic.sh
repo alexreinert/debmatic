@@ -6,10 +6,10 @@ ARCHIVE_TAG="$CCU_VERSION"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
-CCU_DOWNLOAD_SPLASH_URL="http://www.eq-3.de/service/downloads.html?id=307"
+CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html?id=307"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/Downloads/Software/CCU3-Firmware/CCU3-$CCU_VERSION/ccu3-$CCU_VERSION.tgz"
 
-PKG_BUILD=26
+PKG_BUILD=27
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -24,7 +24,7 @@ mv occu-$ARCHIVE_TAG repo
 
 cd $WORK_DIR/repo
 patch -l -p1 < $CURRENT_DIR/occu.patch
-mv $WORK_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update.eq3 $WORK_DIR/firmware/HmIP-RFUSB/hmip_coprocessor_update-2.8.6.eq3
+mv $WORK_DIR/repo/firmware/HmIP-RFUSB/hmip_coprocessor_update.eq3 $WORK_DIR/repo/firmware/HmIP-RFUSB/hmip_coprocessor_update-2.8.6.eq3
 
 wget -O /dev/null --save-cookies=cookies.txt --keep-session-cookies $CCU_DOWNLOAD_SPLASH_URL
 wget -O ccu3.tar.gz --load-cookies=cookies.txt --referer=$CCU_DOWNLOAD_SPLASH_URL $CCU_DOWNLOAD_URL

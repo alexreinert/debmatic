@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -f /usr/local/addons/hb-uni-sensor1/installed

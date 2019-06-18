@@ -34,6 +34,10 @@ case "$1" in
     lighttpd-enable-mod debmatic
     systemctl force-reload lighttpd.service
 
+    if [ -d /usr/share/debmatic/hooks/postinst ]; then
+      run-parts /usr/share/debmatic/hooks/postinst
+    fi
+
     systemctl start debmatic.service
     ;;
 
