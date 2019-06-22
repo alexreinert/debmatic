@@ -10,6 +10,8 @@ TimeoutStartSec=242
 EnvironmentFile=/var/hm_mode
 ExecStart=/usr/share/debmatic/bin/start_hmserver.sh
 ExecStopPost=/bin/rm -f /var/run/HMIPServer.pid
+Restart=on-abnormal
+RestartSec=5s
 
 [Install]
 WantedBy=debmatic.service

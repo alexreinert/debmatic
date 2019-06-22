@@ -11,6 +11,8 @@ ExecStart=/bin/hss_led -l 4
 ExecStopPost=-/sbin/rmmod rpi_rf_mod_led
 ExecStopPost=-/sbin/rmmod dummy_rx8130
 ExecStopPost=-/sbin/rmmod ledtrig-timer
+Restart=on-abnormal
+RestartSec=5s
 
 [Install]
 WantedBy=debmatic.service

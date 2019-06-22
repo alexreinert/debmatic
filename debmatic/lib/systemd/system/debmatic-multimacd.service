@@ -16,6 +16,8 @@ ExecStart=/usr/share/debmatic/bin/start_multimacd.sh
 ExecStopPost=-/bin/rm -f /var/run/multimacd.pid
 ExecStopPost=-/bin/sleep 5
 ExecStopPost=-/sbin/rmmod eq3_char_loop
+Restart=on-abnormal
+RestartSec=5s
 
 [Install]
 WantedBy=debmatic.service

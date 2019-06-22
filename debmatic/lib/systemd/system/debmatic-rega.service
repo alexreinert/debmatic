@@ -15,6 +15,8 @@ EnvironmentFile=-/etc/config/syslog
 ExecStart=/usr/share/debmatic/bin/start_rega.sh
 ExecStop=/usr/share/debmatic/bin/stop_rega.sh
 ExecStopPost=/bin/rm -f /var/run/ReGaHss.pid
+Restart=on-abnormal
+RestartSec=5s
 
 [Install]
 WantedBy=debmatic.service
