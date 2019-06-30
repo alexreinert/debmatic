@@ -1,6 +1,6 @@
-diff -ruN --no-dereference fw.3.45.7.orig/www/api/methods/user/restarthmipserver.tcl fw.3.45.7.debmatic/www/api/methods/user/restarthmipserver.tcl
---- fw.3.45.7.orig/www/api/methods/user/restarthmipserver.tcl	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/api/methods/user/restarthmipserver.tcl	2019-06-17 09:57:18.948948563 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/api/methods/user/restarthmipserver.tcl fw.3.47.10.debmatic/www/api/methods/user/restarthmipserver.tcl
+--- fw.3.47.10.orig/www/api/methods/user/restarthmipserver.tcl	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/api/methods/user/restarthmipserver.tcl	2019-06-25 16:10:43.598348956 +0200
 @@ -7,6 +7,5 @@
  #
  # Rückgabewert: true
@@ -9,9 +9,9 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/api/methods/user/restarthmipserver
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.45.7.orig/www/api/methods/user/restartlighttpd.tcl fw.3.45.7.debmatic/www/api/methods/user/restartlighttpd.tcl
---- fw.3.45.7.orig/www/api/methods/user/restartlighttpd.tcl	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/api/methods/user/restartlighttpd.tcl	2019-06-17 09:57:18.952948591 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/api/methods/user/restartlighttpd.tcl fw.3.47.10.debmatic/www/api/methods/user/restartlighttpd.tcl
+--- fw.3.47.10.orig/www/api/methods/user/restartlighttpd.tcl	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/api/methods/user/restartlighttpd.tcl	2019-06-25 16:10:43.598348956 +0200
 @@ -7,8 +7,7 @@
  #
  # Rückgabewert: true
@@ -23,9 +23,9 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/api/methods/user/restartlighttpd.t
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.45.7.orig/www/config/control_panel.cgi fw.3.45.7.debmatic/www/config/control_panel.cgi
---- fw.3.45.7.orig/www/config/control_panel.cgi	2019-04-02 14:39:51.000000000 +0200
-+++ fw.3.45.7.debmatic/www/config/control_panel.cgi	2019-06-17 09:57:18.984948810 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/config/control_panel.cgi fw.3.47.10.debmatic/www/config/control_panel.cgi
+--- fw.3.47.10.orig/www/config/control_panel.cgi	2019-06-21 10:27:12.000000000 +0200
++++ fw.3.47.10.debmatic/www/config/control_panel.cgi	2019-06-25 16:23:08.951389142 +0200
 @@ -102,16 +102,6 @@
    }
  }
@@ -43,22 +43,35 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/config/control_panel.cgi fw.3.45.7
  if {![isOldCCU]} {
    puts {
      </tr>
-@@ -119,14 +109,6 @@
+@@ -119,27 +109,6 @@
    }
  }
- puts {
--    <!-- Firewall Konfiguration -->
+ 
+-
+-if {[getProduct] >= 3} {
+-  puts {
 -    <td>
 -      <div class="cpButton">
 -        <div class="StdTableBtn CLASS21701" onclick="new FirewallConfigDialog();">${btnSysConfFirewallConfig}</div>
 -        <div class="StdTableBtnHelp"><img id="newFirewallConfigDialogHelp" src="/ise/img/help.png"></div>
 -      </div>
 -    </td>
+-  }
+-} else {
+-  puts {
+-    <td>
+-      <div class="cpButton">
+-        <div class="StdTableBtn CLASS21701" onclick="new FirewallConfigDialog_CCU2();">${btnSysConfFirewallConfig}</div>
+-        <div class="StdTableBtnHelp"><img id="newFirewallConfigDialogHelp" src="/ise/img/help.png"></div>
+-      </div>
+-    </td>
+-  }
+-}
 -
-     <!-- BidCoS-RF Konfiguration -->
+ if {[isOldCCU]} {
+   puts {
      <td>
- }
-@@ -150,14 +132,6 @@
+@@ -162,14 +131,6 @@
        </div>
      </td>
  
@@ -73,7 +86,7 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/config/control_panel.cgi fw.3.45.7
      <!-- Storage Settings -->
      <td>
        <div class="cpButton">
-@@ -179,17 +153,6 @@
+@@ -191,17 +152,6 @@
        </td>
      }
    }
@@ -91,9 +104,9 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/config/control_panel.cgi fw.3.45.7
  
    puts {
      <!-- Kopplungen -->
-diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_maintenance.cgi fw.3.45.7.debmatic/www/config/cp_maintenance.cgi
---- fw.3.45.7.orig/www/config/cp_maintenance.cgi	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/config/cp_maintenance.cgi	2019-06-17 09:57:18.984948810 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/config/cp_maintenance.cgi fw.3.47.10.debmatic/www/config/cp_maintenance.cgi
+--- fw.3.47.10.orig/www/config/cp_maintenance.cgi	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/config/cp_maintenance.cgi	2019-06-25 16:10:43.598348956 +0200
 @@ -389,151 +389,10 @@
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
@@ -294,9 +307,9 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_maintenance.cgi fw.3.45.
    
    puts "Content-Type:application/x-download"
    puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_security.cgi fw.3.45.7.debmatic/www/config/cp_security.cgi
---- fw.3.45.7.orig/www/config/cp_security.cgi	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/config/cp_security.cgi	2019-06-17 09:57:18.984948810 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/config/cp_security.cgi fw.3.47.10.debmatic/www/config/cp_security.cgi
+--- fw.3.47.10.orig/www/config/cp_security.cgi	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/config/cp_security.cgi	2019-06-25 16:10:43.702349662 +0200
 @@ -296,7 +296,6 @@
      } else {
        exec touch /usr/local/.doFactoryReset
@@ -505,122 +518,122 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_security.cgi fw.3.45.7.d
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN --no-dereference fw.3.45.7.orig/www/config/cp_time.cgi fw.3.45.7.debmatic/www/config/cp_time.cgi
---- fw.3.45.7.orig/www/config/cp_time.cgi	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/config/cp_time.cgi	2019-06-17 09:57:18.984948810 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/config/cp_time.cgi fw.3.47.10.debmatic/www/config/cp_time.cgi
+--- fw.3.47.10.orig/www/config/cp_time.cgi	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/config/cp_time.cgi	2019-06-25 16:19:33.473932115 +0200
 @@ -144,7 +144,7 @@
-     global env LOCATIONS TIMEZONES
-     
-     set iso8601_date [exec date -Iseconds]
--    regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
-+    regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
- 	
- 	puts "<div id=\"dragTime\">"
+   global env LOCATIONS TIMEZONES
+   
+   set iso8601_date [exec date -Iseconds]
+-  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
++  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
+   
+   puts "<div id=\"dragTime\">"
  
 @@ -155,100 +155,6 @@
- 	
-     division {class="CLASS21500"} {
-         table {class="popupTable"} {border="1"} {
--            table_row {class="CLASS21502"} {
--                table_data {class="CLASS21503"} {
--                    puts "\${dialogSettingsTimePositionTDTime}"
--                }
--                table_data {class="CLASS21504"} {
--                    table {class="CLASS21505"} {
--                        table_row {
--                            table_data {
--                                table {class="CLASS21505"} {
--                                    table_row {
--                                        table_data {align="left"} {
--                                            #puts "Uhrzeit (hh:mm:ss):"
--                                            puts "\${dialogSettingsTimePositionLblTime}"
--                                        }
--                                        table_data {align="right"} {
--                                            cgi_text hour=$hour {size="2"} {maxlength="2"} {id="text_hour"}
--                                            puts ":"
--                                            cgi_text minute=$minute {size="2"} {maxlength="2"} {id="text_minute"}
--                                            puts ":"
--                                            cgi_text second=$second {size="2"} {maxlength="2"} {id="text_second"}
--                                        }
--                                        table_data {}
--                                    }
--                                    table_row {
--                                        table_data {align="left"} {
--                                            #puts "Datum (tt.mm.jjjj):"
--                                            puts "\${dialogSettingsTimePositionLblDate}"
--                                        }
--                                        table_data {align="right"} {
--                                            cgi_text day=$day {size="2"} {maxlength="2"} {id="text_day"}
--                                            puts "."
--                                            cgi_text month=$month {size="2"} {maxlength="2"} {id="text_month"}
--                                            puts "."
--                                            cgi_text year=$year {size="4"} {maxlength="4"} {id="text_year"}
--                                        }
--                                        table_data {align="left"} {
--                                            division {class="popupControls CLASS21506"} {
--                                                division {class="CLASS21507"} {onClick="apply_time()"} {
--                                                    #puts "Uhrzeit &uuml;bernehmen"
--                                                    puts "\${dialogSettingsTimePositionBtnSaveTime}"
--                                                }
--                                            }
--                                        }
--                                    }
--                                    table_row {
--                                        table_data {colspan="2"} {}
--                                        table_data {align="left"} {class="CLASS21510"} {
--                                            division {class="popupControls CLASS21506"} {
--                                                division {class="CLASS21507"} {onClick="time_from_pc()"} {
--                                                    #puts "Zeit vom PC &uuml;bernehmen"
--                                                    puts "\${dialogSettingsTimePositionBtnGetPCTime}"
--                                                }
--                                            }
--                                        }
--                                    }
--                                }
--                            }
--                        }
+   
+   division {class="CLASS21500"} {
+     table {class="popupTable"} {border="1"} {
+-      table_row {class="CLASS21502"} {
+-        table_data {class="CLASS21503"} {
+-          puts "\${dialogSettingsTimePositionTDTime}"
+-        }
+-        table_data {class="CLASS21504"} {
+-          table {class="CLASS21505"} {
+-            table_row {
+-              table_data {
+-                table {class="CLASS21505"} {
+-                  table_row {
+-                    table_data {align="left"} {
+-                      #puts "Uhrzeit (hh:mm:ss):"
+-                      puts "\${dialogSettingsTimePositionLblTime}"
 -                    }
--                }
--            }
--            table_row {class="CLASS21502"} {
--                table_data {class="CLASS21503"} {
--                    #puts "NTP-Server"
--                    puts "\${dialogSettingsTimePositionTDNTPServer}"
--                }
--                table_data {class="CLASS21504"} {
--                    table {class="CLASS21505"} {
--                        table_row {
--                            table_data {
--                                table {class="CLASS21505"} {
--                                    table_row {
--                                        table_data {align="left"} {
--                                            #puts "NTP Zeitserver Adressen:"
--                                            puts "\${dialogSettingsTimePositionLblNTPServer}"
--                                        }
--                                        table_data {align="right"} {
--                                            cgi_text ntp_servers=[get_timeservers] {size="25"} {id="text_ntp_servers"}
--                                        }
--                                        table_data {align="left"} {
--                                            division {class="popupControls CLASS21506"} {
--                                                division {class="CLASS21507"} {onClick="apply_timeserver()"} {
--                                                    #puts "Zeitserver &uuml;bernehmen"
--                                                    puts "\${dialogSettingsTimePositionBtnNTPServer}"
--                                                }
--                                            }
--                                        }
--                                    }
--                                }
--                            }
--                        }
+-                    table_data {align="right"} {
+-                      cgi_text hour=$hour {size="2"} {maxlength="2"} {id="text_hour"}
+-                      puts ":"
+-                      cgi_text minute=$minute {size="2"} {maxlength="2"} {id="text_minute"}
+-                      puts ":"
+-                      cgi_text second=$second {size="2"} {maxlength="2"} {id="text_second"}
 -                    }
+-                    table_data {}
+-                  }
+-                  table_row {
+-                    table_data {align="left"} {
+-                      #puts "Datum (tt.mm.jjjj):"
+-                      puts "\${dialogSettingsTimePositionLblDate}"
+-                    }
+-                    table_data {align="right"} {
+-                      cgi_text day=$day {size="2"} {maxlength="2"} {id="text_day"}
+-                      puts "."
+-                      cgi_text month=$month {size="2"} {maxlength="2"} {id="text_month"}
+-                      puts "."
+-                      cgi_text year=$year {size="4"} {maxlength="4"} {id="text_year"}
+-                    }
+-                    table_data {align="left"} {
+-                      division {class="popupControls CLASS21506"} {
+-                        division {class="CLASS21507"} {onClick="apply_time()"} {
+-                          #puts "Uhrzeit &uuml;bernehmen"
+-                          puts "\${dialogSettingsTimePositionBtnSaveTime}"
+-                        }
+-                      }
+-                    }
+-                  }
+-                  table_row {
+-                    table_data {colspan="2"} {}
+-                    table_data {align="left"} {class="CLASS21510"} {
+-                      division {class="popupControls CLASS21506"} {
+-                        division {class="CLASS21507"} {onClick="time_from_pc()"} {
+-                          #puts "Zeit vom PC &uuml;bernehmen"
+-                          puts "\${dialogSettingsTimePositionBtnGetPCTime}"
+-                        }
+-                      }
+-                    }
+-                  }
 -                }
+-              }
 -            }
-             set country ""
-             foreach location $LOCATIONS {
-                 if { [lindex $location 0] == "-" } {
-diff -ruN --no-dereference fw.3.45.7.orig/www/config/help.cgi fw.3.45.7.debmatic/www/config/help.cgi
---- fw.3.45.7.orig/www/config/help.cgi	2019-04-02 14:39:51.000000000 +0200
-+++ fw.3.45.7.debmatic/www/config/help.cgi	2019-06-17 09:57:19.056949299 +0200
+-          }
+-        }
+-      }
+-      table_row {class="CLASS21502"} {
+-        table_data {class="CLASS21503"} {
+-          #puts "NTP-Server"
+-          puts "\${dialogSettingsTimePositionTDNTPServer}"
+-        }
+-        table_data {class="CLASS21504"} {
+-          table {class="CLASS21505"} {
+-            table_row {
+-              table_data {
+-                table {class="CLASS21505"} {
+-                  table_row {
+-                    table_data {align="left"} {
+-                      #puts "NTP Zeitserver Adressen:"
+-                      puts "\${dialogSettingsTimePositionLblNTPServer}"
+-                    }
+-                    table_data {align="right"} {
+-                      cgi_text ntp_servers=[get_timeservers] {size="25"} {id="text_ntp_servers"}
+-                    }
+-                    table_data {align="left"} {
+-                      division {class="popupControls CLASS21506"} {
+-                        division {class="CLASS21507"} {onClick="apply_timeserver()"} {
+-                          #puts "Zeitserver &uuml;bernehmen"
+-                          puts "\${dialogSettingsTimePositionBtnNTPServer}"
+-                        }
+-                      }
+-                    }
+-                  }
+-                }
+-              }
+-            }
+-          }
+-        }
+-      }
+       set country ""
+       foreach location $LOCATIONS {
+         if { [lindex $location 0] == "-" } {
+diff -ruN --no-dereference fw.3.47.10.orig/www/config/help.cgi fw.3.47.10.debmatic/www/config/help.cgi
+--- fw.3.47.10.orig/www/config/help.cgi	2019-06-21 10:27:13.000000000 +0200
++++ fw.3.47.10.debmatic/www/config/help.cgi	2019-06-25 16:10:43.706349689 +0200
 @@ -3,8 +3,8 @@
  source common.tcl
  load tclrega.so
@@ -640,21 +653,21 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/config/help.cgi fw.3.45.7.debmatic
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
-diff -ruN --no-dereference fw.3.45.7.orig/www/rega/pages/index.htm fw.3.45.7.debmatic/www/rega/pages/index.htm
---- fw.3.45.7.orig/www/rega/pages/index.htm	2019-04-02 14:43:28.000000000 +0200
-+++ fw.3.45.7.debmatic/www/rega/pages/index.htm	2019-06-17 09:57:19.068949382 +0200
-@@ -71,7 +71,7 @@
+diff -ruN --no-dereference fw.3.47.10.orig/www/rega/pages/index.htm fw.3.47.10.debmatic/www/rega/pages/index.htm
+--- fw.3.47.10.orig/www/rega/pages/index.htm	2019-06-21 10:30:49.000000000 +0200
++++ fw.3.47.10.debmatic/www/rega/pages/index.htm	2019-06-25 16:13:31.207482404 +0200
+@@ -69,7 +69,7 @@
      /*########################################################################*/
  
      PLATFORM = "Central";
--    WEBUI_VERSION = "3.45.7"
+-    WEBUI_VERSION = "3.47.10"
 +    WEBUI_VERSION = "{PKG_VERSION}"
    
      /**
       * Flags
-diff -ruN --no-dereference fw.3.45.7.orig/www/webui/js/lang/de/translate.lang.js fw.3.45.7.debmatic/www/webui/js/lang/de/translate.lang.js
---- fw.3.45.7.orig/www/webui/js/lang/de/translate.lang.js	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/webui/js/lang/de/translate.lang.js	2019-06-17 09:57:19.068949382 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/webui/js/lang/de/translate.lang.js fw.3.47.10.debmatic/www/webui/js/lang/de/translate.lang.js
+--- fw.3.47.10.orig/www/webui/js/lang/de/translate.lang.js	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/webui/js/lang/de/translate.lang.js	2019-06-25 16:10:43.706349689 +0200
 @@ -458,6 +458,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -663,9 +676,9 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/webui/js/lang/de/translate.lang.js
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
-diff -ruN --no-dereference fw.3.45.7.orig/www/webui/js/lang/en/translate.lang.js fw.3.45.7.debmatic/www/webui/js/lang/en/translate.lang.js
---- fw.3.45.7.orig/www/webui/js/lang/en/translate.lang.js	2019-04-02 14:39:54.000000000 +0200
-+++ fw.3.45.7.debmatic/www/webui/js/lang/en/translate.lang.js	2019-06-17 09:57:19.068949382 +0200
+diff -ruN --no-dereference fw.3.47.10.orig/www/webui/js/lang/en/translate.lang.js fw.3.47.10.debmatic/www/webui/js/lang/en/translate.lang.js
+--- fw.3.47.10.orig/www/webui/js/lang/en/translate.lang.js	2019-06-21 10:27:15.000000000 +0200
++++ fw.3.47.10.debmatic/www/webui/js/lang/en/translate.lang.js	2019-06-25 16:10:43.706349689 +0200
 @@ -457,6 +457,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -674,10 +687,10 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/webui/js/lang/en/translate.lang.js
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
-diff -ruN --no-dereference fw.3.45.7.orig/www/webui/webui.js fw.3.45.7.debmatic/www/webui/webui.js
---- fw.3.45.7.orig/www/webui/webui.js	2019-04-02 14:39:55.000000000 +0200
-+++ fw.3.45.7.debmatic/www/webui/webui.js	2019-06-17 09:57:19.076949438 +0200
-@@ -6105,12 +6105,7 @@
+diff -ruN --no-dereference fw.3.47.10.orig/www/webui/webui.js fw.3.47.10.debmatic/www/webui/webui.js
+--- fw.3.47.10.orig/www/webui/webui.js	2019-06-21 10:27:16.000000000 +0200
++++ fw.3.47.10.debmatic/www/webui/webui.js	2019-06-25 16:10:43.714349744 +0200
+@@ -6140,12 +6140,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
            homematic("CCU.setSecurityHint");
@@ -691,7 +704,7 @@ diff -ruN --no-dereference fw.3.45.7.orig/www/webui/webui.js fw.3.45.7.debmatic/
          }
        }, "html");
      });
-@@ -21443,7 +21438,7 @@
+@@ -22190,7 +22185,7 @@
      var script = document.createElement("script");
      script.id = "homematic_com_script";
      script.type = "text/javascript";
