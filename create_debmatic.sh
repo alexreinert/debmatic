@@ -2,14 +2,14 @@
 
 CCU_VERSION="3.47.10"
 
-ARCHIVE_TAG="45c16426814e911cda7b6ec3e8f616d2146e827a"
+ARCHIVE_TAG="$CCU_VERSION"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html?id=315"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/Downloads/Software/CCU3-Firmware/CCU3-$CCU_VERSION/ccu3-$CCU_VERSION.tgz"
 
-PKG_BUILD=28
+PKG_BUILD=29
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
