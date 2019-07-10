@@ -689,7 +689,7 @@ diff -ruN --no-dereference fw.3.47.10.orig/www/webui/js/lang/en/translate.lang.j
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
 diff -ruN --no-dereference fw.3.47.10.orig/www/webui/webui.js fw.3.47.10.debmatic/www/webui/webui.js
 --- fw.3.47.10.orig/www/webui/webui.js	2019-06-21 10:27:16.000000000 +0200
-+++ fw.3.47.10.debmatic/www/webui/webui.js	2019-06-25 16:10:43.714349744 +0200
++++ fw.3.47.10.debmatic/www/webui/webui.js	2019-07-11 09:04:01.954256396 +0200
 @@ -6140,12 +6140,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
@@ -713,3 +713,20 @@ diff -ruN --no-dereference fw.3.47.10.orig/www/webui/webui.js fw.3.47.10.debmati
      $("body").appendChild(script);
    },
  
+@@ -32828,6 +32823,7 @@
+   initialize: function(id, opts) {
+     conInfo("PowerMeter");
+     var self = this;
++    this.powerMeter = "POWERMETER"; // e. g. Hm-ES-PMSw1-PL-DN-R1
+     this.POWERMETER_IEC = "POWERMETER_IEC"; // e. g. Hm-ES-TX-WM
+     this.energyMeterTransmitter = "ENERGIE_METER_TRANSMITTER"; // e. g. HmIP-PSM
+     this.arMeasurementTypes = [];
+@@ -32915,7 +32911,7 @@
+        this.energyMeterTransmitter = e. g. a PSM or a Hm-ES-TX-WM Fw. >= 2.0.0
+     */
+     if (typeof paramSet.METER_TYPE == "undefined") {
+-      return (this.opts.chType == this.energyMeterTransmitter) ? this.sensorTypeID.eletricity : this.sensorTypeID.iec;
++      return ((this.opts.chType == this.energyMeterTransmitter) || (this.opts.chType == this.powerMeter)) ? this.sensorTypeID.eletricity : this.sensorTypeID.iec;
+     }
+ 
+     // No IEC Sensor
