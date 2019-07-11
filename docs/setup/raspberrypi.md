@@ -1,7 +1,7 @@
 ### Vorraussetzung
 
-* Raspberry Pi 2B/3B/3B+
-* Raspbian Stretch
+* Raspberry Pi 2B/3B/3B+/4B
+* Raspbian Stretch oder Raspbian Buster
 
 ### Installation
 0. Volles Backup der SD Karte erstellen
