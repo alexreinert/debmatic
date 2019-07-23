@@ -33,6 +33,7 @@
       dtoverlay=pi3-miniuart-bt
       enable_uart=1
       force_turbo=1
+      core_freq=250
       EOT'
       ```
 6. Serielle Konsole deaktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)

@@ -8,7 +8,7 @@ if [ $EUID != 0 ]; then
 fi
 
 if [ $# -ne 1 ] || [ ! -d "$1" ]; then
-  echo "pivccu-backup <backupdir>"
+  echo "debmatic-backup <backupdir>"
   exit 1
 fi
 
