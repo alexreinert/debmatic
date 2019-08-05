@@ -1,12 +1,12 @@
 #!/bin/bash
 
-ADDON_VERSION=2.10
+ADDON_VERSION=2.11
 
 ARCHIVE_TAG="$ADDON_VERSION"
 
 ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addon/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=6
+PKG_BUILD=7
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
