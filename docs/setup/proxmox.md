@@ -1,0 +1,52 @@
+### Vorraussetzung
+
+* Proxmox 5.1 oder höher
+
+### Installation innerhalb VM
+Eventuelle USB Geräte in die VM durchleiten und innerhalb der VM eine [normale Installation](otheros.md) innerhalb der VM durchführen.
+
+### Installation innerhalb Container
+Aufgrund der Software Architektur der CCU braucht es spezielle Kernel Module, welche im Kontexts der Host laufen müssen, daher muss man sowohl im Host, als auch im Container Anpassungen vorgenommen werden.
+Es darf nur einen einzigen (aktiven) Container mit debmatic geben.
+
+#### Host
+0. Volles Backup des Systems erstellen
+1. Hinzufügen des debmatic apt Repositories
+   ```bash
+   wget -q -O - https://www.debmatic.de/debmatic/public.key | sudo apt-key add -
+   sudo bash -c 'echo "deb https://www.debmatic.de/debmatic stable main" > /etc/apt/sources.list.d/debmatic.list'
+   sudo apt update
+   ```
+3. Installation der Kernel Header (dieser Schritt ist abhängig von Distribution und verwendetem Kernel, bitte in der Hilfe der Distribution nachschlagen)
+   ```bash 
+   sudo apt install pve-headers
+   ```
+4. Installation der Host Pakete
+   ```bash
+   sudo apt install pivccu-modules-dkms debmatic-lxc-host
+   ```
+5. Erstellen des Containers
+6. Anpassen der Konfiguration des Containers, es müssen in der Datei /etc/pve/lxc/<Container-ID>.conf folgende beiden Zeilen eingefügt werden:
+   ```
+   lxc.apparmor.profile: unconfined
+   lxc.hook.mount: /usr/share/debmatic/bin/lxc-start-hook.sh
+   ```
+6. Neustart des Containers
+
+#### Container
+### Installation
+1. Notwendige Pakete für die Installation installieren (als Benutzer root)
+   ```bash
+   apt install sudo apt-transport-https
+   ```
+2. Hinzufügen des debmatic apt Repositories
+   ```bash
+   wget -q -O - https://www.debmatic.de/debmatic/public.key | sudo apt-key add -
+   sudo bash -c 'echo "deb https://www.debmatic.de/debmatic stable main" > /etc/apt/sources.list.d/debmatic.list'
+   sudo apt update
+   ```
+3. Installation von debmatic
+   ```bash
+   sudo apt install debmatic
+   ```
+4. Viel Spaß mit der Nutzung von debmatic

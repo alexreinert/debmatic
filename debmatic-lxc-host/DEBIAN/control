@@ -1,10 +1,9 @@
-Package: debmatic
+Package: debmatic-lxc-host
 Version: {PKG_VERSION}
-Architecture: {PKG_ARCH}
+Architecture: all
 Maintainer: Alexander Reinert <alex@areinert.de>
-{DEPENDS}
-Recommends: pivccu-modules-dkms
-Conflicts: pivccu, pivccu3
+Depends: pivccu-modules-dkms (>= 1.0.33)
+Conflicts: pivccu, pivccu3, debmatic
 Section: misc
 Priority: extra
 Homepage: https://github.com/alexreinert/debmatic

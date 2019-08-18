@@ -4,13 +4,19 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
+systemd-detect-virt -c -q
+if [ $? -eq 0 ]; then
+  mount /sys -o remount,rw
+fi
+
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "0403" ] && [ "`cat $syspath/idProduct`" == "6f70" ]; then
     if [ $(lsmod | grep hb_rf_usb | wc -l) -eq 0 ]; then
-      modprobe -a hb_rf_usb &> /dev/null
+      modprobe -q hb_rf_usb
 
       for try in {0..30}; do
-        if [ $(lsmod | grep hb_rf_usb | wc -l) -ne 0 ]; then
+        lsmod | grep -q hb_rf_usb
+        if [ $? -eq 0 ]; then
           break
         fi
         sleep 1
@@ -34,7 +40,11 @@ do
     UART_DEV="raw-uart$dev_no"
   fi
 
-  if [ -e "/dev/$UART_DEV" ]; then
+  if [ -e "/sys/devices/virtual/raw-uart/$UART_DEV" ]; then
+    if [ ! -e "/dev/$UART_DEV" ]; then
+      mknod "/dev/$UART_DEV" c `cat /sys/devices/virtual/raw-uart/$UART_DEV/dev | tr ':' ' '`
+    fi
+
     echo 1 > /sys/class/raw-uart/$UART_DEV/reset_radio_module
 
     sleep 1
@@ -76,6 +86,13 @@ done
 
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c00f" ]; then
+    HM_HMRF_DEVNODE="/dev/$(udevadm info -q name -p $syspath)"
+
+    if [ ! -e "$HM_HMRF_DEVNODE" ]; then
+      mkdir -p `dirname $HM_HMRF_DEVNODE`
+      mknod "$HM_HMRF_DEVNODE" c `cat $syspath/dev | tr ':' ' '`
+    fi
+
     HM_HMRF_DEV="HM-CFG-USB-2"
     HM_HMRF_SERIAL=`cat $syspath/serial | tr '[:lower:]' '[:upper:]'`
     break
@@ -84,9 +101,9 @@ done
 
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c020" ]; then
-    if [ $(find $syspath -name ttyUSB* | wc -l) -eq 0 ]; then
+    if [ $(find $syspath/ -name ttyUSB* | wc -l) -eq 0 ]; then
       if [ ! -e /sys/bus/usb-serial/drivers/cp210x ]; then
-        modprobe -a cp210x &> /dev/null
+        modprobe -q cp210x
  
         for try in {0..30}; do
           if [ -e /sys/bus/usb-serial/drivers/cp210x ]; then
@@ -96,9 +113,7 @@ for syspath in $(find /sys/bus/usb/devices/); do
         done
       fi
 
-      if [ `grep -c "1b1f c020" /sys/bus/usb-serial/drivers/cp210x/new_id` -eq 0 ]; then
-        echo "1b1f c020" > /sys/bus/usb-serial/drivers/cp210x/new_id
-      fi
+      grep -q "1b1f c020" /sys/bus/usb-serial/drivers/cp210x/new_id || echo "1b1f c020" > /sys/bus/usb-serial/drivers/cp210x/new_id
 
       for try in {0..30}; do
         if [ $(find $syspath/ -name ttyUSB* | wc -l) -ne 0 ]; then
@@ -110,8 +125,13 @@ for syspath in $(find /sys/bus/usb/devices/); do
 
     for syspath in $(find $syspath/ -name ttyUSB*); do
       if [ -e $syspath/dev ]; then
-        HM_HMIP_DEV="HMIP-RFUSB"
         HM_HMIP_DEVNODE="/dev/$(udevadm info -q name -p $syspath)"
+
+        if [ ! -e "$HM_HMIP_DEVNODE" ]; then
+          mknod "$HM_HMIP_DEVNODE" c `cat $syspath/dev | tr ':' ' '`
+        fi
+
+        HM_HMIP_DEV="HMIP-RFUSB"
         HMIP_RFUSB_INFO=`timeout 20 /usr/bin/java -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -v -a 2>&1`
         HM_HMIP_ADDRESS=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
         HM_HMIP_SGTIN=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p' | tr '[:lower:]' '[:upper:]'`

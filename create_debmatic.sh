@@ -6,10 +6,10 @@ ARCHIVE_TAG="a4121859ddc0c9e7ffefedb7cdcc55af1055eaab"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
-CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html?id=320"
-CCU_DOWNLOAD_URL="https://www.eq-3.de/Downloads/Software/CCU3-Firmware/CCU3-$CCU_VERSION/ccu3-$CCU_VERSION.tgz"
+CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
+CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 
-PKG_BUILD=31
+PKG_BUILD=32
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -102,7 +102,7 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync, pivccu-modules-dkms"
+    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync"
     if [ "$ARCH" == amd64 ]; then
       DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
     fi

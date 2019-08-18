@@ -10,7 +10,7 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
-modprobe -a eq3_char_loop &> /dev/null
+lsmod | grep -q eq3_char_loop || modprobe -q -n eq3_char_loop
 if [ $? -eq 0 ]; then
   MODULE_STATE="Available"
 else

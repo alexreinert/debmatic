@@ -53,6 +53,7 @@ Fertige SD Karten Images und ISO Images sind in Planung.
 ### Manuelle Installation
 * [Raspberry Pi](docs/setup/raspberrypi.md)
 * [Armbian](docs/setup/armbian.md)
+* [Proxmox](docs/setup/proxmox.md)
 * [Andere Systeme](docs/setup/otheros.md)
 
 ### Updates
