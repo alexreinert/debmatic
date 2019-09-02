@@ -1,12 +1,12 @@
 #!/bin/bash
 
-CUXD_VERSION=2.2.0
+CUXD_VERSION=2.3.3
 
-ARCHIVE_TAG="c2bf69606f391b1a8c2d96ea3ee7db0040525534"
+ARCHIVE_TAG="f0c733d240de5be2ec1e260498fd56c4a3cc0813"
 
-CUXD_DOWNLOAD_URL="https://github.com/jens-maus/cuxd/archive/$ARCHIVE_TAG.tar.gz"
+CUXD_DOWNLOAD_URL="https://github.com/alexreinert/cuxd/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=1
+PKG_BUILD=2
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -19,7 +19,7 @@ wget -O cuxd.tar.gz $CUXD_DOWNLOAD_URL
 tar xzf cuxd.tar.gz
 mv cuxd-$ARCHIVE_TAG repo
 
-declare -A architectures=(["armhf"]="ccu3" ["arm64"]="ccu3" ["amd64"]="ccu_x86_32")
+declare -A architectures=(["armhf"]="ccu3" ["arm64"]="ccu3" ["i386"]="ccu_x86_32" ["amd64"]="ccu_x86_32")
 for ARCH in "${!architectures[@]}"
 do
   ARCH_SOURCE_DIR=${architectures[$ARCH]}
