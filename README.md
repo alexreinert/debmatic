@@ -72,6 +72,7 @@ Dieses Backup enthält nur die Einstellungen der CCU und ersetzt daher nicht ein
 
 ### Addons
 Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
+* [Cloudmatic Connect](https://www.cloudmatic.de) (Paketname cloudmatic)
 * [CUxD](http://www.cuxd.de/) (Paketname cuxd)
 * [JP HB Devices](https://github.com/jp112sdl/JP-HB-Devices-addon) (Paketname jp-hb-devices)
 * [Homematic check_mk addon](https://github.com/alexreinert/homematic_check_mk) (Paketname homematic-check-mk)

@@ -1,0 +1,13 @@
+[Unit]
+Description=Cloudmatic OpenVPN
+PartOf=cloudmatic.service
+After=cloudmatic.service
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/openvpn --config /usr/share/cloudmatic/client.conf --cd /usr/share/cloudmatic
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=cloudmatic.service
+

@@ -1,0 +1,20 @@
+Template: cloudmatic/cmid
+Type: string
+Description: Please enter your Cloudmatic ID:
+Description-DE: Bitte geben Sie Ihre Cloudmatic ID ein:
+
+Template: cloudmatic/cmuser
+Type: string
+Description: Please enter your Cloudmatic username:
+Description-DE: Bitte geben Sie Ihre Cloudmatic Benutzernamen ein:
+
+Template: cloudmatic/cmpass
+Type: password
+Description: Please enter your Cloudmatic password:
+Description-DE: Bitte geben Sie Ihre Cloudmatic Passwort ein:
+
+Template: cloudmatic/invaliddata
+Type: error
+Description: The data you entered was not correct.
+Description-DE: Die eingegebenen Daten sind nicht korrekt.
+

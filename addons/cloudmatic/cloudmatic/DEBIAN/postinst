@@ -1,0 +1,87 @@
+#!/bin/bash
+set -e
+
+. /usr/share/debconf/confmodule
+
+case "$1" in
+  configure|reconfigure|abort-upgrade)
+    if [ "$1" = "reconfigure" ] || [ "${DEBCONF_RECONFIGURE}" = "1" ]; then
+      rm -f /usr/share/cloudmatic/mhcfg
+    fi
+
+    if [ ! -e /usr/share/cloudmatic/mhcfg ]; then
+      while [ -z "$CMKEY" ]; do
+        db_fset cloudmatic/cmid seen false
+        db_fset cloudmatic/cmuser seen false
+        db_fset cloudmatic/cmpass seen false
+        db_go
+
+        db_input critical cloudmatic/cmid
+        db_input critical cloudmatic/cmuser
+        db_input critical cloudmatic/cmpass
+        db_go
+
+        db_get cloudmatic/cmid
+        CMID=$RET
+
+        db_get cloudmatic/cmuser
+        CMUSER=$RET
+
+        db_get cloudmatic/cmpass
+        CMPASS=$RET
+
+        db_reset cloudmatic/cmpass
+        db_go
+
+        if [ -z "$CMID" ] || [ -z "$CMUSER" ]; then
+          exit 1
+	fi
+
+        CMKEY=`wget -O - --post-data="AUTHKEY=EZd83jbs3m-na3t3i2C&USERNAME=$CMUSER&PASSWORD=$CMPASS&CMID=$CMID" https://www.cloudmatic.de/debmaticapi.php -q | jq -r ".smskey"`
+
+	if [ -z "$CMKEY" ]; then
+          db_input critical cloudmatic/invaliddata
+	  db_go
+	fi
+      done
+
+      cat > /usr/share/cloudmatic/mhcfg <<- EOF
+	user_has_account=1
+	userkennung=$CMUSER
+	userid=$CMID
+	userkey=$CMKEY
+	premiumjahr=$(date +%Y)
+	premiummonat=$(date +%m)
+	premiumtag=$(date +%d)
+	EOF
+
+  	rm -f /usr/share/cloudmatic/oldver
+    fi
+
+    if [ ! -e /usr/share/cloudmatic/oldver ]; then
+      echo 1 > /usr/share/cloudmatic/oldver
+    fi
+
+    systemctl daemon-reload
+
+    for service in `ls /lib/systemd/system/cloudmatic*.service | xargs -n 1 basename`
+    do
+      if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
+        systemctl enable $service
+      fi
+    done
+    for timer in `ls /lib/systemd/system/cloudmatic*.timer | xargs -n 1 basename`
+    do
+      systemctl enable $timer
+    done
+
+    /usr/share/cloudmatic/updatecheck.sh
+
+    systemctl start cloudmatic.service
+    ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+esac
+

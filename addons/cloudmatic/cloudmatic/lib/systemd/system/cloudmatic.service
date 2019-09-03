@@ -1,0 +1,14 @@
+[Unit]
+Description=CloudMatic
+After=network.target
+Wants=network.target
+ConditionPathExists=/usr/share/cloudmatic/mhcfg
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/cloudmatic/updatecheck.sh
+
+[Install]
+WantedBy=multi-user.target
+

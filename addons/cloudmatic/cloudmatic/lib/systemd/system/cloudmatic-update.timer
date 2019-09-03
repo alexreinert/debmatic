@@ -1,0 +1,11 @@
+[Unit]
+Description=Cloudmatic Update
+PartOf=cloudmatic.service
+After=cloudmatic.service
+
+[Timer]
+OnCalendar=hourly
+
+[Install]
+WantedBy=cloudmatic.service
+

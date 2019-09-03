@@ -1,0 +1,10 @@
+Package: cloudmatic
+Version: {PKG_VERSION}
+Architecture: all
+Maintainer: Alexander Reinert <alex@areinert.de>
+Pre-Depends: jq, wget, debmatic (>= 3.43.15-10), openvpn
+Section: debmatic-addons
+Priority: extra
+Homepage: https://www.cloudmatic.de/
+Description: CloudMatic addon for debmatic
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+  remove|upgrade|deconfigure)
+    systemctl stop cloudmatic.service
+
+    for timer in `ls /lib/systemd/system/cloudmatic*.timer | xargs -n 1 basename`
+    do
+      systemctl disable $timer
+    done
+    for service in `ls /lib/systemd/system/cloudmatic*.service | xargs -n 1 basename`
+    do
+      if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
+        systemctl disable $service
+      fi
+    done
+    ;;
+
+  failed-upgrade)
+    ;;
+esac

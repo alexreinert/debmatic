@@ -1,0 +1,7 @@
+[Unit]
+Description=Cloudmatic Update
+ 
+[Service]
+Type=oneshot
+ExecStart=/usr/share/cloudmatic/updatecheck.sh
+
