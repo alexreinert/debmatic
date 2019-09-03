@@ -41,6 +41,7 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
 
     :warning: WARNING: Die Stromversorgung muss über den NanoPC erfolgen auch wenn ein RPI-RF-MOD verwendet wird. Dieses darf dann nicht an ein Netzteil angeschlossen werden.
   * NanoPi M4 mit Armbian und Dev kernel (Experimental)
+  * Rock Pi 4 mit Armbian und Dev kernel (Experimental)
   * Rock64 mit Armbian und Dev kernel (Experimental) (LEDs vom RPI-RF-MOD werden hardwaremäßig nicht unterstützt)
   * RockPro64 mit Armbian und Dev kernel (Experimental)
 

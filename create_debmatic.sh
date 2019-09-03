@@ -9,7 +9,7 @@ OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 
-PKG_BUILD=32
+PKG_BUILD=33
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -74,6 +74,10 @@ do
     for file in ld-linux-armhf.so.3 libelvutils.so libeq3config.so libeq3udss.so libhsscomm.so libLanDeviceUtils.so libtcl8.2.so libUnifiedLanComm.so libxmlparser.so libXmlRpc.so tclrega.so tclrpc.so tclticks.so libc.so.6 libdl.so.2 libgcc_s.so.1 libm.so.6 libpthread.so.0 librt.so.1 libstdc++.so.6; do
       cp $WORK_DIR/ccu/lib/$file $TARGET_DIR/lib/ || cp $WORK_DIR/ccu/usr/lib/$file $TARGET_DIR/lib/
     done
+
+    wget -O $TARGET_DIR/lib/liblockdev.so.1 https://github.com/NeuronRobotics/nrjavaserial/raw/master/src/main/c/cross-compile-libs/ARM_64/liblockdev.so
+    mkdir -p $TARGET_DIR/usr/share/debmatic/lib
+    wget -O $TARGET_DIR/usr/share/debmatic/lib/libNRJavaSerialv8.so https://github.com/NeuronRobotics/nrjavaserial/raw/master/src/main/c/resources/native/linux/ARM_64/libNRJavaSerialv8.so
   fi
 
   cp -pR $WORK_DIR/ccu/firmware $TARGET_DIR/

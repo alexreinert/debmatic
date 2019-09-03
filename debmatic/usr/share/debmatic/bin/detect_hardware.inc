@@ -9,6 +9,11 @@ if [ $? -eq 0 ]; then
   mount /sys -o remount,rw
 fi
 
+LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
+if [ -n "$LIBSERIAL" ]; then
+  JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+fi
+
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "0403" ] && [ "`cat $syspath/idProduct`" == "6f70" ]; then
     if [ $(lsmod | grep hb_rf_usb | wc -l) -eq 0 ]; then
@@ -53,7 +58,7 @@ do
     HM_HMRF_ADDRESS=`/bin/eq3configcmd read-default-rf-address -f /dev/$UART_DEV -h 2>&1 | grep "^0x"`
 
     if [ -z "$HM_HMRF_ADDRESS" ] || [ "$HM_HMRF_ADDRESS" == "0x00ffff" ]; then
-      RF_RPI_MOD_INFO=`timeout 20 /usr/bin/java -Dgnu.io.rxtx.SerialPorts=/dev/$UART_DEV -jar /opt/HmIP/hmip-copro-update.jar -p /dev/$UART_DEV -v -a 2>&1`
+      RF_RPI_MOD_INFO=`timeout 20 /usr/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=/dev/$UART_DEV -jar /opt/HmIP/hmip-copro-update.jar -p /dev/$UART_DEV -v -a 2>&1`
       HM_HMRF_ADDRESS=`echo "$RF_RPI_MOD_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
       HM_HMIP_SGTIN=`echo "$RF_RPI_MOD_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p' | tr '[:lower:]' '[:upper:]'`
 
@@ -132,7 +137,7 @@ for syspath in $(find /sys/bus/usb/devices/); do
         fi
 
         HM_HMIP_DEV="HMIP-RFUSB"
-        HMIP_RFUSB_INFO=`timeout 20 /usr/bin/java -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -v -a 2>&1`
+        HMIP_RFUSB_INFO=`timeout 20 /usr/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -v -a 2>&1`
         HM_HMIP_ADDRESS=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
         HM_HMIP_SGTIN=`echo "$HMIP_RFUSB_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p' | tr '[:lower:]' '[:upper:]'`
         HM_HMIP_SERIAL=`echo -n "$HM_HMIP_SGTIN" | tail -c 10`
