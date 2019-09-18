@@ -660,7 +660,7 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/rega/pages/index.htm fw.3.47.15.d
      /*########################################################################*/
  
      PLATFORM = "Central";
--    WEBUI_VERSION = "3.47.15"
+-    WEBUI_VERSION = "3.47.18"
 +    WEBUI_VERSION = "{PKG_VERSION}"
    
      /**
