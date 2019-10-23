@@ -4,9 +4,11 @@ if [[ -e /etc/config/no-coprocessor-update ]]; then
   exit 0
 fi
 
-LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
-if [ -n "$LIBSERIAL" ]; then
-  JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+if [ -e /usr/share/debmatic/lib ]; then
+  LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
+  if [ -n "$LIBSERIAL" ]; then
+    JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+  fi
 fi
 
 if [ "$HM_HMRF_DEV" == "HM-MOD-RPI-PCB" ]; then

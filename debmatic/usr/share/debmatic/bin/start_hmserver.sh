@@ -4,9 +4,11 @@ if [ -z "$HM_HMIP_DEV" ]; then
   HMSERVER_BIN="HMServer"
   HMSERVER_ARGS="/etc/HMServer.conf"
 else
-  LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
-  if [ -n "$LIBSERIAL" ]; then
-    JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+  if [ -e /usr/share/debmatic/lib ]; then
+    LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
+    if [ -n "$LIBSERIAL" ]; then
+      JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+    fi
   fi
 
   HMSERVER_BIN="HMIPServer"

@@ -9,9 +9,11 @@ if [ $? -eq 0 ]; then
   mount /sys -o remount,rw
 fi
 
-LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
-if [ -n "$LIBSERIAL" ]; then
-  JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+if [ -e /usr/share/debmatic/lib ]; then
+  LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
+  if [ -n "$LIBSERIAL" ]; then
+    JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
+  fi
 fi
 
 for syspath in $(find /sys/bus/usb/devices/); do
