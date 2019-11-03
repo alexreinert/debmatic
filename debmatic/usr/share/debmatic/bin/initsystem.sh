@@ -135,40 +135,12 @@ rm -f /var/status/hasInternet
 rm -f /var/status/hasIP
 rm -f /var/status/hasLink
 
-IFACE=`route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $8}'`
-for i in {1..6}
-do
-  if [ "$(cat /sys/class/net/${IFACE}/carrier)" == "1" ]; then
-    touch /var/status/hasLink
-    break
-  else
-    sleep 2
-  fi
-done
-
-for i in {1..6}
-do
-  if [ "$(ip -o -4 addr show ${IFACE} | wc -l)" == "0" ]; then
-    sleep 2
-  else
-    touch /var/status/hasIP
+for IFACE in `ls /sys/class/net/`; do
+  . /usr/share/debmatic/bin/ifup.sh
+  if [ -e /var/status/hasInternet ]; then
     break
   fi
 done
-
-wget -q --spider http://google.com/
-if [[ $? -eq 0 ]]; then
-  touch /var/status/hasInternet
-elif ping -q -W 5 -c 1 google.com >/dev/null 2>/dev/null; then
-  touch /var/status/hasInternet
-fi
-
-ADDR=`ip -o -4 addr show $IFACE | awk '{print $4}'`
-IP=`ipcalc -n -b $ADDR | grep "Address:" | awk '{print $2}'`
-NETMASK=`ipcalc -n -b $ADDR | grep "Netmask:" | awk '{print $2}'`
-GATEWAY=`route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $2}'`
-
-eq3configcmd netconfigcmd -i "$IP" -g "$GATEWAY" -n "$NETMASK" -d1 "" -d2 ""
 
 mkdir -p /media/usb0/measurement
 touch /var/status/hasUSB
