@@ -1,3 +1,4 @@
+/etc/debmatic/webui.conf
 /etc/lighttpd/conf-available/20-debmatic.conf
 /etc/multimacd.conf
 /etc/rega.conf
