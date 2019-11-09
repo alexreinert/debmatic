@@ -6,7 +6,7 @@ ARCHIVE_TAG="d71b4934a63e73544e2e4b412168da8ca8a85154"
 
 ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=2
+PKG_BUILD=3
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)

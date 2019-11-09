@@ -6,7 +6,7 @@ ARCHIVE_TAG="$XML_API_VERSION"
 
 XML_API_DOWNLOAD_URL="https://github.com/jens-maus/XML-API/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=1
+PKG_BUILD=2
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)

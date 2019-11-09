@@ -6,7 +6,7 @@ ARCHIVE_TAG="f0c733d240de5be2ec1e260498fd56c4a3cc0813"
 
 CUXD_DOWNLOAD_URL="https://github.com/alexreinert/cuxd/archive/$ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=2
+PKG_BUILD=3
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)

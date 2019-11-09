@@ -2,7 +2,7 @@
 
 ADDON_VERSION=1.3
 
-PKG_BUILD=1
+PKG_BUILD=2
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
