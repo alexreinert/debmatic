@@ -13,6 +13,7 @@
    ```
 3. Installation der Kernel Header
    ```bash
+   sudo apt install build-essential bison flex libssl-dev
    sudo apt install `dpkg --get-selections | grep 'linux-image-' | grep '\sinstall' | sed -e 's/linux-image-\([a-z0-9-]\+\).*/linux-headers-\1/'`
    ```
 4. Installation der Kernel Module

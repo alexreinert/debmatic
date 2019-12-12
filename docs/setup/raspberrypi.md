@@ -13,6 +13,7 @@
    ```
 3. Installation der Kernel Module
    ```bash
+   sudo apt install build-essential bison flex libssl-dev
    sudo apt install raspberrypi-kernel-headers pivccu-modules-dkms
    ```
 4. Installation der Device Tree Patches (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)

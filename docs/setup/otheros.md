@@ -16,18 +16,22 @@
    sudo apt update
    ```
 3. Ggf. Update auf Kernel >= 4.9
-4. Installation der Kernel Header (dieser Schritt ist abhängig von Distribution und verwendetem Kernel, bitte in der Hilfe der Distribution nachschlagen)
-5. Installation der Kernel Module
+4. Installation der Pakete, welche für das Bauen von Kernel Modulen notwendig sind
+   ```bash
+   sudo apt install build-essential bison flex libssl-dev
+   ```
+5. Installation der Kernel Header (dieser Schritt ist abhängig von Distribution und verwendetem Kernel, bitte in der Hilfe der Distribution nachschlagen)
+6. Installation der Kernel Module
    ```bash
    sudo apt install pivccu-modules-dkms
    ```
-6. Neustart
+7. Neustart
    ```bash
    sudo reboot
    ```
-7. Installation von debmatic
+8. Installation von debmatic
    ```bash
    sudo apt install debmatic
    ```
-8. Viel Spaß mit der Nutzung von debmatic
+9. Viel Spaß mit der Nutzung von debmatic
 

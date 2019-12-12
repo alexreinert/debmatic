@@ -17,8 +17,9 @@ Es darf nur einen einzigen (aktiven) Container mit debmatic geben.
    sudo bash -c 'echo "deb https://www.debmatic.de/debmatic stable main" > /etc/apt/sources.list.d/debmatic.list'
    sudo apt update
    ```
-3. Installation der Kernel Header (dieser Schritt ist abhängig von Distribution und verwendetem Kernel, bitte in der Hilfe der Distribution nachschlagen)
+3. Installation der Kernel Header
    ```bash 
+   sudo apt install build-essential bison flex libssl-dev
    sudo apt install pve-headers
    ```
 4. Installation der Host Pakete
