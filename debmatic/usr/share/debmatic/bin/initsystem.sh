@@ -136,7 +136,7 @@ rm -f /var/status/hasIP
 rm -f /var/status/hasLink
 
 for IFACE in `ls /sys/class/net/`; do
-  . /usr/share/debmatic/bin/ifup.sh
+  IFACE=$IFACE /usr/share/debmatic/bin/ifup.sh
   if [ -e /var/status/hasInternet ]; then
     break
   fi
