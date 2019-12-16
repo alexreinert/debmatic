@@ -39,6 +39,10 @@ if [ -z "$HM_HMRF_DEV" ] && [ `egrep -c '^Type = (HMLGW2|Lan Interface)' /etc/co
   touch /var/status/debmatic_avoid_rfd
 fi
 
+if [ ! -e /etc/config/hs485d.conf ] || [ `egrep -c '^Type = HMWLGW' /etc/config/hs485d.conf` == 0 ]; then
+  touch /var/status/debmatic_avoid_hs485d
+fi
+
 cat > /var/hm_mode << EOF
 HM_HOST='DEBMATIC'
 HM_HOST_RAW_UART='$HM_HOST_RAW_UART'

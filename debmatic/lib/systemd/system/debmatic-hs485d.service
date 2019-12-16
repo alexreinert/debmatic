@@ -5,7 +5,7 @@ After=debmatic.service
 After=network.target
 Before=debmatic-hmserver.service
 Before=debmatic-rega.service
-ConditionPathExists=/etc/config/hs485d.conf
+ConditionPathExists=!/var/status/debmatic_avoid_hs485d
 
 [Service]
 Type=forking
