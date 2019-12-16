@@ -11,4 +11,13 @@ rm -f /var/status/hasIP
 rm -f /var/status/hasInternet
 rm -f /var/status/hasNTP
 
+for IF in `ls /sys/class/net/`; do
+  if [ "$IF" != "$IFACE" ]; then
+    IFACE=$IF /usr/share/debmatic/bin/ifup.sh
+    if [ -e /var/status/hasInternet ]; then
+      break
+    fi
+  fi
+done
+
 exit 0

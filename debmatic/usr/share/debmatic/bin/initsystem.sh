@@ -139,11 +139,14 @@ rm -f /var/status/hasInternet
 rm -f /var/status/hasIP
 rm -f /var/status/hasLink
 
-for IFACE in `ls /sys/class/net/`; do
-  IFACE=$IFACE /usr/share/debmatic/bin/ifup.sh
-  if [ -e /var/status/hasInternet ]; then
-    break
-  fi
+for i in {1..10}; do
+  for IFACE in `ls /sys/class/net/`; do
+    IFACE=$IFACE /usr/share/debmatic/bin/ifup.sh
+    if [ -e /var/status/hasInternet ]; then
+      break 2
+    fi
+  done
+  sleep 1
 done
 
 mkdir -p /media/usb0/measurement
