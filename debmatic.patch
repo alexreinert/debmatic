@@ -1,6 +1,42 @@
-diff -ruN --no-dereference fw.3.47.15.orig/www/api/methods/user/restarthmipserver.tcl fw.3.47.15.debmatic/www/api/methods/user/restarthmipserver.tcl
---- fw.3.47.15.orig/www/api/methods/user/restarthmipserver.tcl	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/api/methods/user/restarthmipserver.tcl	2019-08-05 08:15:55.642198085 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/api/methods/session/create.tcl fw.3.47.22.debmatic/www/api/methods/session/create.tcl
+--- fw.3.47.22.orig/www/api/methods/session/create.tcl	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/api/methods/session/create.tcl	2019-12-18 13:15:05.296920857 +0100
+@@ -11,7 +11,7 @@
+ 
+ package require http
+ 
+-set LOGIN_URL {127.0.0.1/login.htm}
++set LOGIN_URL {127.0.0.1:8181/login.htm}
+ 
+ ##
+ # getHttpHeader
+diff -ruN --no-dereference fw.3.47.22.orig/www/api/methods/session/login.tcl fw.3.47.22.debmatic/www/api/methods/session/login.tcl
+--- fw.3.47.22.orig/www/api/methods/session/login.tcl	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/api/methods/session/login.tcl	2019-12-18 13:15:24.177020039 +0100
+@@ -12,7 +12,7 @@
+ 
+ package require http
+ 
+-set LOGIN_URL 127.0.0.1/login.htm
++set LOGIN_URL 127.0.0.1:8181/login.htm
+ 
+ ##
+ # getHttpHeader
+diff -ruN --no-dereference fw.3.47.22.orig/www/api/methods/session/renew.tcl fw.3.47.22.debmatic/www/api/methods/session/renew.tcl
+--- fw.3.47.22.orig/www/api/methods/session/renew.tcl	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/api/methods/session/renew.tcl	2019-12-18 13:16:06.185240732 +0100
+@@ -12,7 +12,7 @@
+ package require http
+ 
+ set sid $args(_session_id_)
+-set url "127.0.0.1/pages/index.htm?sid=@$sid@"
++set url "127.0.0.1:8181/pages/index.htm?sid=@$sid@"
+ 
+ ::http::cleanup [::http::geturl $url]
+ 
+diff -ruN --no-dereference fw.3.47.22.orig/www/api/methods/user/restarthmipserver.tcl fw.3.47.22.debmatic/www/api/methods/user/restarthmipserver.tcl
+--- fw.3.47.22.orig/www/api/methods/user/restarthmipserver.tcl	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/api/methods/user/restarthmipserver.tcl	2019-12-18 13:14:28.280726344 +0100
 @@ -7,6 +7,5 @@
  #
  # Rückgabewert: true
@@ -9,9 +45,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/api/methods/user/restarthmipserve
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.47.15.orig/www/api/methods/user/restartlighttpd.tcl fw.3.47.15.debmatic/www/api/methods/user/restartlighttpd.tcl
---- fw.3.47.15.orig/www/api/methods/user/restartlighttpd.tcl	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/api/methods/user/restartlighttpd.tcl	2019-08-05 08:15:55.678198328 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/api/methods/user/restartlighttpd.tcl fw.3.47.22.debmatic/www/api/methods/user/restartlighttpd.tcl
+--- fw.3.47.22.orig/www/api/methods/user/restartlighttpd.tcl	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/api/methods/user/restartlighttpd.tcl	2019-12-18 13:14:28.280726344 +0100
 @@ -7,8 +7,7 @@
  #
  # Rückgabewert: true
@@ -23,9 +59,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/api/methods/user/restartlighttpd.
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.47.15.orig/www/config/control_panel.cgi fw.3.47.15.debmatic/www/config/control_panel.cgi
---- fw.3.47.15.orig/www/config/control_panel.cgi	2019-07-17 09:28:41.000000000 +0200
-+++ fw.3.47.15.debmatic/www/config/control_panel.cgi	2019-08-05 08:15:55.714198572 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/config/control_panel.cgi fw.3.47.22.debmatic/www/config/control_panel.cgi
+--- fw.3.47.22.orig/www/config/control_panel.cgi	2019-10-10 15:50:09.000000000 +0200
++++ fw.3.47.22.debmatic/www/config/control_panel.cgi	2019-12-18 13:14:28.280726344 +0100
 @@ -102,16 +102,6 @@
    }
  }
@@ -104,9 +140,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/config/control_panel.cgi fw.3.47.
  
    puts {
      <!-- Kopplungen -->
-diff -ruN --no-dereference fw.3.47.15.orig/www/config/cp_maintenance.cgi fw.3.47.15.debmatic/www/config/cp_maintenance.cgi
---- fw.3.47.15.orig/www/config/cp_maintenance.cgi	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/config/cp_maintenance.cgi	2019-08-05 08:15:55.730198680 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/config/cp_maintenance.cgi fw.3.47.22.debmatic/www/config/cp_maintenance.cgi
+--- fw.3.47.22.orig/www/config/cp_maintenance.cgi	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/config/cp_maintenance.cgi	2019-12-18 13:14:28.280726344 +0100
 @@ -389,151 +389,10 @@
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
@@ -307,9 +343,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/config/cp_maintenance.cgi fw.3.47
    
    puts "Content-Type:application/x-download"
    puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN --no-dereference fw.3.47.15.orig/www/config/cp_security.cgi fw.3.47.15.debmatic/www/config/cp_security.cgi
---- fw.3.47.15.orig/www/config/cp_security.cgi	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/config/cp_security.cgi	2019-08-05 08:15:55.750198815 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/config/cp_security.cgi fw.3.47.22.debmatic/www/config/cp_security.cgi
+--- fw.3.47.22.orig/www/config/cp_security.cgi	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/config/cp_security.cgi	2019-12-18 13:14:28.344726679 +0100
 @@ -296,7 +296,6 @@
      } else {
        exec touch /usr/local/.doFactoryReset
@@ -518,9 +554,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/config/cp_security.cgi fw.3.47.15
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN --no-dereference fw.3.47.15.orig/www/config/cp_time.cgi fw.3.47.15.debmatic/www/config/cp_time.cgi
---- fw.3.47.15.orig/www/config/cp_time.cgi	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/config/cp_time.cgi	2019-08-05 08:15:55.770198950 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/config/cp_time.cgi fw.3.47.22.debmatic/www/config/cp_time.cgi
+--- fw.3.47.22.orig/www/config/cp_time.cgi	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/config/cp_time.cgi	2019-12-18 13:14:28.344726679 +0100
 @@ -144,7 +144,7 @@
    global env LOCATIONS TIMEZONES
    
@@ -631,9 +667,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/config/cp_time.cgi fw.3.47.15.deb
        set country ""
        foreach location $LOCATIONS {
          if { [lindex $location 0] == "-" } {
-diff -ruN --no-dereference fw.3.47.15.orig/www/config/help.cgi fw.3.47.15.debmatic/www/config/help.cgi
---- fw.3.47.15.orig/www/config/help.cgi	2019-07-17 09:28:42.000000000 +0200
-+++ fw.3.47.15.debmatic/www/config/help.cgi	2019-08-05 08:15:55.770198950 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/config/help.cgi fw.3.47.22.debmatic/www/config/help.cgi
+--- fw.3.47.22.orig/www/config/help.cgi	2019-10-10 15:50:10.000000000 +0200
++++ fw.3.47.22.debmatic/www/config/help.cgi	2019-12-18 13:14:28.344726679 +0100
 @@ -3,8 +3,8 @@
  source common.tcl
  load tclrega.so
@@ -653,9 +689,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/config/help.cgi fw.3.47.15.debmat
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
-diff -ruN --no-dereference fw.3.47.15.orig/www/rega/pages/index.htm fw.3.47.15.debmatic/www/rega/pages/index.htm
---- fw.3.47.15.orig/www/rega/pages/index.htm	2019-07-17 09:32:23.000000000 +0200
-+++ fw.3.47.15.debmatic/www/rega/pages/index.htm	2019-08-05 08:18:03.123061749 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/rega/pages/index.htm fw.3.47.22.debmatic/www/rega/pages/index.htm
+--- fw.3.47.22.orig/www/rega/pages/index.htm	2019-10-10 15:53:49.000000000 +0200
++++ fw.3.47.22.debmatic/www/rega/pages/index.htm	2019-12-18 13:14:28.344726679 +0100
 @@ -69,7 +69,7 @@
      /*########################################################################*/
  
@@ -665,9 +701,23 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/rega/pages/index.htm fw.3.47.15.d
    
      /**
       * Flags
-diff -ruN --no-dereference fw.3.47.15.orig/www/webui/js/lang/de/translate.lang.js fw.3.47.15.debmatic/www/webui/js/lang/de/translate.lang.js
---- fw.3.47.15.orig/www/webui/js/lang/de/translate.lang.js	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/webui/js/lang/de/translate.lang.js	2019-08-05 08:15:55.850199491 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/tcl/eq3/session.tcl fw.3.47.22.debmatic/www/tcl/eq3/session.tcl
+--- fw.3.47.22.orig/www/tcl/eq3/session.tcl	2019-10-10 15:50:09.000000000 +0200
++++ fw.3.47.22.debmatic/www/tcl/eq3/session.tcl	2019-12-18 14:06:07.945207629 +0100
+@@ -5,8 +5,8 @@
+ 
+ package require http
+ 
+-set LOGIN_URL 127.0.0.1/login.htm
+-set RENEW_URL 127.0.0.1/pages/index.htm
++set LOGIN_URL 127.0.0.1:8181/login.htm
++set RENEW_URL 127.0.0.1:8181/pages/index.htm
+ 
+ ##
+ # session_getHttpHeader
+diff -ruN --no-dereference fw.3.47.22.orig/www/webui/js/lang/de/translate.lang.js fw.3.47.22.debmatic/www/webui/js/lang/de/translate.lang.js
+--- fw.3.47.22.orig/www/webui/js/lang/de/translate.lang.js	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/webui/js/lang/de/translate.lang.js	2019-12-18 13:14:28.344726679 +0100
 @@ -458,6 +458,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -676,9 +726,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/webui/js/lang/de/translate.lang.j
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
-diff -ruN --no-dereference fw.3.47.15.orig/www/webui/js/lang/en/translate.lang.js fw.3.47.15.debmatic/www/webui/js/lang/en/translate.lang.js
---- fw.3.47.15.orig/www/webui/js/lang/en/translate.lang.js	2019-07-17 09:28:44.000000000 +0200
-+++ fw.3.47.15.debmatic/www/webui/js/lang/en/translate.lang.js	2019-08-05 08:15:55.874199653 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/webui/js/lang/en/translate.lang.js fw.3.47.22.debmatic/www/webui/js/lang/en/translate.lang.js
+--- fw.3.47.22.orig/www/webui/js/lang/en/translate.lang.js	2019-10-10 15:50:12.000000000 +0200
++++ fw.3.47.22.debmatic/www/webui/js/lang/en/translate.lang.js	2019-12-18 13:14:28.344726679 +0100
 @@ -457,6 +457,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -687,9 +737,9 @@ diff -ruN --no-dereference fw.3.47.15.orig/www/webui/js/lang/en/translate.lang.j
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
-diff -ruN --no-dereference fw.3.47.15.orig/www/webui/webui.js fw.3.47.15.debmatic/www/webui/webui.js
---- fw.3.47.15.orig/www/webui/webui.js	2019-07-17 09:28:45.000000000 +0200
-+++ fw.3.47.15.debmatic/www/webui/webui.js	2019-08-05 08:15:55.946200140 +0200
+diff -ruN --no-dereference fw.3.47.22.orig/www/webui/webui.js fw.3.47.22.debmatic/www/webui/webui.js
+--- fw.3.47.22.orig/www/webui/webui.js	2019-10-10 15:50:13.000000000 +0200
++++ fw.3.47.22.debmatic/www/webui/webui.js	2019-12-18 13:14:28.348726700 +0100
 @@ -6140,12 +6140,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
