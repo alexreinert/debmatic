@@ -59,7 +59,7 @@ do
 
     HM_HMRF_ADDRESS=`/bin/eq3configcmd read-default-rf-address -f /dev/$UART_DEV -h 2>&1 | grep "^0x"`
 
-    if [ -z "$HM_HMRF_ADDRESS" ] || [ "$HM_HMRF_ADDRESS" == "0x00ffff" ]; then
+    if [ -z "$HM_HMRF_ADDRESS" ] || [ "$HM_HMRF_ADDRESS" == "0x00ffff" ] || [ "$RADIO_MAC" == "0xa9ffff" ]; then
       RF_RPI_MOD_INFO=`timeout 20 /usr/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=/dev/$UART_DEV -jar /opt/HmIP/hmip-copro-update.jar -p /dev/$UART_DEV -v -a 2>&1`
       HM_HMRF_ADDRESS=`echo "$RF_RPI_MOD_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
       HM_HMIP_SGTIN=`echo "$RF_RPI_MOD_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p' | tr '[:lower:]' '[:upper:]'`
