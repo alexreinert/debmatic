@@ -1,12 +1,8 @@
 #!/bin/bash
 
-CUXD_VERSION=2.3.3
+CUXD_VERSION=2.4.1
 
-ARCHIVE_TAG="f0c733d240de5be2ec1e260498fd56c4a3cc0813"
-
-CUXD_DOWNLOAD_URL="https://github.com/alexreinert/cuxd/archive/$ARCHIVE_TAG.tar.gz"
-
-PKG_BUILD=3
+PKG_BUILD=4
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -15,26 +11,37 @@ PKG_VERSION=$CUXD_VERSION-$PKG_BUILD
 
 cd $WORK_DIR
 
-wget -O cuxd.tar.gz $CUXD_DOWNLOAD_URL
-tar xzf cuxd.tar.gz
-mv cuxd-$ARCHIVE_TAG repo
+declare -A architectures=(["armhf"]="72330" ["arm64"]="72330" ["i386"]="72329" ["amd64"]="72329")
 
-declare -A architectures=(["armhf"]="ccu3" ["arm64"]="ccu3" ["i386"]="ccu_x86_32" ["amd64"]="ccu_x86_32")
 for ARCH in "${!architectures[@]}"
 do
-  ARCH_SOURCE_DIR=${architectures[$ARCH]}
+  ARCH_DOWNLOAD_URL="https://homematic-forum.de/forum/download/file.php?id=${architectures[$ARCH]}"
+
+  mkdir -p $WORK_DIR/repo-$ARCH
+  cd $WORK_DIR/repo-$ARCH
+  wget -O cuxd.tar.gz $ARCH_DOWNLOAD_URL
+  tar xzf cuxd.tar.gz
 
   TARGET_DIR=$WORK_DIR/cuxd-$PKG_VERSION-$ARCH
 
   mkdir -p $TARGET_DIR/usr/local/addons/cuxd
-  cp -a $WORK_DIR/repo/common/cuxd/* $TARGET_DIR/usr/local/addons/cuxd 
-  cp -a $WORK_DIR/repo/$ARCH_SOURCE_DIR/cuxd/* $TARGET_DIR/usr/local/addons/cuxd 
+  cp -a $WORK_DIR/repo-$ARCH/cuxd_addon.cfg $TARGET_DIR/usr/local/addons/cuxd
+  cp -a $WORK_DIR/repo-$ARCH/cuxd/* $TARGET_DIR/usr/local/addons/cuxd 
 
   cp -a $CURRENT_DIR/cuxd/* $TARGET_DIR 
 
   for file in $TARGET_DIR/DEBIAN/*; do
+    DEPENDS="Pre-Depends: debmatic (>= 3.43.15-10)"
+    if [ "$ARCH" == amd64 ]; then
+      DEPENDS="$DEPENDS, libc6-i386 (>= 2.28)"
+    fi
+    if [ "$ARCH" == i386 ]; then
+      DEPENDS="$DEPENDS, libc6 (>= 2.28)"
+    fi
+
     sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file
     sed -i "s/{PKG_ARCH}/$ARCH/g" $file
+    sed -i "s/{DEPENDS}/$DEPENDS/g" $file
   done
 
   cd $WORK_DIR
