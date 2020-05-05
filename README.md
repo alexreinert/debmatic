@@ -16,6 +16,7 @@ debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Sy
   * HM-CFG-USB-2 (nur HmRF)
   * HM-LGW-O-TW-W-EU (nur HmRF)
   * [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) (abhängig von Funkmodul)
+  * [HB-RF-USB-2](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB-2) (abhängig von Funkmodul)
 
 ### Unterstützung [![Spenden](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA)
 Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1).
@@ -46,7 +47,7 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
   * RockPro64 mit Armbian und Dev kernel (Experimental)
 
     :warning: WARNING: Die Stromversorgung muss über den RockPro64 erfolgen auch wenn ein RPI-RF-MOD verwendet wird. Dieses darf dann nicht an ein Netzteil angeschlossen werden.
-* Nutzung auf anderen Systemen (auch x64 Systeme) kann per USB mit der Platine [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) erfolgen.
+* Nutzung auf anderen Systemen (auch x64 Systeme) kann per USB mit der Platine [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) oder [HB-RF-USB-2](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB-2) erfolgen.
 
 ### Vorbereite Images
 Fertige SD Karten Images und ISO Images sind in Planung.

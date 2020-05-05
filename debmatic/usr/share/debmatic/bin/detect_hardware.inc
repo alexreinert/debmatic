@@ -37,6 +37,27 @@ for syspath in $(find /sys/bus/usb/devices/); do
       sleep 1
     done
   fi
+
+  if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "10c4" ] && [ "`cat $syspath/idProduct`" == "8c07" ]; then
+    if [ $(lsmod | grep hb_rf_usb-2 | wc -l) -eq 0 ]; then
+      modprobe -q hb_rf_usb
+
+      for try in {0..30}; do
+        lsmod | grep -q hb_rf_usb-2
+        if [ $? -eq 0 ]; then
+          break
+        fi
+        sleep 1
+      done
+    fi
+
+    for try in {0..30}; do
+      if [ $(find $syspath/ -name gpiochip* | wc -l) -ne 0 ]; then
+        break
+      fi
+      sleep 1
+    done
+  fi
 done
 
 for dev_no in {0..5}
