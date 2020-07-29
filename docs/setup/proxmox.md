@@ -26,13 +26,17 @@ Es darf nur einen einzigen (aktiven) Container mit debmatic geben.
    ```bash
    sudo apt install pivccu-modules-dkms debmatic-lxc-host
    ```
-5. Erstellen des (priviligierten) Containers
-6. Anpassen der Konfiguration des Containers, es müssen in der Datei /etc/pve/lxc/<Container-ID>.conf folgende beiden Zeilen eingefügt werden:
+5. Falls ein HB-RF-ETH verwendet wird, Installation des benötigten Support Pakets
+   ```bash
+   sudo apt install hb-rf-eth
+   ```
+6. Erstellen des (priviligierten) Containers
+7. Anpassen der Konfiguration des Containers, es müssen in der Datei /etc/pve/lxc/&lt;Container-ID&gt;.conf folgende beiden Zeilen eingefügt werden:
    ```
    lxc.apparmor.profile: unconfined
    lxc.hook.mount: /usr/share/debmatic/bin/lxc-start-hook.sh
    ```
-6. Neustart des Containers
+8. Neustart des Containers
 
 #### Container
 ### Installation

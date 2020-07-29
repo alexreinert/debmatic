@@ -25,13 +25,17 @@
    ```bash
    sudo apt install pivccu-modules-dkms
    ```
-7. Neustart
+7. Falls ein HB-RF-ETH verwendet wird, Installation des benötigten Support Pakets
+   ```bash
+   sudo apt install hb-rf-eth
+   ```
+8. Neustart
    ```bash
    sudo reboot
    ```
-8. Installation von debmatic
+9. Installation von debmatic
    ```bash
    sudo apt install debmatic
    ```
-9. Viel Spaß mit der Nutzung von debmatic
+10. Viel Spaß mit der Nutzung von debmatic
 

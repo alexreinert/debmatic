@@ -16,6 +16,35 @@ if [ -e /usr/share/debmatic/lib ]; then
   fi
 fi
 
+if [ -e /etc/default/hb_rf_eth ]; then
+  . /etc/default/hb_rf_eth
+fi
+if [ ! -z "$HB_RF_ETH_ADDRESS" ]; then
+  if [ ! -e /sys/module/hb_rf_eth/parameters/connect ]; then
+    modprobe -q hb_rf_eth
+
+    for try in {0..30}; do
+      if [ -e /sys/module/hb_rf_eth/parameters/connect ]; then
+        break
+      fi
+      sleep 1
+    done
+  fi
+
+  for try in {0..30}; do
+    ping -c1 $HB_RF_ETH_ADDRESS > /dev/null
+    if [ $? -eq 0 ]; then
+      break
+    fi
+    sleep 1
+  done
+
+  for try in {0..30}; do
+    echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
+    sleep 1
+  done
+fi
+
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "0403" ] && [ "`cat $syspath/idProduct`" == "6f70" ]; then
     if [ $(lsmod | grep hb_rf_usb | wc -l) -eq 0 ]; then
@@ -113,7 +142,6 @@ do
 done
 
 if [ -z "$AVOID_HM_CFG_USB_2" ] || [  "$AVOID_HM_CFG_USB_2" != "1" ]; then
-  echo "try HM-CFG-USB-2"
   for syspath in $(find /sys/bus/usb/devices/); do
     if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c00f" ]; then
       HM_HMRF_DEVNODE="/dev/$(udevadm info -q name -p $syspath)"

@@ -8,6 +8,7 @@ allow_device () {
   done
 }
 
+modprobe -q hb_rf_eth || true
 modprobe -q eq3_char_loop || true
 modprobe -q rpi_rf_mod_led || true
 modprobe -q ledtrig-default-on || true

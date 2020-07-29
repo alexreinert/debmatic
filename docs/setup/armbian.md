@@ -20,17 +20,21 @@
    ```bash
    sudo apt install pivccu-modules-dkms
    ```
-5. Installation der Device Tree Patches (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
+5. Falls ein HB-RF-ETH verwendet wird, Installation des benötigten Support Pakets
+   ```bash
+   sudo apt install hb-rf-eth
+   ```
+6. Installation der Device Tree Patches (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
    ```bash
    sudo apt install pivccu-devicetree-armbian
    ```
-6. Neustart
+7. Neustart
    ```bash
    sudo reboot
    ```
-7. Installation von debmatic
+8. Installation von debmatic
    ```bash
    sudo apt install debmatic
    ```
-8. Viel Spaß mit der Nutzung von debmatic
+9. Viel Spaß mit der Nutzung von debmatic
 

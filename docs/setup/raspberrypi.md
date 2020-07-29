@@ -16,11 +16,15 @@
    sudo apt install build-essential bison flex libssl-dev
    sudo apt install raspberrypi-kernel-headers pivccu-modules-dkms
    ```
-4. Installation der Device Tree Patches (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
+4. Falls ein HB-RF-ETH verwendet wird, Installation des benötigten Support Pakets
+   ```bash
+   sudo apt install hb-rf-eth
+   ```
+5. Installation der Device Tree Patches (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
    ```bash
    sudo apt install pivccu-modules-raspberrypi
    ```
-5. UART Schnittstelle der GPIO Leiste aktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird oder falls ein Raspberry Pi 2B eingesetzt wird)
+6. UART Schnittstelle der GPIO Leiste aktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird oder falls ein Raspberry Pi 2B eingesetzt wird)
    * Option 1: Bluetooth deaktivieren
       ```bash
       sudo bash -c 'cat << EOT >> /boot/config.txt
@@ -37,18 +41,18 @@
       core_freq=250
       EOT'
       ```
-6. Serielle Konsole deaktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
+7. Serielle Konsole deaktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
    ```bash
    sudo sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
    sudo sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
    ```
-7. Neustart
+8. Neustart
    ```bash
    sudo reboot
    ```
-8. Installation von debmatic
+9. Installation von debmatic
    ```bash
    sudo apt install debmatic
    ```
-9. Viel Spaß mit der Nutzung von debmatic
+10. Viel Spaß mit der Nutzung von debmatic
 
