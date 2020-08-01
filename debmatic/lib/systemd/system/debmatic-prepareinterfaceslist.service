@@ -2,7 +2,7 @@
 Description=debmatic prepare InterfacesList.xml
 PartOf=debmatic.service
 After=debmatic.service
-After=network.target
+After=network-online.target
 Before=debmatic-lighttpd.service
 Before=debmatic-updatelgwfirmware.service
 Before=debmatic-rega.service

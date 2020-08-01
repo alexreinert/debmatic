@@ -2,7 +2,7 @@
 Description=debmatic rega
 PartOf=debmatic.service
 After=debmatic.service
-After=network.target
+After=network-online.target
 After=debmatic-hmserver.service
 After=debmatic-rfd.service
 After=debmatic-hs485d.service

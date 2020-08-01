@@ -2,7 +2,7 @@
 Description=debmatic hs485d
 PartOf=debmatic.service
 After=debmatic.service
-After=network.target
+After=network-online.target
 Before=debmatic-hmserver.service
 Before=debmatic-rega.service
 ConditionPathExists=!/var/status/debmatic_avoid_hs485d

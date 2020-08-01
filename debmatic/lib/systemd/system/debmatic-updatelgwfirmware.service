@@ -2,7 +2,7 @@
 Description=debmatic update lgw firmware
 PartOf=debmatic.service
 After=debmatic.service
-After=network.target
+After=network-online.target
 Before=debmatic-updatelgwkey.service
 Before=debmatic-rfd.service
 

@@ -2,7 +2,7 @@
 Description=debmatic update lgw key
 PartOf=debmatic.service
 After=debmatic.service
-After=network.target
+After=network-online.target
 Before=debmatic-rfd.service
 
 [Service]
