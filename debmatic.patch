@@ -39,7 +39,7 @@ diff -ruN --no-dereference fw.3.51.6.orig/www/api/methods/user/restarthmipserver
 +++ fw.3.51.6.debmatic/www/api/methods/user/restarthmipserver.tcl	2020-02-08 19:10:14.540580343 +0100
 @@ -7,6 +7,5 @@
  #
- # Rückgabewert: true
+ # RÃ¼ckgabewert: true
  
 -#exec /etc/init.d/S62HMServer start &
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
@@ -50,7 +50,7 @@ diff -ruN --no-dereference fw.3.51.6.orig/www/api/methods/user/restartlighttpd.t
 +++ fw.3.51.6.debmatic/www/api/methods/user/restartlighttpd.tcl	2020-02-08 19:10:14.540580343 +0100
 @@ -7,8 +7,7 @@
  #
- # Rückgabewert: true
+ # RÃ¼ckgabewert: true
  
 -exec echo "restart-lighttpd" | socat - UNIX-CONNECT:/tmp/eq3-services.uds >/dev/null
 -#exec -- /usr/bin/nohup /etc/init.d/S50lighttpd restart >/dev/null
@@ -149,7 +149,7 @@ diff -ruN --no-dereference fw.3.51.6.orig/www/config/cp_maintenance.cgi fw.3.51.
              }
 -            table_row {
 -              table_data {align="left"} {colspan="3"} {
--                #puts "[bold "Software-Update durchführen"]"
+-                #puts "[bold "Software-Update durchfÃ¼hren"]"
 -                puts "<b>\${dialogSettingsCMLblPerformSoftwareUpdate}</b>"
 -              }
 -            }
@@ -733,7 +733,7 @@ diff -ruN --no-dereference fw.3.51.6.orig/www/webui/js/lang/en/translate.lang.js
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
      "dialogSettingsCMLblActualSoftwareVersion" : "Current software version:",
-+    "dialogSettingsDebmaticDonateHint" : "Please support the development of idebmatic with a donation via <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=WUC7QU84EU7DA' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1'>Amazom wishlist</a>.",
++    "dialogSettingsDebmaticDonateHint" : "Please support the development of debmatic with a donation via <a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=WUC7QU84EU7DA' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1'>Amazom wishlist</a>.",
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
