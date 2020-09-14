@@ -9,7 +9,7 @@ OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 
-PKG_BUILD=46
+PKG_BUILD=47
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -106,7 +106,7 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync"
+    DEPENDS="Pre-Depends: detect-radio-module, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync"
     if [ "$ARCH" == amd64 ]; then
       DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
     fi
