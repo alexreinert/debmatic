@@ -8,6 +8,7 @@ Before=debmatic-rfd.service
 Before=debmatic-hs485d.service
 Before=debmatic-hmserver.service
 Before=debmatic-rega.service
+Before=debmatic-startupfinished.service
 
 [Service]
 Type=forking

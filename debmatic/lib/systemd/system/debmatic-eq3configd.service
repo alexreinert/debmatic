@@ -3,6 +3,7 @@ Description=debmatic eq3configd
 PartOf=debmatic.service
 After=debmatic.service
 After=network-online.target
+Before=debmatic-startupfinished.service
 
 [Service]
 Type=simple

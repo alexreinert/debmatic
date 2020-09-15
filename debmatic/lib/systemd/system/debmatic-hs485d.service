@@ -5,6 +5,7 @@ After=debmatic.service
 After=network-online.target
 Before=debmatic-hmserver.service
 Before=debmatic-rega.service
+Before=debmatic-startupfinished.service
 ConditionPathExists=!/var/status/debmatic_avoid_hs485d
 
 [Service]

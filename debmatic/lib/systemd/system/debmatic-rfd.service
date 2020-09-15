@@ -4,6 +4,7 @@ PartOf=debmatic.service
 After=debmatic.service
 Before=debmatic-hmserver.service
 Before=debmatic-rega.service
+Before=debmatic-startupfinished.service
 ConditionPathExists=!/var/status/debmatic_avoid_rfd
 
 [Service]

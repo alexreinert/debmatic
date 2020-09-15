@@ -3,6 +3,7 @@ Description=debmatic hmserver
 PartOf=debmatic.service
 After=debmatic.service
 Before=debmatic-rega.service
+Before=debmatic-startupfinished.service
 
 [Service]
 Type=forking

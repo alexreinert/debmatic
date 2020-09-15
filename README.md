@@ -22,11 +22,11 @@ debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Sy
 ### Unterstützung [![Spenden](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA)
 Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1).
 
-### Vorraussetzung
+### Voraussetzung
 * Debian basiertes System (Debian, Ubuntu, Raspbian, Armbian)
 * Mindestens Kernel 4.9 (Bei ARM64 mind. Kernel 4.14)
 
-### Vorraussetzung für HM-MOD-RPI-PCB und RPI-RF-MOD 
+### Voraussetzung für HM-MOD-RPI-PCB und RPI-RF-MOD
 * Unterstützter Single Board Computer
   * Raspberry Pi 2B/3B/3B+/4B mit Raspbian Stretch oder Raspbian Buster
   * Asus Tinkerboard mit Armbian und Mainline kernel

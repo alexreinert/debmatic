@@ -2,6 +2,7 @@
 Description=debmatic HssLED
 PartOf=debmatic.service
 After=debmatic.service
+Before=debmatic-startupfinished.service
 
 [Service]
 Type=simple
