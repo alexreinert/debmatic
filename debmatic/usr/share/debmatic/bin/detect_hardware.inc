@@ -32,15 +32,11 @@ if [ ! -z "$HB_RF_ETH_ADDRESS" ]; then
   fi
 
   for try in {0..30}; do
-    ping -c1 $HB_RF_ETH_ADDRESS > /dev/null
-    if [ $? -eq 0 ]; then
-      break
+    if [ -e /sys/class/hb-rf-eth/hb-rf-eth/connect ]; then
+      echo "$HB_RF_ETH_ADDRESS" > /sys/class/hb-rf-eth/hb-rf-eth/connect && break
+    else
+      echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
     fi
-    sleep 1
-  done
-
-  for try in {0..30}; do
-    echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
     sleep 1
   done
 fi
@@ -108,6 +104,9 @@ do
     if [ $? -eq 0 ]; then
       HM_HOST_RAW_UART="$UART_DEV"
       HM_HOST_GPIO_UART="/dev/$UART_DEV"
+      if [ -e "/sys/class/raw-uart/$UART_DEV/device_type" ]; then
+        HM_HOST_UART_DEVICE_TYPE=`cat /sys/class/raw-uart/$UART_DEV/device_type`
+      fi
 
       HM_HMRF_DEVNODE="/dev/mmd_bidcos"
       HM_HMRF_DEV=`echo $MODULE_INFO | cut -d' ' -f1`

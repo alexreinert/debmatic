@@ -47,23 +47,32 @@ if [ -z "$HM_HMRF_DEV" ]; then
 fi
 echo "HMRF Hardware:  $HM_HMRF_DEV"
 
+if [ ! -z "$HM_HOST_UART_DEVICE_TYPE" ]; then
+  echo " Connected via: $HM_HOST_UART_DEVICE_TYPE ($HM_HOST_GPIO_UART)"
+fi
+
+if [ -z "$HM_HMRF_SERIAL" ]; then
+  HM_HMRF_SERIAL='unknown'
+fi
+echo " Board serial:  $HM_HMRF_SERIAL"
+
+if [ -z "$HM_HMRF_ADDRESS" ]; then
+  HM_HMRF_ADDRESS='unknown'
+fi
+echo " Radio MAC:     $HM_HMRF_ADDRESS"
+
 if [ -z "$HM_HMIP_DEV" ]; then
   HM_HMIP_DEV='unknown'
 fi
 echo "HMIP Hardware:  $HM_HMIP_DEV"
 
-if [ -z "$HM_HMRF_SERIAL" ]; then
-  HM_HMRF_SERIAL='unknown'
-fi
-echo "Board serial:   $HM_HMRF_SERIAL"
-
-if [ -z "$HM_HMRF_ADDRESS" ]; then
-  HM_HMRF_ADDRESS='unknown'
-fi
-echo "Radio MAC:      $HM_HMRF_ADDRESS"
-
 if [ -z "$HM_HMIP_SGTIN" ]; then
   HM_HMIP_SGTIN='unknown'
 fi
-echo "SGTIN:          $HM_HMIP_SGTIN"
+echo " SGTIN:         $HM_HMIP_SGTIN"
+
+if [ -z "$HM_HMIP_ADDRESS" ]; then
+  HM_HMIP_ADDRESS='unknown'
+fi
+echo " Radio MAC:     $HM_HMIP_ADDRESS"
 
