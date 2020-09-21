@@ -3,7 +3,7 @@
 * Proxmox 5.1 oder höher
 
 ### Installation innerhalb einer VM
-Eventuelle USB Geräte in die VM durchleiten und innerhalb der VM eine [normale Installation](otheros.md) innerhalb der VM durchführen.
+Eventuelle USB Geräte in die VM durchleiten und innerhalb der VM eine [normale Installation](otheros.md) durchführen.
 
 ### Installation innerhalb eines (priviligierten) Containers
 Aufgrund der Software Architektur der CCU braucht es spezielle Kernel Module, welche im Kontexts der Host laufen müssen, daher muss man sowohl im Host, als auch im Container Anpassungen vorgenommen werden.
