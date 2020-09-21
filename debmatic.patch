@@ -717,7 +717,7 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/tcl/eq3/session.tcl fw.3.53.30.de
  # session_getHttpHeader
 diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/de/translate.lang.js fw.3.53.30.debmatic/www/webui/js/lang/de/translate.lang.js
 --- fw.3.53.30.orig/www/webui/js/lang/de/translate.lang.js	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/webui/js/lang/de/translate.lang.js	2020-09-15 14:32:52.700243173 +0200
++++ fw.3.53.30.debmatic/www/webui/js/lang/de/translate.lang.js	2020-09-20 15:40:50.539610229 +0200
 @@ -459,6 +459,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -726,9 +726,20 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/de/translate.lang.j
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
+@@ -1001,6 +1002,10 @@
+     "USA" : "USA",
+     "dummy" : "dummy",
+ 
++    "hb_eth_connection_description" : "HB-RF-ETH Verbindungsstatus",
++    "hb_eth_connection_connected" : "Verbunden",
++    "hb_eth_connection_disconnected" : "Getrennt",
++
+     "optionLastValue" : "Letzter Wert",
+     "optionNoModification" : "Keine %C4nderung",
+     "optionNone" : "Keine",
 diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/en/translate.lang.js fw.3.53.30.debmatic/www/webui/js/lang/en/translate.lang.js
 --- fw.3.53.30.orig/www/webui/js/lang/en/translate.lang.js	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/webui/js/lang/en/translate.lang.js	2020-09-15 14:32:52.700243173 +0200
++++ fw.3.53.30.debmatic/www/webui/js/lang/en/translate.lang.js	2020-09-20 15:40:31.183479035 +0200
 @@ -458,6 +458,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -737,6 +748,17 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/en/translate.lang.j
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
+@@ -1077,6 +1078,10 @@
+     "USA" : "USA",
+     "dummy" : "dummy",
+ 
++    "hb_eth_connection_description" : "HB-RF-ETH connection state",
++    "hb_eth_connection_connected" : "Connected",
++    "hb_eth_connection_disconnected" : "Disconnected",
++
+     "optionLastValue" : "Last value",
+     "optionNoModification" : "No change",
+     "optionNone" : "None",
 diff -ruN --no-dereference fw.3.53.30.orig/www/webui/webui.js fw.3.53.30.debmatic/www/webui/webui.js
 --- fw.3.53.30.orig/www/webui/webui.js	2020-09-03 11:38:20.000000000 +0200
 +++ fw.3.53.30.debmatic/www/webui/webui.js	2020-09-15 14:32:52.708243224 +0200

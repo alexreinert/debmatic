@@ -1,0 +1,17 @@
+[Unit]
+Description=debmatic Monitor HB-RF-ETH
+PartOf=debmatic.service
+After=debmatic.service
+After=debmatic-startupfinished.service
+ConditionPathExists=/sys/class/hb-rf-eth/hb-rf-eth/is_connected
+
+[Service]
+Type=simple
+EnvironmentFile=/var/hm_mode
+ExecStart=/usr/share/debmatic/bin/monitor_hb_rf_connection.sh
+Restart=on-abnormal
+RestartSec=5s
+
+[Install]
+WantedBy=debmatic.service
+
