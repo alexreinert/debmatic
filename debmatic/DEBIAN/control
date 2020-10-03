@@ -4,7 +4,7 @@ Architecture: {PKG_ARCH}
 Maintainer: Alexander Reinert <alex@areinert.de>
 {DEPENDS}
 Recommends: pivccu-modules-dkms
-Conflicts: pivccu, pivccu3
+Conflicts: pivccu, pivccu3, jp-hb-devices, hb-uni-sensor1, hb-sen-ljet
 Section: misc
 Priority: extra
 Homepage: https://github.com/alexreinert/debmatic

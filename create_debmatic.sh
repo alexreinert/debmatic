@@ -9,7 +9,13 @@ OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 
-PKG_BUILD=50
+JP_HB_DEVICES_ADDON_ARCHIVE_TAG="3.0"
+JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addon/archive/$JP_HB_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
+
+HB_TM_DEVICES_ADDON_ARCHIVE_TAG="86f4feb4c0b5dc7f935a1b4ee87d7401c3b25ee2"
+HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
+
+PKG_BUILD=51
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -43,6 +49,54 @@ umount $WORK_DIR/image
 
 cd $WORK_DIR/ccu
 patch -l -p1 < $CURRENT_DIR/debmatic.patch
+
+cd $WORK_DIR
+wget -O JP-HB-Devices-addon.tar.gz $JP_HB_DEVICES_ADDON_DOWNLOAD_URL
+tar xzf JP-HB-Devices-addon.tar.gz
+mv JP-HB-Devices-addon-$JP_HB_DEVICES_ADDON_ARCHIVE_TAG JP-HB-Devices-addon
+
+cd $WORK_DIR/ccu/www
+
+for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/patch/common/*.patch; do
+  patch -N -l -p3 -s --dry-run -r - --no-backup-if-mismatch -i $file
+  if [ $? -eq 1 ]; then
+    dos2unix $file
+  fi
+  patch -N -l -p3 -r - --no-backup-if-mismatch -i $file
+done
+for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/patch/ge_345/*.patch; do
+  patch -N -l -p3 -s --dry-run -r - --no-backup-if-mismatch -i $file
+  if [ $? -eq 1 ]; then
+    dos2unix $file
+  fi
+  patch -N -l -p3 -r - --no-backup-if-mismatch -i $file
+done
+
+cp -ar $WORK_DIR/JP-HB-Devices-addon/src/addon/www/* $WORK_DIR/ccu/www/
+cp $WORK_DIR/JP-HB-Devices-addon/src/addon/js/jp_webui_inc.js $WORK_DIR/ccu/www/webui/js/extern/
+cp $WORK_DIR/JP-HB-Devices-addon/src/addon/firmware/rftypes/* $WORK_DIR/ccu/firmware/rftypes/
+
+for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/install_*; do
+  sed -i "s|/www/|$WORK_DIR/ccu/www/|g" $file
+  chmod +x $file
+  $file
+done
+
+cd $WORK_DIR
+wget -O HB-TM-Devices-addon.tar.gz $HB_TM_DEVICES_ADDON_DOWNLOAD_URL
+tar xzf HB-TM-Devices-addon.tar.gz
+mv SmartHome-$HB_TM_DEVICES_ADDON_ARCHIVE_TAG HB-TM-Devices-addon
+
+cd $WORK_DIR/ccu/www
+
+cp -ar $WORK_DIR/HB-TM-Devices-addon/HB-TM-Devices-AddOn/CCU_RM/src/addon/www/* $WORK_DIR/ccu/www/
+cp $WORK_DIR/HB-TM-Devices-addon/HB-TM-Devices-AddOn/CCU_RM/src/addon/firmware/rftypes/* $WORK_DIR/ccu/firmware/rftypes/
+
+for file in $WORK_DIR/HB-TM-Devices-addon/HB-TM-Devices-AddOn/CCU_RM/src/addon/install_*; do
+  sed -i "s|/www/|$WORK_DIR/ccu/www/|g" $file
+  chmod +x $file
+  $file
+done
 
 cd $WORK_DIR
 

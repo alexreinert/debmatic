@@ -76,10 +76,9 @@ Dieses Backup enthält nur die Einstellungen der CCU und ersetzt daher nicht ein
 Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [Cloudmatic Connect](https://www.cloudmatic.de) (Paketname cloudmatic)
 * [CUxD](http://www.cuxd.de/) (Paketname cuxd)
-* [JP HB Devices](https://github.com/jp112sdl/JP-HB-Devices-addon) (Paketname jp-hb-devices)
+* [JP HB Devices](https://github.com/jp112sdl/JP-HB-Devices-addon) (Ist bereits in debmatic enthalten)
 * [Homematic check_mk addon](https://github.com/alexreinert/homematic_check_mk) (Paketname homematic-check-mk)
-* [HB-UNI-Sensor1](https://github.com/TomMajor/SmartHome) (Paketname hb-uni-sensor1)
-* [HB-SEN-LJet](https://github.com/TomMajor/SmartHome) (Paketname hb-sen-ljet)
+* [HB-TM-Devices](https://github.com/TomMajor/SmartHome) (Ist bereits in debmatic enthalten)
 * [XML-API](https://github.com/jens-maus/XML-API) (Paketname xml-api)
 
 ### Restore
@@ -93,6 +92,10 @@ Backups können über die WebUI eingespielt werden.
 4. debmatic nach Anleitung installieren (piVCCU wird in diesem Schritt automatisch deinstalliert)
 5. Backup aus Schritt 2. per WebUI einspielen
 6. Notwendige Addons per apt nachinstallieren
+
+### Credits / Danksagung
+* [Jérôme](https://github.com/jp112sdl) für seine Homebrew Geräte und sein [Addon](https://github.com/jp112sdl/JP-HB-Devices-addon) für diese Geräte
+* [TomMajor](https://github.com/TomMajor) für seine Homebrew Geräte und sein [Addon](https://github.com/TomMajor/SmartHome/HB-TP-Devices-AddOn) für diese Geräte
 
 ### Lizenz
 debmatic selbst (die Dateien in diesem Repository) steht unter [Apache License 2.0](https://opensource.org/licenses/Apache-2.0).
