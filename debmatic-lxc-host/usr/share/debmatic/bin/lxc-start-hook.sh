@@ -8,12 +8,36 @@ allow_device () {
   done
 }
 
-modprobe -q hb_rf_eth || true
 modprobe -q eq3_char_loop || true
 modprobe -q rpi_rf_mod_led || true
 modprobe -q ledtrig-default-on || true
 modprobe -q ledtrig-timer || modprobe -q led_trigger_timer || true
 sysctl -w kernel.sched_rt_runtime_us=-1 || true
+
+if [ -e /etc/default/hb_rf_eth ]; then
+  . /etc/default/hb_rf_eth
+fi
+if [ ! -z "$HB_RF_ETH_ADDRESS" ]; then
+  if [ ! -e /sys/module/hb_rf_eth/parameters/connect ]; then
+    modprobe -q hb_rf_eth
+
+    for try in {0..30}; do
+      if [ -e /sys/module/hb_rf_eth/parameters/connect ]; then
+        break
+      fi
+      sleep 1
+    done
+  fi
+
+  for try in {0..30}; do
+    if [ -e /sys/class/hb-rf-eth/hb-rf-eth/connect ]; then
+      echo "$HB_RF_ETH_ADDRESS" > /sys/class/hb-rf-eth/hb-rf-eth/connect && break
+    else
+      echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
+    fi
+    sleep 1
+  done
+fi
 
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "0403" ] && [ "`cat $syspath/idProduct`" == "6f70" ]; then
