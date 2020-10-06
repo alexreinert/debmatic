@@ -5,6 +5,8 @@ Maintainer: Alexander Reinert <alex@areinert.de>
 {DEPENDS}
 Recommends: pivccu-modules-dkms
 Conflicts: pivccu, pivccu3, jp-hb-devices, hb-uni-sensor1, hb-sen-ljet
+Provides: jp-hb-devices, hb-uni-sensor1, hb-sen-ljet
+Replaces: jp-hb-devices, hb-uni-sensor1, hb-sen-ljet
 Section: misc
 Priority: extra
 Homepage: https://github.com/alexreinert/debmatic
