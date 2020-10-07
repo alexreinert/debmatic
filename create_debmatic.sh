@@ -9,13 +9,13 @@ OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 
-JP_HB_DEVICES_ADDON_ARCHIVE_TAG="3.0"
+JP_HB_DEVICES_ADDON_ARCHIVE_TAG="3.1"
 JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addon/archive/$JP_HB_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="86f4feb4c0b5dc7f935a1b4ee87d7401c3b25ee2"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=52
+PKG_BUILD=53
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
