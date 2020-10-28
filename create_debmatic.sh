@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CCU_VERSION="3.53.30"
+CCU_VERSION="3.53.34"
 
-ARCHIVE_TAG="2d7cfb9ce9d73b7d78ce987aa1d0e22ea4e375af"
+ARCHIVE_TAG="ef44441db6e015dc043e0a33dc1c32731057a492"
 
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="86f4feb4c0b5dc7f935a1b4ee87d7401c3b25ee2"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=53
+PKG_BUILD=54
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)

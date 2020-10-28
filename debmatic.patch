@@ -1,6 +1,6 @@
-diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/session/create.tcl fw.3.53.30.debmatic/www/api/methods/session/create.tcl
---- fw.3.53.30.orig/www/api/methods/session/create.tcl	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/api/methods/session/create.tcl	2020-09-15 14:32:52.596242516 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/api/methods/session/create.tcl fw.3.53.34.debmatic/www/api/methods/session/create.tcl
+--- fw.3.53.34.orig/www/api/methods/session/create.tcl	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/api/methods/session/create.tcl	2020-10-28 08:42:06.829625432 +0100
 @@ -11,7 +11,7 @@
  
  package require http
@@ -10,9 +10,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/session/create.tcl fw
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/session/login.tcl fw.3.53.30.debmatic/www/api/methods/session/login.tcl
---- fw.3.53.30.orig/www/api/methods/session/login.tcl	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/api/methods/session/login.tcl	2020-09-15 14:32:52.596242516 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/api/methods/session/login.tcl fw.3.53.34.debmatic/www/api/methods/session/login.tcl
+--- fw.3.53.34.orig/www/api/methods/session/login.tcl	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/api/methods/session/login.tcl	2020-10-28 08:42:06.829625432 +0100
 @@ -12,7 +12,7 @@
  
  package require http
@@ -22,9 +22,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/session/login.tcl fw.
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/session/renew.tcl fw.3.53.30.debmatic/www/api/methods/session/renew.tcl
---- fw.3.53.30.orig/www/api/methods/session/renew.tcl	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/api/methods/session/renew.tcl	2020-09-15 14:32:52.596242516 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/api/methods/session/renew.tcl fw.3.53.34.debmatic/www/api/methods/session/renew.tcl
+--- fw.3.53.34.orig/www/api/methods/session/renew.tcl	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/api/methods/session/renew.tcl	2020-10-28 08:42:06.833625456 +0100
 @@ -12,7 +12,7 @@
  package require http
  
@@ -34,9 +34,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/session/renew.tcl fw.
  
  ::http::cleanup [::http::geturl $url]
  
-diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/user/restarthmipserver.tcl fw.3.53.30.debmatic/www/api/methods/user/restarthmipserver.tcl
---- fw.3.53.30.orig/www/api/methods/user/restarthmipserver.tcl	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/api/methods/user/restarthmipserver.tcl	2020-09-15 14:32:52.596242516 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/api/methods/user/restarthmipserver.tcl fw.3.53.34.debmatic/www/api/methods/user/restarthmipserver.tcl
+--- fw.3.53.34.orig/www/api/methods/user/restarthmipserver.tcl	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/api/methods/user/restarthmipserver.tcl	2020-10-28 08:42:06.833625456 +0100
 @@ -7,6 +7,5 @@
  #
  # Rückgabewert: true
@@ -45,9 +45,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/user/restarthmipserve
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/user/restartlighttpd.tcl fw.3.53.30.debmatic/www/api/methods/user/restartlighttpd.tcl
---- fw.3.53.30.orig/www/api/methods/user/restartlighttpd.tcl	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/api/methods/user/restartlighttpd.tcl	2020-09-15 14:32:52.596242516 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/api/methods/user/restartlighttpd.tcl fw.3.53.34.debmatic/www/api/methods/user/restartlighttpd.tcl
+--- fw.3.53.34.orig/www/api/methods/user/restartlighttpd.tcl	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/api/methods/user/restartlighttpd.tcl	2020-10-28 08:42:06.833625456 +0100
 @@ -7,8 +7,7 @@
  #
  # Rückgabewert: true
@@ -59,9 +59,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/api/methods/user/restartlighttpd.
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.53.30.orig/www/config/control_panel.cgi fw.3.53.30.debmatic/www/config/control_panel.cgi
---- fw.3.53.30.orig/www/config/control_panel.cgi	2020-09-03 11:38:16.000000000 +0200
-+++ fw.3.53.30.debmatic/www/config/control_panel.cgi	2020-09-15 14:32:52.644242819 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/config/control_panel.cgi fw.3.53.34.debmatic/www/config/control_panel.cgi
+--- fw.3.53.34.orig/www/config/control_panel.cgi	2020-10-13 11:30:04.000000000 +0200
++++ fw.3.53.34.debmatic/www/config/control_panel.cgi	2020-10-28 08:42:06.833625456 +0100
 @@ -102,16 +102,6 @@
    }
  }
@@ -140,9 +140,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/control_panel.cgi fw.3.53.
    puts {
      <!-- Kopplungen -->
      <td>
-diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_maintenance.cgi fw.3.53.30.debmatic/www/config/cp_maintenance.cgi
---- fw.3.53.30.orig/www/config/cp_maintenance.cgi	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/config/cp_maintenance.cgi	2020-09-15 14:32:52.644242819 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/config/cp_maintenance.cgi fw.3.53.34.debmatic/www/config/cp_maintenance.cgi
+--- fw.3.53.34.orig/www/config/cp_maintenance.cgi	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/config/cp_maintenance.cgi	2020-10-28 08:42:06.833625456 +0100
 @@ -395,151 +395,10 @@
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
@@ -343,9 +343,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_maintenance.cgi fw.3.53
    
    puts "Content-Type:application/x-download"
    puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_security.cgi fw.3.53.30.debmatic/www/config/cp_security.cgi
---- fw.3.53.30.orig/www/config/cp_security.cgi	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/config/cp_security.cgi	2020-09-15 14:32:52.644242819 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/config/cp_security.cgi fw.3.53.34.debmatic/www/config/cp_security.cgi
+--- fw.3.53.34.orig/www/config/cp_security.cgi	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/config/cp_security.cgi	2020-10-28 22:31:47.784667260 +0100
 @@ -296,7 +296,6 @@
      } else {
        exec touch /usr/local/.doFactoryReset
@@ -531,7 +531,7 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_security.cgi fw.3.53.30
      }
    }
    division {class="popupControls"} {
-@@ -1466,11 +1305,11 @@
+@@ -1466,14 +1305,14 @@
  proc action_create_backup {} {
    set HOSTNAME [exec hostname]
    set iso8601_date [exec date -Iseconds]
@@ -540,12 +540,15 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_security.cgi fw.3.53.30
    #save DOM
    rega system.Save()
    cd /
--  exec tar czf /tmp/usr_local.tar.gz usr/local
-+  exec tar czf /tmp/usr_local.tar.gz etc/config --transform "s/^/usr\\/local\\//g"
+   if {[getProduct] < 3 } {
+     catch { exec tar czf /tmp/usr_local.tar.gz usr/local }
+   } else {
+-    catch { exec tar --owner=root --group=root --exclude=usr/local/tmp --exclude=usr/local/lost+found --exclude=usr/local/eQ-3-Backup --exclude-tag=.nobackup --one-file-system --ignore-failed-read -czf /tmp/usr_local.tar.gz usr/local }
++    catch { exec tar --owner=root --group=root --exclude=usr/local/tmp --exclude=usr/local/lost+found --exclude=usr/local/eQ-3-Backup --exclude-tag=.nobackup --one-file-system --ignore-failed-read -czf /tmp/usr_local.tar.gz etc/config --transform "s/^/usr\\/local\\//g" }
+   }
+   
    cd /tmp/
-   #sign the configuration with the current key
-   exec crypttool -s -t 1 <usr_local.tar.gz >signature
-@@ -1526,7 +1365,7 @@
+@@ -1531,7 +1370,7 @@
  }
  
  proc action_reboot {} {
@@ -554,9 +557,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_security.cgi fw.3.53.30
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_time.cgi fw.3.53.30.debmatic/www/config/cp_time.cgi
---- fw.3.53.30.orig/www/config/cp_time.cgi	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/config/cp_time.cgi	2020-09-15 14:32:52.644242819 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/config/cp_time.cgi fw.3.53.34.debmatic/www/config/cp_time.cgi
+--- fw.3.53.34.orig/www/config/cp_time.cgi	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/config/cp_time.cgi	2020-10-28 08:42:06.833625456 +0100
 @@ -144,7 +144,7 @@
    global env LOCATIONS TIMEZONES
    
@@ -667,9 +670,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/cp_time.cgi fw.3.53.30.deb
        set country ""
        foreach location $LOCATIONS {
          if { [lindex $location 0] == "-" } {
-diff -ruN --no-dereference fw.3.53.30.orig/www/config/help.cgi fw.3.53.30.debmatic/www/config/help.cgi
---- fw.3.53.30.orig/www/config/help.cgi	2020-09-03 11:38:17.000000000 +0200
-+++ fw.3.53.30.debmatic/www/config/help.cgi	2020-09-15 14:32:52.644242819 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/config/help.cgi fw.3.53.34.debmatic/www/config/help.cgi
+--- fw.3.53.34.orig/www/config/help.cgi	2020-10-13 11:30:04.000000000 +0200
++++ fw.3.53.34.debmatic/www/config/help.cgi	2020-10-28 08:42:06.833625456 +0100
 @@ -3,8 +3,8 @@
  source common.tcl
  load tclrega.so
@@ -689,21 +692,21 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/config/help.cgi fw.3.53.30.debmat
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
-diff -ruN --no-dereference fw.3.53.30.orig/www/rega/pages/index.htm fw.3.53.30.debmatic/www/rega/pages/index.htm
---- fw.3.53.30.orig/www/rega/pages/index.htm	2020-09-03 11:42:06.000000000 +0200
-+++ fw.3.53.30.debmatic/www/rega/pages/index.htm	2020-09-15 14:32:52.648242845 +0200
-@@ -69,7 +69,7 @@
+diff -ruN --no-dereference fw.3.53.34.orig/www/rega/pages/index.htm fw.3.53.34.debmatic/www/rega/pages/index.htm
+--- fw.3.53.34.orig/www/rega/pages/index.htm	2020-10-13 11:33:49.000000000 +0200
++++ fw.3.53.34.debmatic/www/rega/pages/index.htm	2020-10-28 08:42:06.849625556 +0100
+@@ -70,7 +70,7 @@
        /*########################################################################*/
  
        PLATFORM = "Central";
--    WEBUI_VERSION = "3.53.30"
+-    WEBUI_VERSION = "3.53.34"
 +    WEBUI_VERSION = "{PKG_VERSION}"
  
        /**
         * Flags
-diff -ruN --no-dereference fw.3.53.30.orig/www/tcl/eq3/session.tcl fw.3.53.30.debmatic/www/tcl/eq3/session.tcl
---- fw.3.53.30.orig/www/tcl/eq3/session.tcl	2020-09-03 11:38:16.000000000 +0200
-+++ fw.3.53.30.debmatic/www/tcl/eq3/session.tcl	2020-09-15 14:32:52.700243173 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/tcl/eq3/session.tcl fw.3.53.34.debmatic/www/tcl/eq3/session.tcl
+--- fw.3.53.34.orig/www/tcl/eq3/session.tcl	2020-10-13 11:30:03.000000000 +0200
++++ fw.3.53.34.debmatic/www/tcl/eq3/session.tcl	2020-10-28 08:42:06.849625556 +0100
 @@ -5,8 +5,8 @@
  
  package require http
@@ -715,9 +718,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/tcl/eq3/session.tcl fw.3.53.30.de
  
  ##
  # session_getHttpHeader
-diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/de/translate.lang.js fw.3.53.30.debmatic/www/webui/js/lang/de/translate.lang.js
---- fw.3.53.30.orig/www/webui/js/lang/de/translate.lang.js	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/webui/js/lang/de/translate.lang.js	2020-09-20 15:40:50.539610229 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/webui/js/lang/de/translate.lang.js fw.3.53.34.debmatic/www/webui/js/lang/de/translate.lang.js
+--- fw.3.53.34.orig/www/webui/js/lang/de/translate.lang.js	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/webui/js/lang/de/translate.lang.js	2020-10-28 08:42:06.849625556 +0100
 @@ -459,6 +459,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -737,9 +740,9 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/de/translate.lang.j
      "optionLastValue" : "Letzter Wert",
      "optionNoModification" : "Keine %C4nderung",
      "optionNone" : "Keine",
-diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/en/translate.lang.js fw.3.53.30.debmatic/www/webui/js/lang/en/translate.lang.js
---- fw.3.53.30.orig/www/webui/js/lang/en/translate.lang.js	2020-09-03 11:38:19.000000000 +0200
-+++ fw.3.53.30.debmatic/www/webui/js/lang/en/translate.lang.js	2020-09-20 15:40:31.183479035 +0200
+diff -ruN --no-dereference fw.3.53.34.orig/www/webui/js/lang/en/translate.lang.js fw.3.53.34.debmatic/www/webui/js/lang/en/translate.lang.js
+--- fw.3.53.34.orig/www/webui/js/lang/en/translate.lang.js	2020-10-13 11:30:07.000000000 +0200
++++ fw.3.53.34.debmatic/www/webui/js/lang/en/translate.lang.js	2020-10-28 08:42:06.849625556 +0100
 @@ -458,6 +458,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -759,10 +762,10 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/webui/js/lang/en/translate.lang.j
      "optionLastValue" : "Last value",
      "optionNoModification" : "No change",
      "optionNone" : "None",
-diff -ruN --no-dereference fw.3.53.30.orig/www/webui/webui.js fw.3.53.30.debmatic/www/webui/webui.js
---- fw.3.53.30.orig/www/webui/webui.js	2020-09-03 11:38:20.000000000 +0200
-+++ fw.3.53.30.debmatic/www/webui/webui.js	2020-09-15 14:32:52.708243224 +0200
-@@ -6305,12 +6305,7 @@
+diff -ruN --no-dereference fw.3.53.34.orig/www/webui/webui.js fw.3.53.34.debmatic/www/webui/webui.js
+--- fw.3.53.34.orig/www/webui/webui.js	2020-10-13 11:30:08.000000000 +0200
++++ fw.3.53.34.debmatic/www/webui/webui.js	2020-10-28 08:42:06.857625605 +0100
+@@ -6311,12 +6311,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
            homematic("CCU.setSecurityHint");
@@ -776,7 +779,7 @@ diff -ruN --no-dereference fw.3.53.30.orig/www/webui/webui.js fw.3.53.30.debmati
          }
        }, "html");
      });
-@@ -23565,7 +23560,7 @@
+@@ -23571,7 +23566,7 @@
      var script = document.createElement("script");
      script.id = "homematic_com_script";
      script.type = "text/javascript";
