@@ -157,3 +157,10 @@ touch /var/status/hasSD
 touch /var/status/USBinitialised
 touch /var/status/SDinitialised
 
+if [ -e /proc/sys/abi/cp15_barrier ]; then
+  echo 2 > /proc/sys/abi/cp15_barrier
+fi
+if [ -e /proc/sys/abi/setend ]; then
+  echo 2 > /proc/sys/abi/setend
+fi
+

@@ -37,7 +37,7 @@ if [ ! -z "$HB_RF_ETH_ADDRESS" ]; then
     else
       echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
     fi
-    sleep 1
+    sleep 2
   done
 fi
 
