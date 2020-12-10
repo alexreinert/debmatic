@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [[ -e /etc/config/no-coprocessor-update ]]; then
-  exit 0
-fi
-
 if [ -e /usr/share/debmatic/lib ]; then
   LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
   if [ -n "$LIBSERIAL" ]; then
