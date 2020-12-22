@@ -14,14 +14,24 @@ foreach (sv_id, dom.GetObject(ID_SYSTEM_VARIABLES).EnumUsedIDs()) {
 }
 "
 
-for {set i 0} {$i < 60} {incr i} {
-  array set result [rega_script $script]
-  set ise_are_sv_created $result(are_sv_created)
+puts -nonewline "Waiting for ReGa startup "
 
-  if {$ise_are_sv_created} {
-    break
-  }
+for {set i 0} {$i < 30} {incr i} {
+  puts -nonewline "."
+  flush stdout
 
   exec sleep 5
+
+  if { [catch {
+    array set result [rega_script $script]
+    set ise_are_sv_created $result(are_sv_created)
+  } err ] } {
+    set ise_are_sv_created false
+  }
+
+  if {$ise_are_sv_created} {
+    puts " Done"
+    break
+  }
 }
 

@@ -7,10 +7,11 @@ Before=debmatic-startupfinished.service
 
 [Service]
 Type=simple
+ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
 ExecStart=/bin/eq3configd
 ExecStartPost=/usr/share/debmatic/bin/create_pid_file /var/run/eq3configd.pid /bin/eq3configd
 ExecStopPost=/bin/rm -f /var/run/eq3configd.pid
-Restart=on-abnormal
+Restart=on-failure
 RestartSec=5s
 
 [Install]

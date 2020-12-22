@@ -8,6 +8,7 @@ Before=debmatic-rfd.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
 ExecStart=/usr/share/debmatic/bin/update_lgw_key.sh
 
 [Install]

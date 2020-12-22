@@ -23,7 +23,7 @@ fi
 touch /var/status/hasIP
 
 if [ `route -4 -n | grep -E "^0.0.0.0" | head -1 | awk '{print $8}'` == $IFACE ]; then
-  wget -q --spider http://google.com/
+  wget -q --timeout=5 --spider http://google.com/
   if [[ $? -eq 0 ]]; then
     touch /var/status/hasInternet
   elif ping -q -W 5 -c 1 google.com >/dev/null 2>/dev/null; then

@@ -14,6 +14,7 @@ Environment=LOGLEVEL_HS485D=5
 EnvironmentFile=/var/hm_mode
 EnvironmentFile=-/etc/config/syslog
 PIDFile=/var/run/hs485dLoader.pid
+ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
 ExecStart=/bin/hs485dLoader -l ${LOGLEVEL_HS485D} -dw /etc/config/hs485d.conf
 Restart=on-abnormal
 RestartSec=5s

@@ -13,10 +13,12 @@ Type=forking
 Environment=LOGLEVEL_REGA=2
 EnvironmentFile=/var/hm_mode
 EnvironmentFile=-/etc/config/syslog
+ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
 ExecStart=/usr/share/debmatic/bin/start_rega.sh
+ExecStartPost=-/usr/share/debmatic/bin/wait_sysvar_creation.tcl
 ExecStop=/usr/share/debmatic/bin/stop_rega.sh
 ExecStopPost=/bin/rm -f /var/run/ReGaHss.pid
-Restart=on-abnormal
+Restart=on-failure
 RestartSec=5s
 
 [Install]
