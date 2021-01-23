@@ -14,6 +14,7 @@ for i in {1..10}; do
   sleep 2
 
   if [ -e /var/status/multimacd.status ] && [ "`cat /var/status/multimacd.status`" == "`pidof /bin/multimacd`" ]; then
+    cp -f /var/status/multimacd.status /var/run/multimacd.pid
     break
   fi
 done

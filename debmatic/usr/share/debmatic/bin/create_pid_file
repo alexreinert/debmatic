@@ -1,3 +1,12 @@
 #!/bin/bash
 
-pidof $2 > $1
+for try in {0..10}; do
+  PID=`pidof -s $2`
+  if [ $? -eq 0 ]; then
+    break
+  fi
+  sleep 0.1
+done
+
+echo $PID > $1
+

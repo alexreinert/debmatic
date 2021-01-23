@@ -13,6 +13,7 @@ TimeoutStartSec=22
 PIDFile=/var/status/multimacd.status
 ExecStart=/usr/share/debmatic/bin/start_multimacd.sh
 ExecStopPost=-/bin/rm -f /var/run/multimacd.pid
+ExecStopPost=-/bin/rm -f /var/status/multimacd.status
 ExecStopPost=-/bin/sleep 5
 ExecStopPost=-/sbin/rmmod eq3_char_loop
 Restart=on-abnormal
