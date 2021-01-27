@@ -13,7 +13,7 @@ WORK_DIR=$(mktemp -d)
 
 PKG_VERSION=$ADDON_VERSION-$PKG_BUILD
 
-cd $WORK_DIR
+cd "$WORK_DIR" || exit
 
 wget -O repo.tar.gz $ADDON_DOWNLOAD_URL
 tar xzf repo.tar.gz
@@ -21,32 +21,32 @@ mv SmartHome-$ARCHIVE_TAG repo
 
 TARGET_DIR=$WORK_DIR/hb-sen-ljet-$PKG_VERSION
 
-mkdir -p $TARGET_DIR/usr/local/addons/hb-sen-ljet
-cp -a $WORK_DIR/repo/HB-SEN-LJet/CCU_RM/src/addon/* $TARGET_DIR/usr/local/addons/hb-sen-ljet
+mkdir -p "$TARGET_DIR"/usr/local/addons/hb-sen-ljet
+cp -a "$WORK_DIR"/repo/HB-SEN-LJet/CCU_RM/src/addon/* "$TARGET_DIR"/usr/local/addons/hb-sen-ljet
 
-cp -a $CURRENT_DIR/hb-sen-ljet/* $TARGET_DIR 
+cp -a "$CURRENT_DIR"/hb-sen-ljet/* "$TARGET_DIR"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-sen-ljet/install
-sed -i $TARGET_DIR/usr/local/addons/hb-sen-ljet/install -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/install
+sed -i "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/install -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-sen-ljet/uninstall
-sed -i $TARGET_DIR/usr/local/addons/hb-sen-ljet/uninstall -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/uninstall
+sed -i "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/uninstall -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-sen-ljet/functions
-sed -i $TARGET_DIR/usr/local/addons/hb-sen-ljet/functions -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/functions
+sed -i "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/functions -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-sen-ljet/params
-sed -i $TARGET_DIR/usr/local/addons/hb-sen-ljet/params -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/params
+sed -i "$TARGET_DIR"/usr/local/addons/hb-sen-ljet/params -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-for file in $TARGET_DIR/DEBIAN/*; do
-  sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file
+for file in "$TARGET_DIR"/DEBIAN/*; do
+  sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" "$file"
 done
 
-cd $WORK_DIR
+cd "$WORK_DIR" || exit
 
 dpkg-deb --build hb-sen-ljet-$PKG_VERSION
 
-cp hb-sen-ljet-*.deb $CURRENT_DIR
+cp hb-sen-ljet-*.deb "$CURRENT_DIR"
 
 echo "Please clean-up the work dir temp folder $WORK_DIR, e.g. by doing rm -R $WORK_DIR"
 

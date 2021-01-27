@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "debmatic version: `dpkg -s debmatic | grep '^Version: ' | cut -d' ' -f2`"
+echo "debmatic version: $(dpkg -s debmatic | grep '^Version: ' | cut -d' ' -f2)"
 
 if [ $EUID != 0 ]; then
   echo "Please run as root"
@@ -25,7 +25,7 @@ else
 fi
 echo "Raw UART dev:   $RAW_UART_STATE"
 
-if [ -f /proc/device-tree/model ] && [ `grep -c "Raspberry Pi 3" /proc/device-tree/model` == 1 ]; then
+if [ -f /proc/device-tree/model ] && [ "$(grep -c "Raspberry Pi 3" /proc/device-tree/model)" == 1 ]; then
   if cmp -s /proc/device-tree/aliases/uart0 /proc/device-tree/aliases/serial0; then
     UART_STATE="Assigned to GPIO pins"
   else
@@ -34,7 +34,7 @@ if [ -f /proc/device-tree/model ] && [ `grep -c "Raspberry Pi 3" /proc/device-tr
   echo "Rasp.Pi3 UART:  $UART_STATE"
 fi
 
-if [ `systemctl is-active debmatic.service` == "active" ]; then
+if [ "$(systemctl is-active debmatic.service)" == "active" ]; then
   if [ -e /var/status/startupFinished ]; then
     . /var/hm_mode
   fi
@@ -47,7 +47,7 @@ if [ -z "$HM_HMRF_DEV" ]; then
 fi
 echo "HMRF Hardware:  $HM_HMRF_DEV"
 
-if [ ! -z "$HM_HOST_UART_DEVICE_TYPE" ]; then
+if [ -n "$HM_HOST_UART_DEVICE_TYPE" ]; then
   echo " Connected via: $HM_HOST_UART_DEVICE_TYPE ($HM_HOST_GPIO_UART)"
 fi
 

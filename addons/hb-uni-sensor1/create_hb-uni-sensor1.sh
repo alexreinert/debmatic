@@ -13,7 +13,7 @@ WORK_DIR=$(mktemp -d)
 
 PKG_VERSION=$ADDON_VERSION-$PKG_BUILD
 
-cd $WORK_DIR
+cd "$WORK_DIR" || exit
 
 wget -O repo.tar.gz $ADDON_DOWNLOAD_URL
 tar xzf repo.tar.gz
@@ -21,32 +21,32 @@ mv SmartHome-$ARCHIVE_TAG repo
 
 TARGET_DIR=$WORK_DIR/hb-uni-sensor1-$PKG_VERSION
 
-mkdir -p $TARGET_DIR/usr/local/addons/hb-uni-sensor1
-cp -a $WORK_DIR/repo/HB-UNI-Sensor1/CCU_RM/src/addon/* $TARGET_DIR/usr/local/addons/hb-uni-sensor1
+mkdir -p "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1
+cp -a "$WORK_DIR"/repo/HB-UNI-Sensor1/CCU_RM/src/addon/* "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1
 
-cp -a $CURRENT_DIR/hb-uni-sensor1/* $TARGET_DIR 
+cp -a "$CURRENT_DIR"/hb-uni-sensor1/* "$TARGET_DIR"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-uni-sensor1/install
-sed -i $TARGET_DIR/usr/local/addons/hb-uni-sensor1/install -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/install
+sed -i "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/install -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-uni-sensor1/uninstall
-sed -i $TARGET_DIR/usr/local/addons/hb-uni-sensor1/uninstall -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/uninstall
+sed -i "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/uninstall -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-uni-sensor1/functions
-sed -i $TARGET_DIR/usr/local/addons/hb-uni-sensor1/functions -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/functions
+sed -i "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/functions -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-chmod +x $TARGET_DIR/usr/local/addons/hb-uni-sensor1/params
-sed -i $TARGET_DIR/usr/local/addons/hb-uni-sensor1/params -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
+chmod +x "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/params
+sed -i "$TARGET_DIR"/usr/local/addons/hb-uni-sensor1/params -e "s/^#\!\/bin\/sh$/#\!\/bin\/bash/"
 
-for file in $TARGET_DIR/DEBIAN/*; do
-  sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file
+for file in "$TARGET_DIR"/DEBIAN/*; do
+  sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" "$file"
 done
 
-cd $WORK_DIR
+cd "$WORK_DIR" || exit
 
 dpkg-deb --build hb-uni-sensor1-$PKG_VERSION
 
-cp hb-uni-sensor1-*.deb $CURRENT_DIR
+cp hb-uni-sensor1-*.deb "$CURRENT_DIR"
 
 echo "Please clean-up the work dir temp folder $WORK_DIR, e.g. by doing rm -R $WORK_DIR"
 

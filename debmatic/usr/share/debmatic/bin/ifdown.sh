@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ${IFACE} = "lo" ] || [ ${IFACE} = "lxcbr0" ]; then
+if [ "${IFACE}" = "lo" ] || [ "${IFACE}" = "lxcbr0" ]; then
   exit 0
 fi
 
@@ -11,7 +11,7 @@ rm -f /var/status/hasIP
 rm -f /var/status/hasInternet
 rm -f /var/status/hasNTP
 
-for IF in `ls /sys/class/net/`; do
+for IF in /sys/class/net/*; do
   if [ "$IF" != "$IFACE" ]; then
     IFACE=$IF /usr/share/debmatic/bin/ifup.sh
     if [ -e /var/status/hasInternet ]; then

@@ -12,9 +12,9 @@ if [ "$HM_HMRF_DEV" == "RPI-RF-MOD" ]; then
   fi
 
   if [ -e "/sys/class/raw-uart/$HM_HOST_RAW_UART/red_gpio_pin" ]; then
-    RED_PIN=`cat /sys/class/raw-uart/$HM_HOST_RAW_UART/red_gpio_pin`
-    GREEN_PIN=`cat /sys/class/raw-uart/$HM_HOST_RAW_UART/green_gpio_pin`
-    BLUE_PIN=`cat /sys/class/raw-uart/$HM_HOST_RAW_UART/blue_gpio_pin`
+    RED_PIN=$(cat /sys/class/raw-uart/"$HM_HOST_RAW_UART"/red_gpio_pin)
+    GREEN_PIN=$(cat /sys/class/raw-uart/"$HM_HOST_RAW_UART"/green_gpio_pin)
+    BLUE_PIN=$(cat /sys/class/raw-uart/"$HM_HOST_RAW_UART"/blue_gpio_pin)
   fi
 fi
 
@@ -26,6 +26,6 @@ if [ -w "/sys/module/rpi_rf_mod_led/parameters/red_gpio_pin" ]; then
   echo "$GREEN_PIN" > /sys/module/rpi_rf_mod_led/parameters/green_gpio_pin
   echo "$BLUE_PIN" > /sys/module/rpi_rf_mod_led/parameters/blue_gpio_pin
 else
-  modprobe rpi_rf_mod_led red_gpio_pin=$RED_PIN green_gpio_pin=$GREEN_PIN blue_gpio_pin=$BLUE_PIN || true
+  modprobe rpi_rf_mod_led red_gpio_pin="$RED_PIN" green_gpio_pin="$GREEN_PIN" blue_gpio_pin="$BLUE_PIN" || true
 fi
 

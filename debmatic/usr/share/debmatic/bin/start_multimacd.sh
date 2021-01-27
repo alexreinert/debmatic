@@ -3,7 +3,7 @@ sysctl -w kernel.sched_rt_runtime_us=-1 || true
 modprobe -q eq3_char_loop || true
 
 if [ ! -e /dev/eq3loop ]; then
-  mknod /dev/eq3loop c `cat /sys/devices/virtual/eq3loop/eq3loop/dev | tr ':' ' '`
+  mknod /dev/eq3loop c "$(tr ':' ' ' </sys/devices/virtual/eq3loop/eq3loop/dev)"
 fi
 
 sed "s|^Coprocessor Device Path = .*$|Coprocessor Device Path = ${HM_HOST_GPIO_UART}|" /etc/multimacd.conf > /var/run/multimacd.conf
@@ -13,7 +13,7 @@ sed "s|^Coprocessor Device Path = .*$|Coprocessor Device Path = ${HM_HOST_GPIO_U
 for i in {1..10}; do
   sleep 2
 
-  if [ -e /var/status/multimacd.status ] && [ "`cat /var/status/multimacd.status`" == "`pidof /bin/multimacd`" ]; then
+  if [ -e /var/status/multimacd.status ] && [ "$(cat /var/status/multimacd.status)" == "$(pidof /bin/multimacd)" ]; then
     cp -f /var/status/multimacd.status /var/run/multimacd.pid
     break
   fi
@@ -23,7 +23,7 @@ for dev in mmd_bidcos mmd_hmip; do
   for i in {1..10}; do
     if [ -e /sys/devices/virtual/eq3loop/$dev/dev ]; then
       if [ ! -e /dev/$dev ]; then
-        mknod /dev/$dev c `cat /sys/devices/virtual/eq3loop/$dev/dev | tr ':' ' '`
+        mknod /dev/$dev c "$(tr ':' ' ' </sys/devices/virtual/eq3loop/"$dev"/dev)"
       fi
       break
     fi

@@ -2,7 +2,7 @@
 
 REGA_BIN_VERSION=NORMAL
 if [ -e /etc/config/ReGaHssVersion ]; then
-  REGA_BIN_VERSION=`cat /etc/config/ReGaHssVersion`
+  REGA_BIN_VERSION=$(cat /etc/config/ReGaHssVersion)
 fi
 
 case ${REGA_BIN_VERSION} in
@@ -17,6 +17,6 @@ case ${REGA_BIN_VERSION} in
     ;;
 esac
 
-$REGA_BIN_FILE -f /etc/rega.conf -l $LOGLEVEL_REGA &
+$REGA_BIN_FILE -f /etc/rega.conf -l "$LOGLEVEL_REGA" &
 echo $! > /var/run/ReGaHss.pid
 

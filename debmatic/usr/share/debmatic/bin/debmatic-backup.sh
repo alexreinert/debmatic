@@ -12,29 +12,29 @@ if [ $# -ne 1 ] || [ ! -d "$1" ]; then
   exit 1
 fi
 
-CURDIR=`pwd`
+CURDIR=$(pwd)
 
-BACKUPPATH="$1/`hostname`_`date '+%Y-%m-%d_%H-%M-%S'`.sbk"
-BACKUPPATH=`realpath $BACKUPPATH`
+BACKUPPATH="$1/$(hostname)_$(date '+%Y-%m-%d_%H-%M-%S').sbk"
+BACKUPPATH=$(realpath "$BACKUPPATH")
 
-if [ `systemctl is-active debmatic-rega.service` == "active" ]; then
+if [ "$(systemctl is-active debmatic-rega.service)" == "active" ]; then
   echo "load tclrega.so; rega system.Save()" | /bin/tclsh
 fi
 
-TMPDIR=`mktemp -d`
+TMPDIR=$(mktemp -d)
 
 cd /
-tar czf $TMPDIR/usr_local.tar.gz etc/config --transform 's/^/usr\/local\//g'
+tar czf "$TMPDIR"/usr_local.tar.gz etc/config --transform 's/^/usr\/local\//g'
 
-crypttool -s -t 1 < $TMPDIR/usr_local.tar.gz > $TMPDIR/signature
-crypttool -g -t 1 > $TMPDIR/key_index
-cp /boot/VERSION $TMPDIR/firmware_version
+crypttool -s -t 1 < "$TMPDIR"/usr_local.tar.gz > "$TMPDIR"/signature
+crypttool -g -t 1 > "$TMPDIR"/key_index
+cp /boot/VERSION "$TMPDIR"/firmware_version
 
-cd $TMPDIR
+cd "$TMPDIR"
 
-tar cf $BACKUPPATH usr_local.tar.gz signature firmware_version key_index
+tar cf "$BACKUPPATH" usr_local.tar.gz signature firmware_version key_index
 
-cd $CURDIR
-rm -rf $TMPDIR
+cd "$CURDIR"
+rm -rf "$TMPDIR"
 
 echo "Backup written to $BACKUPPATH"

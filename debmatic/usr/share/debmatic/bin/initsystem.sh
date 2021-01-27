@@ -32,23 +32,23 @@ if [ -d /usr/local/eQ-3-Backup/restore ]; then
   rm -rf /usr/local/eQ-3-Backup/restore
 fi
 
-for file in `ls /etc/config_templates`; do
-  if [ ! -e /etc/config/$file ]; then
-    \cp /etc/config_templates/$file /etc/config/
+for file in /etc/config_templates/*; do
+  if [ ! -e /etc/config/"$file" ]; then
+    cp /etc/config_templates/"$file" /etc/config/
   fi
 done
 mkdir -p /etc/config/addons/www
 
-\cp -f /etc/config_templates/InterfacesList.xml /etc/config/
+cp -f /etc/config_templates/InterfacesList.xml /etc/config/
 if [ -z "$HM_HOST_RAW_UART" ]; then
   touch /var/status/debmatic_avoid_multimacd
 fi
 
-if [ -z "$HM_HMRF_DEV" ] && [ `egrep -c '^Type = (HMLGW2|Lan Interface)' /etc/config/rfd.conf` == 0 ]; then
+if [ -z "$HM_HMRF_DEV" ] && [ "$(grep -E -c '^Type = (HMLGW2|Lan Interface)' /etc/config/rfd.conf)" == 0 ]; then
   touch /var/status/debmatic_avoid_rfd
 fi
 
-if [ ! -e /etc/config/hs485d.conf ] || [ `egrep -c '^Type = HMWLGW' /etc/config/hs485d.conf` == 0 ]; then
+if [ ! -e /etc/config/hs485d.conf ] || [ "$(grep -E -c '^Type = HMWLGW' /etc/config/hs485d.conf)" == 0 ]; then
   touch /var/status/debmatic_avoid_hs485d
 fi
 
@@ -86,14 +86,14 @@ elif [ -n "${HM_HMIP_SERIAL}" ]; then
   RF_ADDRESS=${HM_HMIP_ADDRESS}
 else
   if [ -z "$DEBMATIC_SERIAL" ]; then
-    DEBMATIC_SERIAL=`shuf -i 1-9999999 -n 1`
-    DEBMATIC_SERIAL=`printf "DEB%07d" $DEBMATIC_SERIAL`
+    DEBMATIC_SERIAL=$(shuf -i 1-9999999 -n 1)
+    DEBMATIC_SERIAL=$(printf "DEB%07d" "$DEBMATIC_SERIAL")
     echo "DEBMATIC_SERIAL=\"$DEBMATIC_SERIAL\"" >> /etc/default/debmatic
   fi
 
   if [ -z "$DEBMATIC_ADDRESS" ]; then
-    DEBMATIC_ADDRESS=`shuf -i 1-16777215 -n 1`
-    DEBMATIC_ADDRESS=`printf "0x%06x" $DEBMATIC_ADDRESS`
+    DEBMATIC_ADDRESS=$(shuf -i 1-16777215 -n 1)
+    DEBMATIC_ADDRESS=$(printf "0x%06x" "$DEBMATIC_ADDRESS")
     echo "DEBMATIC_ADDRESS=\"$DEBMATIC_ADDRESS\"" >> /etc/default/debmatic
   fi
 
@@ -105,7 +105,7 @@ echo "${BOARD_SERIAL}" > /var/board_serial
 echo "${FIRMWARE_VERSION}" > /var/rf_firmware_version
 echo "${RF_ADDRESS}" > /var/rf_address
 
-if [ -n ${HM_HMIP_SERIAL} ]; then
+if [ -n "${HM_HMIP_SERIAL}" ]; then
   echo "${HM_HMIP_SERIAL}" > /var/hmip_board_serial
   echo "${HM_HMIP_VERSION}" > /var/hmip_firmware_version
   echo "${HM_HMIP_ADDRESS}" > /var/hmip_address
@@ -123,7 +123,7 @@ EOF
 if [ ! -e /etc/config/ids ]; then
   cp /var/ids /etc/config/ids
 else
-  if [ `grep -c "BidCoS-Address \?= \?[a-zA-Z0-9]\+" /etc/config/ids` -eq 0 ]; then
+  if [ "$(grep -c "BidCoS-Address \?= \?[a-zA-Z0-9]\+" /etc/config/ids)" -eq 0 ]; then
     cp /var/ids /etc/config/ids
   fi
 fi
@@ -142,7 +142,7 @@ fi
 sed -i -e 's/:2001/:32001/' -e 's/:9292/:39292/' -e 's/:2010/:32010/' /etc/config/InterfacesList.xml
 
 for i in {1..10}; do
-  for IFACE in `ls /sys/class/net/`; do
+  for IFACE in /sys/class/net/*; do
     IFACE=$IFACE /usr/share/debmatic/bin/ifup.sh
     if [ -e /var/status/hasInternet ]; then
       break 2
