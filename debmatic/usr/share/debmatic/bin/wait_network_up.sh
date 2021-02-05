@@ -10,7 +10,7 @@ while ! ifquery --state $INTERFACES >/dev/null; do
 done
 
 for i in $INTERFACES; do
-  while [ -e /run/network/ifup-$i.pid ]; do#
+  while [ -e /run/network/ifup-$i.pid ]; do
     sleep 0.2
   done
 done

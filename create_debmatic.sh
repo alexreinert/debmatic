@@ -14,7 +14,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="4cc93d0b90ebfa0c1e55e14fb69dc6a8cffd8fc7"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=64
+PKG_BUILD=66
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -159,7 +159,7 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync"
+    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, java8-runtime-headless | java8-runtime, ipcalc, net-tools, rsync, ifupdown"
     if [ "$ARCH" == amd64 ]; then
       DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
     fi
