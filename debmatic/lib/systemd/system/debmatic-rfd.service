@@ -18,6 +18,7 @@ ExecStart=/usr/share/debmatic/bin/start_rfd.sh
 ExecStopPost=/bin/rm -f /var/run/rfd.pid
 Restart=on-abnormal
 RestartSec=5s
+TimeoutSec=180s
 
 [Install]
 WantedBy=debmatic.service

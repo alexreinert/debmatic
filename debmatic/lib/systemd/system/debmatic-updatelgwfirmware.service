@@ -11,6 +11,7 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
 ExecStart=/usr/share/debmatic/bin/update_lgw_firmware.sh
+TimeoutSec=300s
 
 [Install]
 WantedBy=debmatic.service

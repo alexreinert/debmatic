@@ -8,6 +8,7 @@ RemainAfterExit=yes
 ExecStart=/usr/share/debmatic/bin/initsystem.sh
 ExecStopPost=-/bin/echo - > /sys/module/hb_rf_eth/parameters/connect
 ExecStopPost=-/sbin/rmmod hb_rf_eth
+TimeoutSec=300s
 
 [Install]
 WantedBy=multi-user.target

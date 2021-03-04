@@ -13,6 +13,7 @@ ExecStart=/usr/share/debmatic/bin/start_hmserver.sh
 ExecStopPost=/bin/rm -f /var/run/HMIPServer.pid
 Restart=on-abnormal
 RestartSec=5s
+TimeoutSec=300s
 
 [Install]
 WantedBy=debmatic.service

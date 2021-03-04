@@ -20,6 +20,7 @@ ExecStop=/usr/share/debmatic/bin/stop_rega.sh
 ExecStopPost=/bin/rm -f /var/run/ReGaHss.pid
 Restart=on-failure
 RestartSec=5s
+TimeoutSec=180s
 
 [Install]
 WantedBy=debmatic.service
