@@ -14,7 +14,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="4cc93d0b90ebfa0c1e55e14fb69dc6a8cffd8fc7"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=68
+PKG_BUILD=69
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)

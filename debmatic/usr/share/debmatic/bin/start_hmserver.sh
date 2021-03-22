@@ -16,6 +16,7 @@ else
   sed "s|^Adapter\.1\.Port=.*$|Adapter.1.Port=${HM_HMIP_DEVNODE}|" /etc/crRFD.conf > /var/run/crRFD.conf
   if [[ "${HM_HMIP_DEV}" != "RPI-RF-MOD" ]]; then
     sed -i "s|^Lan\.Routing\.Enabled=.*$|Lan.Routing.Enabled=false|" /var/run/crRFD.conf
+    sed -i "s|^Adapter\.Local\.Device\.Enabled=.*$|Adapter.Local.Device.Enabled=false|" /var/run/crRFD.conf
   fi
 fi
 
