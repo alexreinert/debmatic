@@ -1,6 +1,6 @@
-diff -ruN --no-dereference fw.3.57.4.orig/bin/hm_autoconf fw.3.57.4.debmatic/bin/hm_autoconf
---- fw.3.57.4.orig/bin/hm_autoconf	2021-02-01 12:06:50.000000000 +0100
-+++ fw.3.57.4.debmatic/bin/hm_autoconf	2021-03-02 13:36:55.736128460 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/bin/hm_autoconf fw.3.57.5.debmatic/bin/hm_autoconf
+--- fw.3.57.5.orig/bin/hm_autoconf	2021-02-01 12:06:50.000000000 +0100
++++ fw.3.57.5.debmatic/bin/hm_autoconf	2021-04-13 14:24:53.117589886 +0200
 @@ -41,9 +41,9 @@
  
      load tclrega.so
@@ -231,9 +231,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/bin/hm_autoconf fw.3.57.4.debmatic/bin
                set procname "conf_channel_$ch_descr(TYPE)"
                if {[llength [info procs $procname]]} {
                    if [catch { $procname $url $ise_ch_id ch_descr } errMsg] {
-diff -ruN --no-dereference fw.3.57.4.orig/bin/hm_startup fw.3.57.4.debmatic/bin/hm_startup
---- fw.3.57.4.orig/bin/hm_startup	2021-02-01 12:06:50.000000000 +0100
-+++ fw.3.57.4.debmatic/bin/hm_startup	2021-03-02 13:36:55.772128666 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/bin/hm_startup fw.3.57.5.debmatic/bin/hm_startup
+--- fw.3.57.5.orig/bin/hm_startup	2021-02-01 12:06:50.000000000 +0100
++++ fw.3.57.5.debmatic/bin/hm_startup	2021-04-13 14:24:53.149590081 +0200
 @@ -1,27 +1,7 @@
  #!/bin/tclsh
  
@@ -408,9 +408,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/bin/hm_startup fw.3.57.4.debmatic/bin/
  checkDevices
 +create_default_objects
 +
-diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/ccu/restartReGa.tcl fw.3.57.4.debmatic/www/api/methods/ccu/restartReGa.tcl
---- fw.3.57.4.orig/www/api/methods/ccu/restartReGa.tcl	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/api/methods/ccu/restartReGa.tcl	2021-03-02 13:36:55.772128666 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/api/methods/ccu/restartReGa.tcl fw.3.57.5.debmatic/www/api/methods/ccu/restartReGa.tcl
+--- fw.3.57.5.orig/www/api/methods/ccu/restartReGa.tcl	2021-03-23 11:36:27.000000000 +0100
++++ fw.3.57.5.debmatic/www/api/methods/ccu/restartReGa.tcl	2021-04-13 14:24:53.165590178 +0200
 @@ -7,4 +7,4 @@
  # Rückgabewert: kein
  ##
@@ -418,9 +418,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/ccu/restartReGa.tcl fw
 -catch {exec /etc/init.d/S70ReGaHss restart}
 \ No newline at end of file
 +catch {exec systemctl restart debmatic-rega.service}
-diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/session/create.tcl fw.3.57.4.debmatic/www/api/methods/session/create.tcl
---- fw.3.57.4.orig/www/api/methods/session/create.tcl	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/api/methods/session/create.tcl	2021-03-02 13:36:55.772128666 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/api/methods/session/create.tcl fw.3.57.5.debmatic/www/api/methods/session/create.tcl
+--- fw.3.57.5.orig/www/api/methods/session/create.tcl	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/api/methods/session/create.tcl	2021-04-13 14:24:53.213590470 +0200
 @@ -11,7 +11,7 @@
  
  package require http
@@ -430,9 +430,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/session/create.tcl fw.
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/session/login.tcl fw.3.57.4.debmatic/www/api/methods/session/login.tcl
---- fw.3.57.4.orig/www/api/methods/session/login.tcl	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/api/methods/session/login.tcl	2021-03-02 13:36:55.772128666 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/api/methods/session/login.tcl fw.3.57.5.debmatic/www/api/methods/session/login.tcl
+--- fw.3.57.5.orig/www/api/methods/session/login.tcl	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/api/methods/session/login.tcl	2021-04-13 14:24:53.245590664 +0200
 @@ -12,7 +12,7 @@
  
  package require http
@@ -442,9 +442,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/session/login.tcl fw.3
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/session/renew.tcl fw.3.57.4.debmatic/www/api/methods/session/renew.tcl
---- fw.3.57.4.orig/www/api/methods/session/renew.tcl	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/api/methods/session/renew.tcl	2021-03-02 13:36:55.772128666 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/api/methods/session/renew.tcl fw.3.57.5.debmatic/www/api/methods/session/renew.tcl
+--- fw.3.57.5.orig/www/api/methods/session/renew.tcl	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/api/methods/session/renew.tcl	2021-04-13 14:24:53.245590664 +0200
 @@ -12,7 +12,7 @@
  package require http
  
@@ -454,9 +454,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/session/renew.tcl fw.3
  
  ::http::cleanup [::http::geturl $url]
  
-diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/user/restarthmipserver.tcl fw.3.57.4.debmatic/www/api/methods/user/restarthmipserver.tcl
---- fw.3.57.4.orig/www/api/methods/user/restarthmipserver.tcl	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/api/methods/user/restarthmipserver.tcl	2021-03-02 13:36:55.796128804 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/api/methods/user/restarthmipserver.tcl fw.3.57.5.debmatic/www/api/methods/user/restarthmipserver.tcl
+--- fw.3.57.5.orig/www/api/methods/user/restarthmipserver.tcl	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/api/methods/user/restarthmipserver.tcl	2021-04-13 14:24:53.261590760 +0200
 @@ -7,6 +7,5 @@
  #
  # Rückgabewert: true
@@ -465,9 +465,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/user/restarthmipserver
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/user/restartlighttpd.tcl fw.3.57.4.debmatic/www/api/methods/user/restartlighttpd.tcl
---- fw.3.57.4.orig/www/api/methods/user/restartlighttpd.tcl	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/api/methods/user/restartlighttpd.tcl	2021-03-02 13:36:55.796128804 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/api/methods/user/restartlighttpd.tcl fw.3.57.5.debmatic/www/api/methods/user/restartlighttpd.tcl
+--- fw.3.57.5.orig/www/api/methods/user/restartlighttpd.tcl	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/api/methods/user/restartlighttpd.tcl	2021-04-13 14:24:53.265590784 +0200
 @@ -7,8 +7,7 @@
  #
  # Rückgabewert: true
@@ -479,9 +479,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/api/methods/user/restartlighttpd.t
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.57.4.orig/www/config/control_panel.cgi fw.3.57.4.debmatic/www/config/control_panel.cgi
---- fw.3.57.4.orig/www/config/control_panel.cgi	2021-02-17 19:29:06.000000000 +0100
-+++ fw.3.57.4.debmatic/www/config/control_panel.cgi	2021-03-02 13:36:55.796128804 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/config/control_panel.cgi fw.3.57.5.debmatic/www/config/control_panel.cgi
+--- fw.3.57.5.orig/www/config/control_panel.cgi	2021-03-23 11:36:23.000000000 +0100
++++ fw.3.57.5.debmatic/www/config/control_panel.cgi	2021-04-13 14:24:53.273590833 +0200
 @@ -102,16 +102,6 @@
    }
  }
@@ -560,9 +560,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/config/control_panel.cgi fw.3.57.4
    puts {
      <!-- Kopplungen -->
      <td>
-diff -ruN --no-dereference fw.3.57.4.orig/www/config/cp_maintenance.cgi fw.3.57.4.debmatic/www/config/cp_maintenance.cgi
---- fw.3.57.4.orig/www/config/cp_maintenance.cgi	2021-02-17 19:29:08.000000000 +0100
-+++ fw.3.57.4.debmatic/www/config/cp_maintenance.cgi	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/config/cp_maintenance.cgi fw.3.57.5.debmatic/www/config/cp_maintenance.cgi
+--- fw.3.57.5.orig/www/config/cp_maintenance.cgi	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/config/cp_maintenance.cgi	2021-04-13 14:24:53.345591269 +0200
 @@ -394,171 +394,10 @@
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
@@ -783,9 +783,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/config/cp_maintenance.cgi fw.3.57.
    
    puts "Content-Type:application/x-download"
    puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN --no-dereference fw.3.57.4.orig/www/config/cp_security.cgi fw.3.57.4.debmatic/www/config/cp_security.cgi
---- fw.3.57.4.orig/www/config/cp_security.cgi	2021-02-17 19:29:08.000000000 +0100
-+++ fw.3.57.4.debmatic/www/config/cp_security.cgi	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/config/cp_security.cgi fw.3.57.5.debmatic/www/config/cp_security.cgi
+--- fw.3.57.5.orig/www/config/cp_security.cgi	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/config/cp_security.cgi	2021-04-13 14:24:53.373591438 +0200
 @@ -296,7 +296,6 @@
      } else {
        exec touch /usr/local/.doFactoryReset
@@ -1024,9 +1024,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/config/cp_security.cgi fw.3.57.4.d
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN --no-dereference fw.3.57.4.orig/www/config/cp_time.cgi fw.3.57.4.debmatic/www/config/cp_time.cgi
---- fw.3.57.4.orig/www/config/cp_time.cgi	2021-02-17 19:29:08.000000000 +0100
-+++ fw.3.57.4.debmatic/www/config/cp_time.cgi	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/config/cp_time.cgi fw.3.57.5.debmatic/www/config/cp_time.cgi
+--- fw.3.57.5.orig/www/config/cp_time.cgi	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/config/cp_time.cgi	2021-04-13 14:24:53.449591898 +0200
 @@ -144,7 +144,7 @@
    global env LOCATIONS TIMEZONES
    
@@ -1137,9 +1137,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/config/cp_time.cgi fw.3.57.4.debma
        set country ""
        foreach location $LOCATIONS {
          if { [lindex $location 0] == "-" } {
-diff -ruN --no-dereference fw.3.57.4.orig/www/config/help.cgi fw.3.57.4.debmatic/www/config/help.cgi
---- fw.3.57.4.orig/www/config/help.cgi	2021-02-17 19:29:06.000000000 +0100
-+++ fw.3.57.4.debmatic/www/config/help.cgi	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/config/help.cgi fw.3.57.5.debmatic/www/config/help.cgi
+--- fw.3.57.5.orig/www/config/help.cgi	2021-03-23 11:36:24.000000000 +0100
++++ fw.3.57.5.debmatic/www/config/help.cgi	2021-04-13 14:24:53.493592164 +0200
 @@ -3,8 +3,8 @@
  source common.tcl
  load tclrega.so
@@ -1159,21 +1159,21 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/config/help.cgi fw.3.57.4.debmatic
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
-diff -ruN --no-dereference fw.3.57.4.orig/www/rega/pages/index.htm fw.3.57.4.debmatic/www/rega/pages/index.htm
---- fw.3.57.4.orig/www/rega/pages/index.htm	2021-02-17 19:32:42.000000000 +0100
-+++ fw.3.57.4.debmatic/www/rega/pages/index.htm	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/rega/pages/index.htm fw.3.57.5.debmatic/www/rega/pages/index.htm
+--- fw.3.57.5.orig/www/rega/pages/index.htm	2021-03-23 11:40:11.000000000 +0100
++++ fw.3.57.5.debmatic/www/rega/pages/index.htm	2021-04-13 14:24:53.493592164 +0200
 @@ -71,7 +71,7 @@
        /*########################################################################*/
  
        PLATFORM = "Central";
--    WEBUI_VERSION = "3.57.4"
+-    WEBUI_VERSION = "3.57.5"
 +    WEBUI_VERSION = "{PKG_VERSION}"
  
        /**
         * Flags
-diff -ruN --no-dereference fw.3.57.4.orig/www/tcl/eq3/session.tcl fw.3.57.4.debmatic/www/tcl/eq3/session.tcl
---- fw.3.57.4.orig/www/tcl/eq3/session.tcl	2021-02-17 19:29:05.000000000 +0100
-+++ fw.3.57.4.debmatic/www/tcl/eq3/session.tcl	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/tcl/eq3/session.tcl fw.3.57.5.debmatic/www/tcl/eq3/session.tcl
+--- fw.3.57.5.orig/www/tcl/eq3/session.tcl	2021-03-23 11:36:23.000000000 +0100
++++ fw.3.57.5.debmatic/www/tcl/eq3/session.tcl	2021-04-13 14:24:53.545592480 +0200
 @@ -5,8 +5,8 @@
  
  package require http
@@ -1185,9 +1185,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/tcl/eq3/session.tcl fw.3.57.4.debm
  
  ##
  # session_getHttpHeader
-diff -ruN --no-dereference fw.3.57.4.orig/www/webui/js/lang/de/translate.lang.js fw.3.57.4.debmatic/www/webui/js/lang/de/translate.lang.js
---- fw.3.57.4.orig/www/webui/js/lang/de/translate.lang.js	2021-02-17 19:29:08.000000000 +0100
-+++ fw.3.57.4.debmatic/www/webui/js/lang/de/translate.lang.js	2021-03-02 13:36:55.800128827 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/webui/js/lang/de/translate.lang.js fw.3.57.5.debmatic/www/webui/js/lang/de/translate.lang.js
+--- fw.3.57.5.orig/www/webui/js/lang/de/translate.lang.js	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/webui/js/lang/de/translate.lang.js	2021-04-13 14:24:53.549592504 +0200
 @@ -460,6 +460,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -1207,9 +1207,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/webui/js/lang/de/translate.lang.js
      "optionLastValue" : "Letzter Wert",
      "optionNoModification" : "Keine %C4nderung",
      "optionNone" : "Keine",
-diff -ruN --no-dereference fw.3.57.4.orig/www/webui/js/lang/en/translate.lang.js fw.3.57.4.debmatic/www/webui/js/lang/en/translate.lang.js
---- fw.3.57.4.orig/www/webui/js/lang/en/translate.lang.js	2021-02-17 19:29:08.000000000 +0100
-+++ fw.3.57.4.debmatic/www/webui/js/lang/en/translate.lang.js	2021-03-02 13:36:55.828128987 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/webui/js/lang/en/translate.lang.js fw.3.57.5.debmatic/www/webui/js/lang/en/translate.lang.js
+--- fw.3.57.5.orig/www/webui/js/lang/en/translate.lang.js	2021-03-23 11:36:26.000000000 +0100
++++ fw.3.57.5.debmatic/www/webui/js/lang/en/translate.lang.js	2021-04-13 14:24:53.561592577 +0200
 @@ -459,6 +459,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -1229,9 +1229,9 @@ diff -ruN --no-dereference fw.3.57.4.orig/www/webui/js/lang/en/translate.lang.js
      "optionLastValue" : "Last value",
      "optionNoModification" : "No change",
      "optionNone" : "None",
-diff -ruN --no-dereference fw.3.57.4.orig/www/webui/webui.js fw.3.57.4.debmatic/www/webui/webui.js
---- fw.3.57.4.orig/www/webui/webui.js	2021-02-17 19:29:09.000000000 +0100
-+++ fw.3.57.4.debmatic/www/webui/webui.js	2021-03-02 13:36:55.836129033 +0100
+diff -ruN --no-dereference fw.3.57.5.orig/www/webui/webui.js fw.3.57.5.debmatic/www/webui/webui.js
+--- fw.3.57.5.orig/www/webui/webui.js	2021-03-23 11:36:27.000000000 +0100
++++ fw.3.57.5.debmatic/www/webui/webui.js	2021-04-13 14:24:53.609592867 +0200
 @@ -6490,12 +6490,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
