@@ -1,4 +1,4 @@
-# debmatic
+# debmatic&reg;
 
 debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Systemen zu betreiben.
 

@@ -8,7 +8,7 @@ OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 
-JP_HB_DEVICES_ADDON_ARCHIVE_TAG="4.2"
+JP_HB_DEVICES_ADDON_ARCHIVE_TAG="5.4"
 JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addon/archive/$JP_HB_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
@@ -80,11 +80,29 @@ cp -ar $WORK_DIR/JP-HB-Devices-addon/src/addon/www/* $WORK_DIR/ccu/www/
 cp $WORK_DIR/JP-HB-Devices-addon/src/addon/js/jp_webui_inc.js $WORK_DIR/ccu/www/webui/js/extern/
 cp $WORK_DIR/JP-HB-Devices-addon/src/addon/firmware/rftypes/* $WORK_DIR/ccu/firmware/rftypes/
 
-for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/install_*; do
-  sed -i "s|/www/|$WORK_DIR/ccu/www/|g" $file
-  chmod +x $file
-  $file
-done
+sed -i "\~</body>~i\    <script type=\"text/javascript\" src=\"/webui/js/extern/jp_webui_inc.js\"></script>" $WORK_DIR/ccu/www/rega/pages/index.htm
+
+mkdir -p $WORK_DIR/ccu/www/config/easymodes/KEY/localization/de
+mkdir -p $WORK_DIR/ccu/www/config/easymodes/KEY/localization/en
+cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/de/GENERIC.txt $WORK_DIR/ccu/www/config/easymodes/KEY/localization/de/
+cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/de/KEY.txt $WORK_DIR/ccu/www/config/easymodes/KEY/localization/de/
+cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/en/GENERIC.txt $WORK_DIR/ccu/www/config/easymodes/KEY/localization/en/
+cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/en/KEY.txt $WORK_DIR/ccu/www/config/easymodes/KEY/localization/en/
+
+echo "\n<%  if (action == \"servoOldVal\")     { Call(\"channels.fn::servoOldVal()\"); } %>" > $WORK_DIR/ccu/www/rega/esp/channels.htm
+echo "\n<%  if (action == \"fanOldVal\")     { Call(\"channels.fn::fanOldVal()\"); } %>" > $WORK_DIR/ccu/www/rega/esp/channels.htm
+echo "\n<%  if (action == \"airflapOldVal\")     { Call(\"channels.fn::airflapOldVal()\"); } %>" > $WORK_DIR/ccu/www/rega/esp/channels.htm
+
+while IFS=";" read -r DEVICE IMG; do
+  if case $DEVICE in "HB-"*) true;; *) false;; esac; then
+    DEVICE_IMG=${IMG}.png
+    DEVICE_THUMB=${IMG}_thumb.png
+    DEVDBINSERT="$DEVICE {{50 \/config\/img\/devices\/50\/$DEVICE_THUMB} {250 \/config\/img\/devices\/250\/$DEVICE_IMG}} "
+
+    sed -i "s/\(array[[:space:]]*set[[:space:]]*DEV_PATHS[[:space:]]*{\)/\1$DEVDBINSERT/g" $WORK_DIR/ccu/www/config/devdescr/DEVDB.tcl
+  fi
+done < $WORK_DIR/JP-HB-Devices-addon/src/addon/devdb.csv
+
 
 cd $WORK_DIR
 wget -O HB-TM-Devices-addon.tar.gz $HB_TM_DEVICES_ADDON_DOWNLOAD_URL
