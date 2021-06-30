@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CCU_VERSION="3.57.5"
+CCU_VERSION="3.59.6"
 
-ARCHIVE_TAG="8cb51174c2bc8c4b33df50a96b82c90e8092f79c"
+ARCHIVE_TAG="f88d81a54e004fb895efbe7ec829c4d1ef28dd47"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
@@ -14,7 +14,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="d20494a51dffa815cb4f91e44f24b5bd27c06b82"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=71
+PKG_BUILD=72
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -132,10 +132,6 @@ do
     for file in ld-linux-armhf.so.3 libelvutils.so libeq3config.so libeq3udss.so libhsscomm.so libLanDeviceUtils.so libtcl8.2.so libUnifiedLanComm.so libxmlparser.so libXmlRpc.so tclrega.so tclrpc.so tclticks.so libc.so.6 libdl.so.2 libgcc_s.so.1 libm.so.6 libpthread.so.0 librt.so.1 libstdc++.so.6; do
       cp $WORK_DIR/ccu/lib/$file $TARGET_DIR/lib/ || cp $WORK_DIR/ccu/usr/lib/$file $TARGET_DIR/lib/
     done
-
-    wget -O $TARGET_DIR/lib/liblockdev.so.1 https://github.com/NeuronRobotics/nrjavaserial/raw/master/src/main/c/cross-compile-libs/ARM_64/liblockdev.so
-    mkdir -p $TARGET_DIR/usr/share/debmatic/lib
-    wget -O $TARGET_DIR/usr/share/debmatic/lib/libNRJavaSerialv8.so https://github.com/NeuronRobotics/nrjavaserial/raw/master/src/main/c/resources/native/linux/ARM_64/libNRJavaSerialv8.so
   fi
 
   cp -pR $WORK_DIR/ccu/firmware $TARGET_DIR/
@@ -148,10 +144,6 @@ do
   cp -pR $WORK_DIR/ccu/opt/HmIP $TARGET_DIR/opt/
 
   cp -pR $WORK_DIR/ccu/www $TARGET_DIR/
-
-#  mkdir -p $TARGET_DIR/usr/share/debmatic/bin/lighttpd/lib
-#  cp -p repo/$ARCH_SOURCE_DIR/packages/lighttpd/bin/* $TARGET_DIR/usr/share/debmatic/bin/lighttpd
-#  cp -pR repo/$ARCH_SOURCE_DIR/packages/lighttpd/lib/* $TARGET_DIR/usr/share/debmatic/bin/lighttpd/lib
 
   cp -pR $CURRENT_DIR/debmatic/* $TARGET_DIR 
 
