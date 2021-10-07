@@ -1,4 +1,5 @@
 #!/bin/bash
+JAVA_HOME=$(update-java-alternatives --jre-headless --list | grep "\\W\(108\|111\|211\|180\)[0-9]\+\\W" | tr -s " " | sort -k2 | tail -1 | cut -d" " -f3)
 
 if [ -z "$HM_HMIP_DEV" ]; then
   HMSERVER_BIN="HMServer"
@@ -13,7 +14,7 @@ else
   fi
 fi
 
-/usr/bin/java -Xmx128m -Dlog4j.configuration=file:///etc/config/log4j.xml -Dfile.encoding=ISO-8859-1 $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HMServer/$HMSERVER_BIN.jar $HMSERVER_ARGS &
+JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java -Xmx128m -Dlog4j.configuration=file:///etc/config/log4j.xml -Dfile.encoding=ISO-8859-1 $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HMServer/$HMSERVER_BIN.jar $HMSERVER_ARGS &
 echo $! > /var/run/HMIPServer.pid
 
 for i in {1..120}; do

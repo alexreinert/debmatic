@@ -1,4 +1,5 @@
 #!/bin/bash
+JAVA_HOME=$(update-java-alternatives --jre-headless --list | grep "\\W\(108\|111\|211\|180\)[0-9]\+\\W" | tr -s " " | sort -k2 | tail -1 | cut -d" " -f3)
 
 if [ -e /usr/share/debmatic/lib ]; then
   LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
@@ -43,7 +44,7 @@ if [ "$HM_HMRF_DEV" == "RPI-RF-MOD" ]; then
   if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
     echo "Starting update of RPI-RF-MOD to version $NEW_VERSION..."
 
-    HM_HMRF_VERSION=`java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HOST_GPIO_UART -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HOST_GPIO_UART -o -f /firmware/RPI-RF-MOD/dualcopro_update_blhmip-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
+    HM_HMRF_VERSION=`JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HOST_GPIO_UART -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HOST_GPIO_UART -o -f /firmware/RPI-RF-MOD/dualcopro_update_blhmip-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
 
     echo "$HM_HMRF_VERSION" > /var/rf_firmware_version
 
@@ -71,7 +72,7 @@ if [ "$HM_HMIP_DEV" == "HMIP-RFUSB" ]; then
   if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMIP_VERSION" ]; then
     echo "Starting update of HMIP-RFUSB to version $NEW_VERSION..."
 
-    HM_HMIP_VERSION=`java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -o -f /firmware/HmIP-RFUSB/hmip_coprocessor_update-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
+    HM_HMIP_VERSION=`JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -o -f /firmware/HmIP-RFUSB/hmip_coprocessor_update-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
 
     echo "$HM_HMRF_VERSION" > /var/hmip_firmware_version
 

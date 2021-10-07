@@ -4,7 +4,7 @@ Architecture: {PKG_ARCH}
 Maintainer: Alexander Reinert <alex@areinert.de>
 {DEPENDS}
 Recommends: pivccu-modules-dkms
-Conflicts: pivccu, pivccu3, jp-hb-devices, hb-uni-sensor1, hb-sen-ljet, pivccu-modules-dkms (>= 1.1.0), openjdk-16-jre-headless, openjdk-17-jre-headless, openjdk-18-jre-headless, openjdk-16-jre, openjdk-17-jre, openjdk-18-jre
+Conflicts: pivccu, pivccu3, jp-hb-devices, hb-uni-sensor1, hb-sen-ljet, pivccu-modules-dkms (>= 1.1.0)
 Provides: jp-hb-devices, hb-uni-sensor1, hb-sen-ljet
 Replaces: jp-hb-devices, hb-uni-sensor1, hb-sen-ljet
 Section: misc
