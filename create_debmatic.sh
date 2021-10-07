@@ -14,7 +14,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=77
+PKG_BUILD=78
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -89,9 +89,9 @@ cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/de/KEY.txt $WORK_DIR/cc
 cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/en/GENERIC.txt $WORK_DIR/ccu/www/config/easymodes/KEY/localization/en/
 cp $WORK_DIR/ccu/www/config/easymodes/BLIND/localization/en/KEY.txt $WORK_DIR/ccu/www/config/easymodes/KEY/localization/en/
 
-echo "\n<%  if (action == \"servoOldVal\")     { Call(\"channels.fn::servoOldVal()\"); } %>" > $WORK_DIR/ccu/www/rega/esp/channels.htm
-echo "\n<%  if (action == \"fanOldVal\")     { Call(\"channels.fn::fanOldVal()\"); } %>" > $WORK_DIR/ccu/www/rega/esp/channels.htm
-echo "\n<%  if (action == \"airflapOldVal\")     { Call(\"channels.fn::airflapOldVal()\"); } %>" > $WORK_DIR/ccu/www/rega/esp/channels.htm
+echo "\n<%  if (action == \"servoOldVal\")     { Call(\"channels.fn::servoOldVal()\"); } %>" >> $WORK_DIR/ccu/www/rega/esp/channels.htm
+echo "\n<%  if (action == \"fanOldVal\")     { Call(\"channels.fn::fanOldVal()\"); } %>" >> $WORK_DIR/ccu/www/rega/esp/channels.htm
+echo "\n<%  if (action == \"airflapOldVal\")     { Call(\"channels.fn::airflapOldVal()\"); } %>" >> $WORK_DIR/ccu/www/rega/esp/channels.htm
 
 while IFS=";" read -r DEVICE IMG; do
   if case $DEVICE in "HB-"*) true;; *) false;; esac; then
