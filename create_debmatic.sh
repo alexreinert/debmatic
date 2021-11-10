@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CCU_VERSION="3.59.6"
+CCU_VERSION="3.61.5"
 
-ARCHIVE_TAG="f88d81a54e004fb895efbe7ec829c4d1ef28dd47"
+ARCHIVE_TAG="0d99a074354bcfeceb84168be53f4acc41bb3968"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
@@ -14,7 +14,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=78
+PKG_BUILD=79
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -77,7 +77,7 @@ for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/patch/ge_345/*.patch; do
 done
 
 cp -ar $WORK_DIR/JP-HB-Devices-addon/src/addon/www/* $WORK_DIR/ccu/www/
-cp $WORK_DIR/JP-HB-Devices-addon/src/addon/js/jp_webui_inc.js $WORK_DIR/ccu/www/webui/js/extern/
+cp $WORK_DIR/JP-HB-Devices-addon/src/addon/www/webui/js/extern/jp_webui_inc.js $WORK_DIR/ccu/www/webui/js/extern/
 cp $WORK_DIR/JP-HB-Devices-addon/src/addon/firmware/rftypes/* $WORK_DIR/ccu/firmware/rftypes/
 
 sed -i "\~</body>~i\    <script type=\"text/javascript\" src=\"/webui/js/extern/jp_webui_inc.js\"></script>" $WORK_DIR/ccu/www/rega/pages/index.htm
