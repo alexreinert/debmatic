@@ -45,8 +45,8 @@ for syspath in $(find /sys/bus/usb/devices/); do
       modprobe -q hb_rf_usb
 
       for try in {0..30}; do
-        lsmod | grep -q hb_rf_usb
-        if [ $? -eq 0 ]; then
+        lsmod | grep -q hb_rf_usb && RC=$? || RC=$?
+        if [ $RC -eq 0 ]; then
           break
         fi
         sleep 1
@@ -68,8 +68,8 @@ for syspath in $(find /sys/bus/usb/devices/); do
       modprobe -q hb_rf_usb_2
 
       for try in {0..30}; do
-        lsmod | grep -q hb_rf_usb_2
-        if [ $? -eq 0 ]; then
+        lsmod | grep -q hb_rf_usb_2 && RC=$? || RC=$?
+        if [ $RC -eq 0 ]; then
           break
         fi
         sleep 1

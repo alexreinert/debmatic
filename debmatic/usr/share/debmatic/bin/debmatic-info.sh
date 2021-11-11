@@ -10,13 +10,21 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
-lsmod | grep -q eq3_char_loop || modprobe -q -n eq3_char_loop
-if [ $? -eq 0 ]; then
+lsmod | grep -q eq3_char_loop || modprobe -q -n eq3_char_loop && RC=$? || RC=$?
+if [ $RC -eq 0 ]; then
   MODULE_STATE="Available"
 else
   MODULE_STATE="Not available"
 fi
 echo "Kernel modules: $MODULE_STATE"
+
+if [ `systemctl is-active debmatic.service` == "active" ]; then
+  if [ -e /var/status/startupFinished ]; then
+    . /var/hm_mode
+  fi
+else
+  . /usr/share/debmatic/bin/detect_hardware.inc
+fi
 
 if [ -e /sys/devices/virtual/raw-uart ]; then
   RAW_UART_STATE="Available"
@@ -32,14 +40,6 @@ if [ -f /proc/device-tree/model ] && [ `grep -c "Raspberry Pi 3" /proc/device-tr
     UART_STATE="Not assigned to GPIO pins"
   fi
   echo "Rasp.Pi3 UART:  $UART_STATE"
-fi
-
-if [ `systemctl is-active debmatic.service` == "active" ]; then
-  if [ -e /var/status/startupFinished ]; then
-    . /var/hm_mode
-  fi
-else
-  . /usr/share/debmatic/bin/detect_hardware.inc
 fi
 
 if [ -z "$HM_HMRF_DEV" ]; then

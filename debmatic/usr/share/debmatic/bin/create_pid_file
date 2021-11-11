@@ -1,8 +1,8 @@
 #!/bin/bash
 
 for try in {0..10}; do
-  PID=`pidof -s $2`
-  if [ $? -eq 0 ]; then
+  PID=`pidof -s $2` && RC=$? || RC=$?
+  if [ $RC -eq 0 ]; then
     break
   fi
   sleep 0.1

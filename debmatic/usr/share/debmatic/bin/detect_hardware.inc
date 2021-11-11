@@ -4,8 +4,8 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
-systemd-detect-virt -c -q
-if [ $? -eq 0 ]; then
+systemd-detect-virt -c -q && RC=$? || RC=$?
+if [ $RC -eq 0 ]; then
   mount /sys -o remount,rw
 fi
 
@@ -49,8 +49,8 @@ for syspath in $(find /sys/bus/usb/devices/); do
       modprobe -q hb_rf_usb
 
       for try in {0..30}; do
-        lsmod | grep -q hb_rf_usb
-        if [ $? -eq 0 ]; then
+        lsmod | grep -q hb_rf_usb && RC=$? || RC=$?
+        if [ $RC -eq 0 ]; then
           break
         fi
         sleep 1
@@ -70,8 +70,8 @@ for syspath in $(find /sys/bus/usb/devices/); do
       modprobe -q hb_rf_usb-2
 
       for try in {0..30}; do
-        lsmod | grep -q hb_rf_usb-2
-        if [ $? -eq 0 ]; then
+        lsmod | grep -q hb_rf_usb-2 && RC=$? || RC=$?
+        if [ $RC -eq 0 ]; then
           break
         fi
         sleep 1
@@ -102,8 +102,8 @@ do
 
     echo 1 > /sys/class/raw-uart/$UART_DEV/reset_radio_module
 
-    MODULE_INFO=`detect_radio_module /dev/$UART_DEV`
-    if [ $? -eq 0 ]; then
+    MODULE_INFO=`detect_radio_module /dev/$UART_DEV` && RC=$? || RC=$?
+    if [ $RC -eq 0 ]; then
       HM_HOST_RAW_UART="$UART_DEV"
       HM_HOST_GPIO_UART="/dev/$UART_DEV"
       if [ -e "/sys/class/raw-uart/$UART_DEV/device_type" ]; then
