@@ -14,7 +14,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=80
+PKG_BUILD=81
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -103,7 +103,6 @@ while IFS=";" read -r DEVICE IMG; do
   fi
 done < $WORK_DIR/JP-HB-Devices-addon/src/addon/devdb.csv
 
-
 cd $WORK_DIR
 wget -O HB-TM-Devices-addon.tar.gz $HB_TM_DEVICES_ADDON_DOWNLOAD_URL
 tar xzf HB-TM-Devices-addon.tar.gz
@@ -160,6 +159,7 @@ do
   cp -pR $WORK_DIR/ccu/opt/HMServer $TARGET_DIR/opt/
   cp -p $WORK_DIR/repo/HMserver/opt/HMServer/HMServer.jar $TARGET_DIR/opt/HMServer/
   cp -pR $WORK_DIR/ccu/opt/HmIP $TARGET_DIR/opt/
+  cp -p $WORK_DIR/repo/HMServer-Beta/opt/HmIP/hmip-copro-update.jar $TARGET_DIR/opt/HmIP/
 
   cp -pR $WORK_DIR/ccu/www $TARGET_DIR/
 
