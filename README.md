@@ -19,8 +19,8 @@ debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Sy
   * [HB-RF-USB-2](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB-2) (abhängig von Funkmodul)
   * [HB-RF-ETH](https://github.com/alexreinert/PCB/tree/master/HB-RF-ETH) (abhängig von Funkmodul)
 
-### Unterstützung [![Spenden](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA)
-Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WUC7QU84EU7DA) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.amazon.de/gp/registry/wishlist/3NNUQIQO20AAP/ref=nav_wishlist_lists_1).
+### Unterstützung [![Spenden](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.debmatic.de/dontate/paypal)
+Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [PayPal](https://www.debmatic.de/dontate/paypal) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.debmatic.de/donate/amazon).
 
 ### Voraussetzung
 * Debian basiertes System (Debian, Ubuntu, Raspbian, Armbian)
@@ -28,7 +28,7 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
 
 ### Voraussetzung für HM-MOD-RPI-PCB und RPI-RF-MOD
 * Unterstützter Single Board Computer
-  * Raspberry Pi 2B/3B/3B+/4B mit Raspbian Stretch oder Raspbian Buster
+  * Raspberry Pi 2B/3B/3B+/4B mit Raspberry Pi OS Buster oder Bullseye
   * Asus Tinkerboard mit Armbian und Mainline kernel
   * Asus Tinkerboard S mit Armbian und Mainline kernel
   * Banana Pi M1 mit Armbian und Mainline kernel (LEDs vom RPI-RF-MOD werden hardwaremäßig nicht unterstützt)

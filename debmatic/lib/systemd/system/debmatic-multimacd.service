@@ -8,7 +8,9 @@ ConditionPathExists=!/var/status/debmatic_avoid_multimacd
 
 [Service]
 Type=forking
+Environment=LOGLEVEL_RFD=5
 EnvironmentFile=/var/hm_mode
+EnvironmentFile=-/etc/config/syslog
 TimeoutStartSec=22
 PIDFile=/var/status/multimacd.status
 ExecStart=/usr/share/debmatic/bin/start_multimacd.sh

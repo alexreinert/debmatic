@@ -1,7 +1,7 @@
 ### Vorraussetzung
 
 * Raspberry Pi 2B/3B/3B+/4B
-* Raspbian Stretch oder Raspbian Buster
+* RaspberryPi OS Buster oder Bullseye (32 Bit Image oder 64 Bit Image; der Mischbetrieb 32 Bit Image und 64 Bit Kernel wird nicht unterstützt)
 
 ### Installation
 0. Volles Backup der SD Karte erstellen

@@ -1,12 +1,13 @@
 #!/bin/bash
 
-CCU_VERSION="3.61.5"
+CCU_VERSION="3.61.6"
 
-ARCHIVE_TAG="0d99a074354bcfeceb84168be53f4acc41bb3968"
+ARCHIVE_TAG="68c6c5e57d13ca2cbdb3d8f6c5d0ee7edb41ef4d"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
+CCU_DOWNLOAD_URL="https://homematic-ip.com/sites/default/files/downloads/ccu3-$CCU_VERSION.tgz"
 
 JP_HB_DEVICES_ADDON_ARCHIVE_TAG="5.7"
 JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addon/archive/$JP_HB_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
@@ -14,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=81
+PKG_BUILD=82
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
