@@ -40,49 +40,42 @@ if [ ! -z "$HB_RF_ETH_ADDRESS" ]; then
 fi
 
 for syspath in $(find /sys/bus/usb/devices/); do
-  if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "0403" ] && [ "`cat $syspath/idProduct`" == "6f70" ]; then
-    if [ $(lsmod | grep hb_rf_usb | wc -l) -eq 0 ]; then
-      modprobe -q hb_rf_usb
+  if [ ! -e $syspath/idVendor ]; then
+    continue
 
-      for try in {0..30}; do
-        lsmod | grep -q hb_rf_usb && RC=$? || RC=$?
+  USBID="`cat $syspath/idVendor`:`cat $syspath/idProduct`"
+
+  case "$USBID" in
+    "0403:6f70")
+      KMOD="hb_rf_usb"
+      ;;
+    "10c4:8c07" | "1b1f:c020")
+      KMOD="hb_rf_usb-2"
+      ;;
+    *)
+      continue
+      ;;
+  esac
+
+  if [ $(lsmod | grep -w $KMOD | wc -l) -eq 0 ]; then
+    modprobe -q $KMOD
+
+    for try in {0..30}; do
+        lsmod | grep -q -w $KMOD && RC=$? || RC=$?
         if [ $RC -eq 0 ]; then
           break
         fi
         sleep 1
       done
     fi
+  fi
 
-    for try in {0..30}; do
-      if [ $(find $syspath/ -name gpiochip* | wc -l) -ne 0 ]; then
+  for try in {0..30}; do
+      if [ $(find $syspath/ -mindepth 2 -name driver | wc -l) -ne 0 ]; then
         break
       fi
       sleep 1
-    done
-  fi
-done
-
-for syspath in $(find /sys/bus/usb/devices/); do
-  if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "10c4" ] && [ "`cat $syspath/idProduct`" == "8c07" ]; then
-    if [ $(lsmod | grep hb_rf_usb_2 | wc -l) -eq 0 ]; then
-      modprobe -q hb_rf_usb_2
-
-      for try in {0..30}; do
-        lsmod | grep -q hb_rf_usb_2 && RC=$? || RC=$?
-        if [ $RC -eq 0 ]; then
-          break
-        fi
-        sleep 1
-      done
-    fi
-
-    for try in {0..30}; do
-      if [ $(find $syspath/ -name gpiochip* | wc -l) -ne 0 ]; then
-        break
-      fi
-      sleep 1
-    done
-  fi
+  done
 done
 
 for dev_no in {0..5}
@@ -101,39 +94,6 @@ done
 for syspath in $(find /sys/bus/usb/devices/); do
   if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c00f" ]; then
     allow_device `cat $syspath/dev`
-  fi
-done
-
-for syspath in $(find /sys/bus/usb/devices/); do
-  if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c020" ]; then
-    if [ $(find $syspath/ -name ttyUSB* | wc -l) -eq 0 ]; then
-      if [ ! -e /sys/bus/usb-serial/drivers/cp210x ]; then
-        modprobe -q cp210x
-
-        for try in {0..30}; do
-          if [ -e /sys/bus/usb-serial/drivers/cp210x ]; then
-            break
-          fi
-          sleep 1
-        done
-      fi
-
-      grep -q "1b1f c020" /sys/bus/usb-serial/drivers/cp210x/new_id || echo "1b1f c020" > /sys/bus/usb-serial/drivers/cp210x/new_id
-
-      for try in {0..30}; do
-        if [ $(find $syspath/ -name ttyUSB* | wc -l) -ne 0 ]; then
-          break
-        fi
-        sleep 1
-      done
-    fi
-
-    for syspath in $(find $syspath/ -name ttyUSB*); do
-      if [ -e $syspath/dev ]; then
-        allow_device `cat $syspath/dev`
-        break
-      fi
-    done
   fi
 done
 

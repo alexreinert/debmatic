@@ -37,7 +37,19 @@ diff -ruN --no-dereference fw.3.61.6.orig/bin/hm_autoconf fw.3.61.6.debmatic/bin
      # Mapping of channel type to default function for the channel
      array set CHANNEL_FUNCTIONS {
          BLIND                   LIGHT
-@@ -151,7 +136,6 @@
+@@ -128,6 +113,11 @@
+         rega "dom.GetObject($dev_id).ReadyConfig(true);"
+         puts "ReadyConfig($dev_id)"
+     }
++
++    proc conf_device_HmIP-RFUSB { url dev_id desc_var } {
++        rega "dom.GetObject($dev_id).ReadyConfig(true);"
++        puts "ReadyConfig($dev_id)"
++    }
+ 	
+ 	proc conf_device_HmIP-CCU3 { url dev_id desc_var } {
+         rega "dom.GetObject($dev_id).ReadyConfig(true);"
+@@ -151,7 +141,6 @@
      
      proc conf_value_WEATHER.RAIN_COUNTER { url ch_id ch_desc_var value_desc_var} {
          create_rain_calculation $ch_id
@@ -45,7 +57,7 @@ diff -ruN --no-dereference fw.3.61.6.orig/bin/hm_autoconf fw.3.61.6.debmatic/bin
      }
      
      proc conf_value_DISPLAY.SERVICE_COUNT { url ch_id ch_desc_var value_desc_var} {
-@@ -162,90 +146,6 @@
+@@ -162,90 +151,6 @@
          create_sysvar_to_value_prg $ch_id ALARM_COUNT 40 "Alarmmeldungen anzeigen"
      }
      
@@ -136,7 +148,7 @@ diff -ruN --no-dereference fw.3.61.6.orig/bin/hm_autoconf fw.3.61.6.debmatic/bin
      proc create_sysvar_to_value_prg {ch_id value sv_id prg_name} {
          set script "string ch_id=\"$ch_id\";\nstring value_name=\"$value\";\nstring sv_id=$sv_id;\nstring prg_name=\"$prg_name\";\n"
          append script {
-@@ -514,7 +414,9 @@
+@@ -514,7 +419,9 @@
          string ifaces;
          foreach(if_id, dom.GetObject(ID_INTERFACES).EnumUsedIDs()){
              object o=dom.GetObject(if_id);
@@ -147,7 +159,7 @@ diff -ruN --no-dereference fw.3.61.6.orig/bin/hm_autoconf fw.3.61.6.debmatic/bin
          }
          string dev_id;
          string devs;
-@@ -531,35 +433,22 @@
+@@ -531,35 +438,22 @@
                  }
              }
          }
@@ -195,7 +207,7 @@ diff -ruN --no-dereference fw.3.61.6.orig/bin/hm_autoconf fw.3.61.6.debmatic/bin
      }
  
      # We need a catch because OSRAM Lightify causes an error (/tmp/hm_autoconf_xxx.log) because a list must have an even number of elements.
-@@ -592,20 +481,26 @@
+@@ -592,20 +486,26 @@
                array_clear ch_descr
                array set ch_descr [xmlrpc $url getDeviceDescription $ch_address]
                if [info exist DEVICE_FUNCTIONS($dev_descr(TYPE))] {
@@ -1142,6 +1154,18 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/config/cp_time.cgi fw.3.61.6.debma
        set country ""
        foreach location $LOCATIONS {
          if { [lindex $location 0] == "-" } {
+diff -ruN --no-dereference fw.3.61.6.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl fw.3.61.6.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
+--- fw.3.61.6.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
++++ fw.3.61.6.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
+@@ -26,7 +26,7 @@
+ 
+   puts "<script type=\"text/javascript\">load_JSFunc('/config/easymodes/MASTER_LANG/HmIP-ParamHelp.js');</script>"
+ 
+-  if {([string equal $devType "HmIP-CCU3"] == 1) || ([string equal $devType "RPI-RF-MOD"] == 1)} {
++  if {([string equal $devType "HmIP-CCU3"] == 1) || ([string equal $devType "RPI-RF-MOD"] == 1) || ([string equal $devType "HmIP-RFUSB"] == 1)} {
+     append html "[getNoParametersToSet]"
+     return $html
+   }
 diff -ruN --no-dereference fw.3.61.6.orig/www/config/help.cgi fw.3.61.6.debmatic/www/config/help.cgi
 --- fw.3.61.6.orig/www/config/help.cgi
 +++ fw.3.61.6.debmatic/www/config/help.cgi
@@ -1164,6 +1188,30 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/config/help.cgi fw.3.61.6.debmatic
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
+diff -ruN --no-dereference fw.3.61.6.orig/www/rega/esp/datapointconfigurator.fn fw.3.61.6.debmatic/www/rega/esp/datapointconfigurator.fn
+--- fw.3.61.6.orig/www/rega/esp/datapointconfigurator.fn
++++ fw.3.61.6.debmatic/www/rega/esp/datapointconfigurator.fn
+@@ -713,7 +713,7 @@
+               Call("/esp/controls/hap.fn::CreateHAP()");
+             }
+ 
+-            if ((ch.Label() == "RPI-RF-MOD") || (ch.Label() =="HmIP-CCU3")) {
++            if ((ch.Label() == "RPI-RF-MOD") || (ch.Label() =="HmIP-CCU3") || (ch.Label() =="HmIP-RFUSB")) {
+               WriteLine( "<script>conInfo('Create CoPro Control.');</script>" );
+               sLastControlName = CN_MAINTENANCE;
+               isKnownControl = true;
+diff -ruN --no-dereference fw.3.61.6.orig/www/rega/esp/functions.fn fw.3.61.6.debmatic/www/rega/esp/functions.fn
+--- fw.3.61.6.orig/www/rega/esp/functions.fn
++++ fw.3.61.6.debmatic/www/rega/esp/functions.fn
+@@ -411,7 +411,7 @@
+           bShowChannel = false;
+         }
+       } else {
+-        if ((oDevHssType != "HmIP-CCU3") && (oDevHssType != "HmIP-HAP") && (oDevHssType != "RPI-RF-MOD")) {
++        if ((oDevHssType != "HmIP-CCU3") && (oDevHssType != "HmIP-HAP") && (oDevHssType != "RPI-RF-MOD") && (oDevHssType != "HmIP-RFUSB")) {
+           bShowChannel = false;
+         }
+       }
 diff -ruN --no-dereference fw.3.61.6.orig/www/rega/pages/index.htm fw.3.61.6.debmatic/www/rega/pages/index.htm
 --- fw.3.61.6.orig/www/rega/pages/index.htm
 +++ fw.3.61.6.debmatic/www/rega/pages/index.htm
@@ -1176,6 +1224,25 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/rega/pages/index.htm fw.3.61.6.deb
  
        /**
         * Flags
+diff -ruN --no-dereference fw.3.61.6.orig/www/rega/pages/tabs/startpage.htm fw.3.61.6.debmatic/www/rega/pages/tabs/startpage.htm
+--- fw.3.61.6.orig/www/rega/pages/tabs/startpage.htm
++++ fw.3.61.6.debmatic/www/rega/pages/tabs/startpage.htm
+@@ -278,13 +278,13 @@
+   WebUI.resize();
+   StartPage.showUpdate();
+   if (forceUpdate) {
+-      StartPage.showCurrentFirmware();
++      jQuery("#currentFirmware").text(WEBUI_VERSION);
+       jQuery("#forceUpdate").show();
+   } else {
+       jQuery("#favSelector").show();
+       jQuery("#favView").show();
+       StartPage.showUpdate();
+-      StartPage.showCurrentFirmware();
++      jQuery("#currentFirmware").text(WEBUI_VERSION);
+       StartPage.showAllDeviceFirmware();
+       jQuery("#forceUpdate").remove();
+   }
 diff -ruN --no-dereference fw.3.61.6.orig/www/tcl/eq3/session.tcl fw.3.61.6.debmatic/www/tcl/eq3/session.tcl
 --- fw.3.61.6.orig/www/tcl/eq3/session.tcl
 +++ fw.3.61.6.debmatic/www/tcl/eq3/session.tcl
@@ -1190,6 +1257,44 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/tcl/eq3/session.tcl fw.3.61.6.debm
  
  ##
  # session_getHttpHeader
+diff -ruN --no-dereference fw.3.61.6.orig/www/tools/js/model/devicetypelist.js fw.3.61.6.debmatic/www/tools/js/model/devicetypelist.js
+--- fw.3.61.6.orig/www/tools/js/model/devicetypelist.js
++++ fw.3.61.6.debmatic/www/tools/js/model/devicetypelist.js
+@@ -18,7 +18,8 @@
+     "HMW-RCV-50",
+     "HM-Sec-SD-Team",
+     "HmIP-CCU3",
+-    "RPI-RF-MOD"
++    "RPI-RF-MOD",
++    "HmIP-RFUSB"
+   ],
+   
+   /**
+@@ -110,4 +111,4 @@
+   }
+ 
+ });
+- 
+\ No newline at end of file
++ 
+diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js fw.3.61.6.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
+--- fw.3.61.6.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js
++++ fw.3.61.6.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
+@@ -293,6 +293,7 @@
+     "PSM-UK": "Homematic IP Zwischenstecker Schalten/Messen UK",
+     "RC8": "Homematic IP Fernbedienung, 8 Kanal",
+     "RPI-RF-MOD" : "CO-PROCESSOR",
++    "HmIP-RFUSB" : "CO-PROCESSOR",
+     "SMI": "Homematic IP Bewegungsmelder innen",
+     "SMO": "Homematic IP Bewegungsmelder au%DFen",
+     "SRH": "Homematic IP Fenster-/ Drehgriffkontakt",
+@@ -323,4 +324,4 @@
+     "ZEL_STG_RM_WT_2": "Funk-Wandtaster 2-fach im 55er Rahmen",
+     "The END": ""
+   }
+-});
+\ No newline at end of file
++});
 diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/de/translate.lang.js fw.3.61.6.debmatic/www/webui/js/lang/de/translate.lang.js
 --- fw.3.61.6.orig/www/webui/js/lang/de/translate.lang.js
 +++ fw.3.61.6.debmatic/www/webui/js/lang/de/translate.lang.js
@@ -1197,7 +1302,7 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/de/translate.lang.js
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
      "dialogSettingsCMLblActualSoftwareVersion" : "Aktuelle Software-Version:",
-+    "dialogSettingsDebmaticDonateHint" : "Bitte unterst%FCtzen Sie die Entwicklung von debmatic mit einer Spende via <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> oder eine Aufmerksamkeit auf meinem <a href='https://www.debmatic.de/donate/amazon'>Amazon Wunschzettel</a>.",
++    "dialogSettingsDebmaticDonateHint" : "Bitte unterst%FCtzen Sie die Entwicklung von debmatic mit einer Spende via <a href='https://ko-fi.com/alexreinert' rel='nofollow'>Ko-fi</a>, <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> oder einer Aufmerksamkeit auf meinem <a href='https://www.debmatic.de/donate/amazon'>Amazon Wunschzettel</a>.",
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
@@ -1212,6 +1317,24 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/de/translate.lang.js
      "optionLastValue" : "Letzter Wert",
      "optionNoModification" : "Keine %C4nderung",
      "optionNone" : "Keine",
+diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js fw.3.61.6.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
+--- fw.3.61.6.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js
++++ fw.3.61.6.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
+@@ -293,6 +293,7 @@
+     "PSM-UK": "Homematic IP Pluggable Switch and Meter UK",
+     "RC8": "Homematic IP Remote Contro, 8-channel",
+     "RPI-RF-MOD" : "CO-PROCESSOR",
++    "HmIP-RFUSB" : "CO-PROCESSOR",
+     "SMI": "Homematic IP Motion Detector - indoor",
+     "SMO": "Homematic IP Motion Detector, outdoor",
+     "SRH": "Homematic IP Rotary Handle Sensor",
+@@ -323,4 +324,4 @@
+     "ZEL_STG_RM_WT_2": "Wireless Push-button 2-channel in 55mm frame",
+     "The END": ""
+   }
+-});
+\ No newline at end of file
++});
 diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/en/translate.lang.js fw.3.61.6.debmatic/www/webui/js/lang/en/translate.lang.js
 --- fw.3.61.6.orig/www/webui/js/lang/en/translate.lang.js
 +++ fw.3.61.6.debmatic/www/webui/js/lang/en/translate.lang.js
@@ -1219,7 +1342,7 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/en/translate.lang.js
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
      "dialogSettingsCMLblActualSoftwareVersion" : "Current software version:",
-+    "dialogSettingsDebmaticDonateHint" : "Please support the development of debmatic with a donation via <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.debmatic.de/donate/amazon'>Amazom wishlist</a>.",
++    "dialogSettingsDebmaticDonateHint" : "Please support the development of debmatic with a donation via <a href='https://ko-fi.com/alexreinert' rel='nofollow'>Ko-fi</a>, <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.debmatic.de/donate/amazon'>Amazom wishlist</a>.",
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
      "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
@@ -1237,7 +1360,20 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/webui/js/lang/en/translate.lang.js
 diff -ruN --no-dereference fw.3.61.6.orig/www/webui/webui.js fw.3.61.6.debmatic/www/webui/webui.js
 --- fw.3.61.6.orig/www/webui/webui.js
 +++ fw.3.61.6.debmatic/www/webui/webui.js
-@@ -6703,12 +6703,7 @@
+@@ -603,6 +603,12 @@
+ DEV_PATHS["RPI-RF-MOD"]["50"] = "/config/img/devices/50/CCU3_thumb.png";
+ DEV_PATHS["RPI-RF-MOD"]["250"] = "/config/img/devices/250/CCU3.png";
+ DEV_HIGHLIGHT["RPI-RF-MOD"] = new Object();
++DEV_LIST.push('HmIP-RFUSB');
++DEV_DESCRIPTION["HmIP-RFUSB"] = "HmIP-RFUSB";
++DEV_PATHS["HmIP-RFUSB"] = new Object();
++DEV_PATHS["HmIP-RFUSB"]["50"] = "/config/img/devices/50/CCU3_thumb.png";
++DEV_PATHS["HmIP-RFUSB"]["250"] = "/config/img/devices/250/CCU3.png";
++DEV_HIGHLIGHT["HmIP-RFUSB"] = new Object();
+ DEV_LIST.push('263 145');
+ DEV_DESCRIPTION["263 145"] = "263_145";
+ DEV_PATHS["263 145"] = new Object();
+@@ -6703,12 +6709,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
            homematic("CCU.setSecurityHint");
@@ -1251,7 +1387,17 @@ diff -ruN --no-dereference fw.3.61.6.orig/www/webui/webui.js fw.3.61.6.debmatic/
          }
        }, "html");
      });
-@@ -24404,7 +24399,7 @@
+@@ -9382,7 +9383,8 @@
+     "HM-Sec-SD-Team",
+     "HM-Sec-SD-2-Team",
+     "HmIP-CCU3",
+-    "RPI-RF-MOD"
++    "RPI-RF-MOD",
++    "HmIP-RFUSB"
+   ],
+   
+   /**
+@@ -24404,7 +24406,7 @@
      var script = document.createElement("script");
      script.id = "homematic_com_script";
      script.type = "text/javascript";

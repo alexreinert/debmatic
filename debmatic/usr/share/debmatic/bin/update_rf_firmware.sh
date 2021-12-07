@@ -1,13 +1,6 @@
 #!/bin/bash
 JAVA_HOME=$(update-java-alternatives --jre-headless --list | grep "\\W\(108\|111\|211\|180\)[0-9]\+\\W" | tr -s " " | sort -k2 | tail -1 | cut -d" " -f3)
 
-if [ -e /usr/share/debmatic/lib ]; then
-  LIBSERIAL=`find /usr/share/debmatic/lib -name "libNRJavaSerial*.so"`
-  if [ -n "$LIBSERIAL" ]; then
-    JAVA_ARGS="-DlibNRJavaSerial.userlib=$LIBSERIAL"
-  fi
-fi
-
 if [ "$HM_HMRF_DEV" == "HM-MOD-RPI-PCB" ]; then
   NEW_VERSION=`grep 'dualcopro_si1002_update_blhm.eq3' /firmware/HM-MOD-UART/fwmap | awk '{print $3}'`
 
@@ -66,26 +59,31 @@ if [ "$HM_HMRF_DEV" == "RPI-RF-MOD" ]; then
   fi
 fi
 
-if [ "$HM_HMIP_DEV" == "HMIP-RFUSB" ]; then
-  NEW_VERSION=`ls /firmware/HmIP-RFUSB/hmip_coprocessor_update-*.eq3 | sed 's/.*-\(.*\)\.eq3/\1/' | sort | tail -1`
+if [ "$HM_HMRF_DEV" == "HMIP-RFUSB" ]; then
+  NEW_VERSION=`ls /firmware/HmIP-RFUSB/dualcopro_update_blhmip-*.eq3 | sed 's/.*-\(.*\)\.eq3/\1/' | sort | tail -1`
 
-  if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMIP_VERSION" ]; then
-    echo "Starting update of HMIP-RFUSB to version $NEW_VERSION..."
+  if [ -n "$NEW_VERSION" ] && [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
+    echo "Starting update of HmIP-RFUSB to version $NEW_VERSION..."
 
-    HM_HMIP_VERSION=`JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HMIP_DEVNODE -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HMIP_DEVNODE -o -f /firmware/HmIP-RFUSB/hmip_coprocessor_update-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
+    HM_HMRF_VERSION=`JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HM_HOST_GPIO_UART -jar /opt/HmIP/hmip-copro-update.jar -p $HM_HOST_GPIO_UART -o -f /firmware/HmIP-RFUSB/dualcopro_update_blhmip-$NEW_VERSION.eq3 2>/dev/null | grep "Version:" | cut -d' ' -f5`
 
-    echo "$HM_HMRF_VERSION" > /var/hmip_firmware_version
+    echo "$HM_HMRF_VERSION" > /var/rf_firmware_version
+
+    if [ "$HM_HMIP_DEV" == "$HM_HMRF_DEV" ]; then
+      HM_HMIP_VERSION=$HM_HMRF_VERSION
+      echo "$HM_HMRF_VERSION" > /var/hmip_firmware_version
+    fi
 
     set | grep '^HM_' >/var/hm_mode
 
-    if [ "$NEW_VERSION" != "$HM_HMIP_VERSION" ]; then
-      echo "Failed to update HMIP-RFUSB to version $NEW_VERSION."
+    if [ "$NEW_VERSION" != "$HM_HMRF_VERSION" ]; then
+      echo "Failed to update HmIP-RFUSB to version $NEW_VERSION."
       exit 1
     fi
 
-    echo "Successfully updated HMIP-RFUSB to version $NEW_VERSION."
+    echo "Successfully updated HmIP-RFUSB to version $NEW_VERSION."
   elif [ -n "$NEW_VERSION" ]; then
-    echo "HMIP-RFUSB has already desired version $NEW_VERSION..."
+    echo "HmIP-RFUSB has already desired version $NEW_VERSION..."
   fi
 fi
 

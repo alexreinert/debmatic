@@ -40,7 +40,7 @@ done
 mkdir -p /etc/config/addons/www
 
 \cp -f /etc/config_templates/InterfacesList.xml /etc/config/
-if [ -z "$HM_HOST_RAW_UART" ]; then
+if [ -z "$HM_HMRF_DEV" ] || [ -z "$HM_HMIP_DEV" ] || [ "$HM_HMRF_DEV" != "$HM_HMIP_DEV" ]; then
   touch /var/status/debmatic_avoid_multimacd
 fi
 
@@ -52,72 +52,34 @@ if [ ! -e /etc/config/hs485d.conf ] || [ `egrep -c '^Type = HMWLGW' /etc/config/
   touch /var/status/debmatic_avoid_hs485d
 fi
 
-cat > /var/hm_mode << EOF
-HM_HOST='DEBMATIC'
-HM_HOST_RAW_UART='$HM_HOST_RAW_UART'
-HM_HOST_GPIO_UART='$HM_HOST_GPIO_UART'
-HM_HOST_UART_DEVICE_TYPE='$HM_HOST_UART_DEVICE_TYPE'
-HM_HOST_GPIO_RESET=''
-HM_LED_GREEN=''
-HM_LED_RED=''
-HM_LED_YELLOW=''
-HM_RTC=''
-HM_MODE='NORMAL'
-HM_HMRF_DEVNODE='$HM_HMRF_DEVNODE'
-HM_HMIP_DEVNODE='$HM_HMIP_DEVNODE'
-HM_HMRF_DEV='$HM_HMRF_DEV'
-HM_HMIP_DEV='$HM_HMIP_DEV'
-HM_HMRF_SERIAL='$HM_HMRF_SERIAL'
-HM_HMRF_VERSION='$HM_HMRF_VERSION'
-HM_HMRF_ADDRESS='$HM_HMRF_ADDRESS'
-HM_HMIP_SGTIN='$HM_HMIP_SGTIN'
-HM_HMIP_SERIAL='$HM_HMIP_SERIAL'
-HM_HMIP_VERSION='$HM_HMIP_VERSION'
-HM_HMIP_ADDRESS='$HM_HMIP_ADDRESS'
-EOF
-
-if [ -n "${HM_HMRF_SERIAL}" ]; then
-  BOARD_SERIAL=${HM_HMRF_SERIAL}
-  FIRMWARE_VERSION=${HM_HMRF_VERSION}
-  RF_ADDRESS=${HM_HMRF_ADDRESS}
-elif [ -n "${HM_HMIP_SERIAL}" ]; then
+if [[ -n "${HM_HMRF_DEV}" ]]; then
   BOARD_SERIAL=${HM_HMIP_SERIAL}
-  FIRMWARE_VERSION=${HM_HMIP_VERSION}
-  RF_ADDRESS=${HM_HMIP_ADDRESS}
+  BOARD_ADDRESS=${HM_HMRF_ADDRESS}
+elif [[ -n "${HM_HMIP_DEV}" ]]; then
+  BOARD_SERIAL=${HM_HMIP_SERIAL}
+  BOARD_ADDRESS=${HM_HMIP_ADDRESS}
 else
-  if [ -z "$DEBMATIC_SERIAL" ]; then
-    DEBMATIC_SERIAL=`shuf -i 1-9999999 -n 1`
-    DEBMATIC_SERIAL=`printf "DEB%07d" $DEBMATIC_SERIAL`
-    echo "DEBMATIC_SERIAL=\"$DEBMATIC_SERIAL\"" >> /etc/default/debmatic
-  fi
-
-  if [ -z "$DEBMATIC_ADDRESS" ]; then
-    DEBMATIC_ADDRESS=`shuf -i 1-16777215 -n 1`
-    DEBMATIC_ADDRESS=`printf "0x%06x" $DEBMATIC_ADDRESS`
-    echo "DEBMATIC_ADDRESS=\"$DEBMATIC_ADDRESS\"" >> /etc/default/debmatic
-  fi
-
-  BOARD_SERIAL=$DEBMATIC_SERIAL
-  RF_ADDRESS=$DEBMATIC_ADDRESS
+  BOARD_SERIAL=${DEBMATIC_SERIAL}
+  BOARD_ADDRESS=${DEBMATIC_ADDRESS}
 fi
 
-echo "${BOARD_SERIAL}" > /var/board_serial
-echo "${FIRMWARE_VERSION}" > /var/rf_firmware_version
-echo "${RF_ADDRESS}" > /var/rf_address
+echo -n "${BOARD_SERIAL}" > /var/board_serial
 
-if [ -n ${HM_HMIP_SERIAL} ]; then
-  echo "${HM_HMIP_SERIAL}" > /var/hmip_board_serial
-  echo "${HM_HMIP_VERSION}" > /var/hmip_firmware_version
-  echo "${HM_HMIP_ADDRESS}" > /var/hmip_address
-  if [ -n "${HM_HMIP_SGTIN}" ]; then
-    echo "${HM_HMIP_SGTIN}" > /var/board_sgtin
-    echo "${HM_HMIP_SGTIN}" > /var/hmip_board_sgtin
-  fi
+if [[ -n "${HM_HMIP_SGTIN}" ]]; then
+  echo -n "${HM_HMIP_SGTIN}" > /var/board_sgtin
 fi
+
+echo -n "${HM_HMRF_SERIAL}" > /var/rf_board_serial
+echo -n "${HM_HMRF_ADDRESS}" > /var/rf_address
+echo -n "${HM_HMRF_VERSION}" > /var/rf_firmware_version
+echo -n "${HM_HMIP_SERIAL}" > /var/hmip_board_serial
+echo -n "${HM_HMIP_VERSION}" > /var/hmip_firmware_version
+echo -n "${HM_HMIP_ADDRESS}" > /var/hmip_address
+echo -n "${HM_HMIP_SGTIN}" > /var/hmip_board_sgtin
 
 cat > /var/ids << EOF
-BidCoS-Address=${RF_ADDRESS}
-SerialNumber=${BOARD_SERIAL}
+BidCoS-Address=${DEBMATIC_ADDRESS}
+SerialNumber=${DEBMATIC_SERIAL}
 EOF
 
 if [ ! -e /etc/config/ids ]; then
@@ -127,6 +89,38 @@ else
     cp /var/ids /etc/config/ids
   fi
 fi
+
+cat > /var/hm_mode << EOF
+HM_HOST='debmatic'
+HM_MODE='NORMAL'
+HM_LED_GREEN=''
+HM_LED_GREEN_MODE1='none'
+HM_LED_GREEN_MODE2='none'
+HM_LED_RED=''
+HM_LED_RED_MODE1='none'
+HM_LED_RED_MODE2='none'
+HM_LED_YELLOW=''
+HM_LED_YELLOW_MODE1='none'
+HM_LED_YELLOW_MODE2='none'
+HM_HOST_GPIO_UART='$HM_HOST_GPIO_UART'
+HM_HOST_GPIO_RESET=''
+HM_RTC=''
+HM_HMIP_DEV='$HM_HMIP_DEV'
+HM_HMIP_DEVNODE='$HM_HMIP_DEVNODE'
+HM_HMIP_SERIAL='$HM_HMIP_SERIAL'
+HM_HMIP_VERSION='$HM_HMIP_VERSION'
+HM_HMIP_SGTIN='$HM_HMIP_SGTIN'
+HM_HMIP_ADDRESS='$HM_HMIP_ADDRESS'
+HM_HMIP_ADDRESS_ACTIVE='$HM_HMIP_ADDRESS'
+HM_HMIP_DEVTYPE='$HM_HMIP_DEVTYPE'
+HM_HMRF_DEV='$HM_HMRF_DEV'
+HM_HMRF_DEVNODE='$HM_HMRF_DEVNODE'
+HM_HMRF_SERIAL='$HM_HMRF_SERIAL'
+HM_HMRF_VERSION='$HM_HMRF_VERSION'
+HM_HMRF_ADDRESS='$HM_HMRF_ADDRESS'
+HM_HMRF_ADDRESS_ACTIVE='$HM_HMRF_ADDRESS'
+HM_HMRF_DEVTYPE='$HM_HMRF_DEVTYPE'
+EOF
 
 if [ ! -e /etc/config/crypttool.cfg ]; then
   touch /etc/config/crypttool.cfg

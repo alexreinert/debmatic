@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=82
+PKG_BUILD=83
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -30,7 +30,6 @@ mv occu-$ARCHIVE_TAG repo
 
 cd $WORK_DIR/repo
 patch -l -p1 < $CURRENT_DIR/occu.patch
-mv $WORK_DIR/repo/firmware/HmIP-RFUSB/hmip_coprocessor_update.eq3 $WORK_DIR/repo/firmware/HmIP-RFUSB/hmip_coprocessor_update-2.8.6.eq3
 
 wget -O /dev/null --save-cookies=cookies.txt --keep-session-cookies $CCU_DOWNLOAD_SPLASH_URL
 wget -O ccu3.tar.gz --load-cookies=cookies.txt --referer=$CCU_DOWNLOAD_SPLASH_URL $CCU_DOWNLOAD_URL
@@ -49,6 +48,8 @@ umount $WORK_DIR/image
 
 cd $WORK_DIR/ccu
 patch -l -p1 < $CURRENT_DIR/debmatic.patch
+DEVDBINSERT="HmIP-RFUSB {{50 \/config\/img\/devices\/50\/CCU3_thumb.png} {250 \/config\/img\/devices\/250\/CCU3.png}} "
+sed -i "s/\(array[[:space:]]*set[[:space:]]*DEV_PATHS[[:space:]]*{\)/\1$DEVDBINSERT/g" $WORK_DIR/ccu/www/config/devdescr/DEVDB.tcl
 
 cd $WORK_DIR
 wget -O JP-HB-Devices-addon.tar.gz $JP_HB_DEVICES_ADDON_DOWNLOAD_URL
@@ -154,7 +155,8 @@ do
 
   cp -pR $WORK_DIR/ccu/firmware $TARGET_DIR/
   cp -pR $WORK_DIR/repo/firmware/HM-MOD-UART $TARGET_DIR/firmware/
-  cp -pR $WORK_DIR/repo/firmware/HmIP-RFUSB $TARGET_DIR/firmware/
+  mkdir -p $TARGET_DIR/firmware/HmIP-RFUSB
+  cp -pR $WORK_DIR/repo/firmware/HmIP-RFUSB-Beta/dualcopro_update_blhmip-4.4.8.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/
 
   mkdir -p $TARGET_DIR/opt
   cp -pR $WORK_DIR/ccu/opt/HMServer $TARGET_DIR/opt/

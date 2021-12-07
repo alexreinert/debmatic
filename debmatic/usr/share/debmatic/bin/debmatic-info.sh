@@ -43,36 +43,41 @@ if [ -f /proc/device-tree/model ] && [ `grep -c "Raspberry Pi 3" /proc/device-tr
 fi
 
 if [ -z "$HM_HMRF_DEV" ]; then
-  HM_HMRF_DEV='unknown'
-fi
-echo "HMRF Hardware:  $HM_HMRF_DEV"
+  echo "HMRF Hardware:  unknown"
+else
+  echo "HMRF Hardware:  $HM_HMRF_DEV"
 
-if [ ! -z "$HM_HOST_UART_DEVICE_TYPE" ]; then
-  echo " Connected via: $HM_HOST_UART_DEVICE_TYPE ($HM_HOST_GPIO_UART)"
-fi
+  if [ ! -z "$HM_HMRF_DEVTYPE" ]; then
+    echo " Connected via: $HM_HMRF_DEVTYPE ($HM_HMRF_DEVNODE)"
+  fi
 
-if [ -z "$HM_HMRF_SERIAL" ]; then
-  HM_HMRF_SERIAL='unknown'
-fi
-echo " Board serial:  $HM_HMRF_SERIAL"
+  if [ -z "$HM_HMRF_SERIAL" ]; then
+    HM_HMRF_SERIAL='unknown'
+  fi
+  echo " Board serial:  $HM_HMRF_SERIAL"
 
-if [ -z "$HM_HMRF_ADDRESS" ]; then
-  HM_HMRF_ADDRESS='unknown'
+  if [ -z "$HM_HMRF_ADDRESS" ]; then
+    HM_HMRF_ADDRESS='unknown'
+  fi
+  echo " Radio MAC:     $HM_HMRF_ADDRESS"
 fi
-echo " Radio MAC:     $HM_HMRF_ADDRESS"
 
 if [ -z "$HM_HMIP_DEV" ]; then
-  HM_HMIP_DEV='unknown'
-fi
-echo "HMIP Hardware:  $HM_HMIP_DEV"
+  echo "HMIP Hardware:  unknown"
+else
+  echo "HMIP Hardware:  $HM_HMIP_DEV"
 
-if [ -z "$HM_HMIP_SGTIN" ]; then
-  HM_HMIP_SGTIN='unknown'
-fi
-echo " SGTIN:         $HM_HMIP_SGTIN"
+  if [ ! -z "$HM_HMIP_DEVTYPE" ]; then
+    echo " Connected via: $HM_HMIP_DEVTYPE ($HM_HMIP_DEVNODE)"
+  fi
 
-if [ -z "$HM_HMIP_ADDRESS" ]; then
-  HM_HMIP_ADDRESS='unknown'
-fi
-echo " Radio MAC:     $HM_HMIP_ADDRESS"
+  if [ -z "$HM_HMIP_SGTIN" ]; then
+    HM_HMIP_SGTIN='unknown'
+  fi
+  echo " SGTIN:         $HM_HMIP_SGTIN"
 
+  if [ -z "$HM_HMIP_ADDRESS" ]; then
+    HM_HMIP_ADDRESS='unknown'
+  fi
+  echo " Radio MAC:     $HM_HMIP_ADDRESS"
+fi

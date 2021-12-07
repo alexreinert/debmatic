@@ -4,6 +4,8 @@ RED_PIN=0
 GREEN_PIN=0
 BLUE_PIN=0
 
+HMIP_RAW_UART="$(basename $HM_HMIP_DEVNODE)"
+
 if [ "$HM_HMRF_DEV" == "RPI-RF-MOD" ]; then
   if [ -e "/sys/module/generic_raw_uart/parameters/load_dummy_rx8130_module" ]; then
     echo 1 > /sys/module/generic_raw_uart/parameters/load_dummy_rx8130_module
@@ -11,10 +13,10 @@ if [ "$HM_HMRF_DEV" == "RPI-RF-MOD" ]; then
     modprobe dummy_rx8130
   fi
 
-  if [ -e "/sys/class/raw-uart/$HM_HOST_RAW_UART/red_gpio_pin" ]; then
-    RED_PIN=`cat /sys/class/raw-uart/$HM_HOST_RAW_UART/red_gpio_pin`
-    GREEN_PIN=`cat /sys/class/raw-uart/$HM_HOST_RAW_UART/green_gpio_pin`
-    BLUE_PIN=`cat /sys/class/raw-uart/$HM_HOST_RAW_UART/blue_gpio_pin`
+  if [ -e "/sys/class/raw-uart/$HMIP_RAW_UART/red_gpio_pin" ]; then
+    RED_PIN=`cat /sys/class/raw-uart/$HMIP_RAW_UART/red_gpio_pin`
+    GREEN_PIN=`cat /sys/class/raw-uart/$HMIP_RAW_UART/green_gpio_pin`
+    BLUE_PIN=`cat /sys/class/raw-uart/$HMIP_RAW_UART/blue_gpio_pin`
   fi
 fi
 

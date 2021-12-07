@@ -11,7 +11,7 @@ debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Sy
 * Unterstützung für 
   * HM-MOD-RPI-PCB (HmRF + HmIP Funk)
   * RPI-RF-MOD (HmRF, HmIP Funk + HmIP Wired)
-  * HmIP-RFUSB (nur HmIP Funk)
+  * HmIP-RFUSB (HmRF, HmIP Funk + HmIP Wired)
   * HmIP-RFUSB-TK (Telekom Version, nur HmIP Funk, Firmware Updates nicht möglich, Funktionalität nicht dauerhaft sichergestellt)
   * HM-CFG-USB-2 (nur HmRF)
   * HM-LGW-O-TW-W-EU (nur HmRF)
@@ -19,8 +19,8 @@ debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Sy
   * [HB-RF-USB-2](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB-2) (abhängig von Funkmodul)
   * [HB-RF-ETH](https://github.com/alexreinert/PCB/tree/master/HB-RF-ETH) (abhängig von Funkmodul)
 
-### Unterstützung [![Spenden](https://img.shields.io/badge/donate-PayPal-green.svg)](https://www.debmatic.de/dontate/paypal)
-Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [PayPal](https://www.debmatic.de/dontate/paypal) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.debmatic.de/donate/amazon).
+### Unterstützung [<img src="https://ko-fi.com/img/githubbutton_sm.svg" height="20" alt="Support me on Ko-fi">](https://ko-fi.com/alexreinert) [<img src="https://img.shields.io/badge/donate-PayPal-green.svg" height="20" alt="Donate via Paypal">](https://www.debmatic.de/donate/paypal)
+Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschiedene Testgeräte benötigt. Allerdings erhält das Projekt keine Unterstützung durch kommerzielle Anbieter. Bitte unterstützen Sie die Entwicklung mit einer Spende via [Ko-fi](https://ko-fi.com/alexreinert), [PayPal](https://www.debmatic.de/dontate/paypal) oder durch eine Aufmerksamkeit auf meinem [Amazon Wunschzettel](https://www.debmatic.de/donate/amazon).
 
 ### Voraussetzung
 * Debian basiertes System (Debian, Ubuntu, Raspbian, Armbian)
