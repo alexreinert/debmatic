@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=83
+PKG_BUILD=84
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -156,7 +156,7 @@ do
   cp -pR $WORK_DIR/ccu/firmware $TARGET_DIR/
   cp -pR $WORK_DIR/repo/firmware/HM-MOD-UART $TARGET_DIR/firmware/
   mkdir -p $TARGET_DIR/firmware/HmIP-RFUSB
-  cp -pR $WORK_DIR/repo/firmware/HmIP-RFUSB-Beta/dualcopro_update_blhmip-4.4.8.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/
+  cp -pR $WORK_DIR/repo/firmware/HmIP-RFUSB/dualcopro_update_blhmip-*.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/
 
   mkdir -p $TARGET_DIR/opt
   cp -pR $WORK_DIR/ccu/opt/HMServer $TARGET_DIR/opt/
