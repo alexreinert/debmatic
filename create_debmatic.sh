@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CCU_VERSION="3.61.6"
+CCU_VERSION="3.61.7"
 
-ARCHIVE_TAG="68c6c5e57d13ca2cbdb3d8f6c5d0ee7edb41ef4d"
+ARCHIVE_TAG="af970e900c7fbc87e0d7e7bdf91d3cc0331063c1"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=84
+PKG_BUILD=85
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -29,7 +29,7 @@ tar xzf occu.tar.gz
 mv occu-$ARCHIVE_TAG repo
 
 cd $WORK_DIR/repo
-patch -l -p1 < $CURRENT_DIR/occu.patch
+patch -E -l -p1 < $CURRENT_DIR/occu.patch
 
 wget -O /dev/null --save-cookies=cookies.txt --keep-session-cookies $CCU_DOWNLOAD_SPLASH_URL
 wget -O ccu3.tar.gz --load-cookies=cookies.txt --referer=$CCU_DOWNLOAD_SPLASH_URL $CCU_DOWNLOAD_URL
@@ -47,7 +47,7 @@ cp -pR $WORK_DIR/image/* $WORK_DIR/ccu/
 umount $WORK_DIR/image
 
 cd $WORK_DIR/ccu
-patch -l -p1 < $CURRENT_DIR/debmatic.patch
+patch -E -l -p1 < $CURRENT_DIR/debmatic.patch
 DEVDBINSERT="HmIP-RFUSB {{50 \/config\/img\/devices\/50\/CCU3_thumb.png} {250 \/config\/img\/devices\/250\/CCU3.png}} "
 sed -i "s/\(array[[:space:]]*set[[:space:]]*DEV_PATHS[[:space:]]*{\)/\1$DEVDBINSERT/g" $WORK_DIR/ccu/www/config/devdescr/DEVDB.tcl
 
