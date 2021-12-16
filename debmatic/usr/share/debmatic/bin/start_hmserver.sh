@@ -14,8 +14,7 @@ else
   HMSERVER_BIN="HMIPServer"
   HMSERVER_ARGS="de.eq3.ccu.server.ip.HMIPServer /var/run/crRFD.conf /etc/HMServer.conf"
   sed "s|^Adapter\.1\.Port=.*$|Adapter.1.Port=${HMSERVER_DEV}|" /etc/crRFD.conf > /var/run/crRFD.conf
-#  if [[ "${HM_HMIP_DEV}" != "RPI-RF-MOD" && "${HM_HMIP_DEV}" != "HMIP-RFUSB" ]]; then
-  if [[ "${HM_HMIP_DEV}" != "RPI-RF-MOD" ]]; then
+  if [[ "${HM_HMIP_DEV}" != "RPI-RF-MOD" && "${HM_HMIP_DEV}" != "HMIP-RFUSB" ]]; then
     sed -i "s|^Lan\.Routing\.Enabled=.*$|Lan.Routing.Enabled=false|" /var/run/crRFD.conf
     sed -i "s|^Adapter\.Local\.Device\.Enabled=.*$|Adapter.Local.Device.Enabled=false|" /var/run/crRFD.conf
   fi
