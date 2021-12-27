@@ -13,7 +13,7 @@ debmatic ist ein Projekt um eine Homematic CCU3 direkt unter Debian basierten Sy
   * RPI-RF-MOD (HmRF, HmIP Funk + HmIP Wired)
   * HmIP-RFUSB (HmRF, HmIP Funk + HmIP Wired)
   * HmIP-RFUSB-TK (Telekom Version, nur HmIP Funk, Firmware Updates nicht möglich, Funktionalität nicht dauerhaft sichergestellt)
-  * HM-CFG-USB-2 (nur HmRF)
+  * HM-CFG-USB-2 (nur HmRF, nicht bei ARM64)
   * HM-LGW-O-TW-W-EU (nur HmRF)
   * [HB-RF-USB](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB) (abhängig von Funkmodul)
   * [HB-RF-USB-2](https://github.com/alexreinert/PCB/tree/master/HB-RF-USB-2) (abhängig von Funkmodul)

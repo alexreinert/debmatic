@@ -40,7 +40,7 @@ done
 mkdir -p /etc/config/addons/www
 
 \cp -f /etc/config_templates/InterfacesList.xml /etc/config/
-if [ -z "$HM_HMRF_DEV" ] || [ -z "$HM_HMIP_DEV" ] || [ "$HM_HMRF_DEV" != "$HM_HMIP_DEV" ]; then
+if [ [ "$HM_HMIP_DEV" != "HM-MOD-RPI-PCB" ] && [ "$HM_HMIP_DEV" != "RPI-RF-MOD" ] && [ "$HM_HMIP_DEV" != "HMIP-RFUSB" ] ]; then
   touch /var/status/debmatic_avoid_multimacd
 fi
 

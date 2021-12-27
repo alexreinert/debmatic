@@ -143,6 +143,7 @@ done
 if [ -z "$AVOID_HM_CFG_USB_2" ] || [  "$AVOID_HM_CFG_USB_2" != "1" ]; then
   for syspath in $(find /sys/bus/usb/devices/); do
     if [ -e $syspath/idVendor ] && [ "`cat $syspath/idVendor`" == "1b1f" ] && [ "`cat $syspath/idProduct`" == "c00f" ]; then
+      HM_HMRF_DEV="HM-CFG-USB-2"
       HM_HMRF_DEVNODE="/dev/$(udevadm info -q name -p $syspath)"
 
       if [ ! -e "$HM_HMRF_DEVNODE" ]; then
@@ -150,8 +151,10 @@ if [ -z "$AVOID_HM_CFG_USB_2" ] || [  "$AVOID_HM_CFG_USB_2" != "1" ]; then
         mknod "$HM_HMRF_DEVNODE" c `cat $syspath/dev | tr ':' ' '`
       fi
 
-      HM_HMRF_DEV="HM-CFG-USB-2"
       HM_HMRF_SERIAL=`cat $syspath/serial | tr '[:lower:]' '[:upper:]'`
+      HM_HMRF_VERSION=""
+      HM_HMRF_ADDRESS="$DEBMATIC_ADDRESS"
+      HM_HMRF_DEVTYPE="USB"
       break
     fi 
   done
