@@ -26,7 +26,7 @@ else
   . /usr/share/debmatic/bin/detect_hardware.inc
 fi
 
-if [ -e /sys/devices/virtual/raw-uart ]; then
+if [ "$(echo /sys/class/raw-uart/raw-uart*)" != "/sys/class/raw-uart/raw-uart*" ]; then
   RAW_UART_STATE="Available"
 else
   RAW_UART_STATE="Not available"
