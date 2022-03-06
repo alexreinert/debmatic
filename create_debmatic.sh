@@ -123,6 +123,15 @@ done
 
 cd $WORK_DIR
 
+openssl req -new -x509 -nodes -keyout $WORK_DIR/server.pem \
+                                              -out $WORK_DIR/server.pem \
+                                              -days 3650 \
+                                              -addext "subjectAltName = DNS:debmatic" \
+                                              -addext "keyUsage = keyCertSign,digitalSignature,keyEncipherment" \
+                                              -addext "extendedKeyUsage = serverAuth" \
+                                              -addext "nsCertType = server,sslCA" \
+                                              -subj "/CN=debmatic" 2>/dev/null >/dev/null
+
 declare -A architectures=(["armhf"]="arm-gnueabihf" ["arm64"]="arm-gnueabihf" ["i386"]="X86_32_Debian_Wheezy" ["amd64"]="X86_32_Debian_Wheezy")
 for ARCH in "${!architectures[@]}"
 do
@@ -168,14 +177,7 @@ do
 
   cp -pR $CURRENT_DIR/debmatic/* $TARGET_DIR 
   
-  openssl req -new -x509 -nodes -keyout $TARGET_DIR/etc/config/server.pem \
-                                              -out $TARGET_DIR/etc/config/server.pem \
-                                              -days 3650 \
-                                              -addext "subjectAltName = DNS:debmatic" \
-                                              -addext "keyUsage = keyCertSign,digitalSignature,keyEncipherment" \
-                                              -addext "extendedKeyUsage = serverAuth" \
-                                              -addext "nsCertType = server,sslCA" \
-                                              -subj "/CN=debmatic" 2>/dev/null >/dev/null
+  cp $WORK_DIR/server.pem $TARGET_DIR/etc/config_templates/
 
   echo "VERSION=$CCU_VERSION.$PKG_BUILD" > $TARGET_DIR/usr/share/debmatic/VERSION
 
