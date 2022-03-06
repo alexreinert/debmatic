@@ -167,6 +167,15 @@ do
   cp -pR $WORK_DIR/ccu/www $TARGET_DIR/
 
   cp -pR $CURRENT_DIR/debmatic/* $TARGET_DIR 
+  
+  openssl req -new -x509 -nodes -keyout $TARGET_DIR/etc/config/server.pem \
+                                              -out $TARGET_DIR/etc/config/server.pem \
+                                              -days 3650 \
+                                              -addext "subjectAltName = DNS:debmatic" \
+                                              -addext "keyUsage = keyCertSign,digitalSignature,keyEncipherment" \
+                                              -addext "extendedKeyUsage = serverAuth" \
+                                              -addext "nsCertType = server,sslCA" \
+                                              -subj "/CN=debmatic" 2>/dev/null >/dev/null
 
   echo "VERSION=$CCU_VERSION.$PKG_BUILD" > $TARGET_DIR/usr/share/debmatic/VERSION
 
