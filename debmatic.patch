@@ -854,7 +854,7 @@ diff -ruN --no-dereference fw.3.61.7.orig/www/config/cp_security.cgi fw.3.61.7.d
      division {class="popupTitle"} {
        puts "\${dialogSettingsSecurityMessageSysBackupRestartSystemTitle}"
      }
-@@ -1132,177 +1115,6 @@
+@@ -1132,61 +1115,6 @@
          puts "\${dialogSettingsSecurityHintSessionTimeout2}"
        }
        }
@@ -913,33 +913,13 @@ diff -ruN --no-dereference fw.3.61.7.orig/www/config/cp_security.cgi fw.3.61.7.d
 -        puts "\${dialogSettingsSecuritySSHDescription}"
 -      }
 -      }
--      # auth
--      if { [getProduct]  >= 3 } {
--        table_row {class="CLASS20806"} {
--          table_data {class="CLASS20807"} {
--            puts "\${dialogSettingsSecurityTDAuth}"
--          }
--          table_data {class="CLASS20808"} {
--            division {} {
--              table {
--                table_row {
--                  table_data {align="left"}  {
--                    puts "\${dialogSettingsSecurityLblActivateAuthRemoteXML}"
--                  }
--                  set checked ""
--                  #set checked "checked=true"
--                  table_data {class="CLASS21112"} {align="left"}  {
--                    cgi_checkbox authState=unknown {id="userAuthActive"} {onClick=setUserAuth();} $checked
--                  }
--                }
--              }
--            }
--          }
--          table_data {class="CLASS20808"} {
--            puts "\${dialogSettingsSecurityTDExplanation}"
--          }
--        }
--      }
+       # auth
+       if { [getProduct]  >= 3 } {
+         table_row {class="CLASS20806"} {
+@@ -1214,95 +1142,6 @@
+           }
+         }
+       }
 -      # automatic redirect to https
 -      if { [getProduct]  >= 3 } {
 -        table_row {class="CLASS20806"} {
@@ -1032,7 +1012,7 @@ diff -ruN --no-dereference fw.3.61.7.orig/www/config/cp_security.cgi fw.3.61.7.d
      }
    }
    division {class="popupControls"} {
-@@ -1542,7 +1354,7 @@
+@@ -1542,7 +1381,7 @@
  }
  
  proc action_reboot {} {

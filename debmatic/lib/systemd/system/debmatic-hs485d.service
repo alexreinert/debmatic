@@ -15,7 +15,10 @@ EnvironmentFile=/var/hm_mode
 EnvironmentFile=-/etc/config/syslog
 PIDFile=/var/run/hs485dLoader.pid
 ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
+ExecStartPre=/usr/share/debmatic/bin/add_fw_block.sh "debmatic_rfd" 32000
 ExecStart=/bin/hs485dLoader -l ${LOGLEVEL_HS485D} -dw /etc/config/hs485d.conf
+ExecStopPost=/bin/rm -f /var/run/rfd.pid
+ExecStopPost=/usr/share/debmatic/bin/delete_fw_block.sh "debmatic_rfd" 32000
 Restart=on-abnormal
 RestartSec=5s
 

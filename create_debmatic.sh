@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=89
+PKG_BUILD=90
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -142,6 +142,7 @@ do
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/RFD/lib/* $TARGET_DIR/lib/
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/WebUI/lib/* $TARGET_DIR/lib/
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/LinuxBasis/lib/* $TARGET_DIR/lib/
+  cp -pR $WORK_DIR/ccu/lib/*.tcl $TARGET_DIR/lib/
 
   if [ "$ARCH" == "arm64" ]; then
     for file in avrprog crypttool eq3configcmd eq3configd eq3-uds-services hs485d hs485dLoader hss_led multimacd ReGaHss.community ReGaHss.normal rfd SetInterfaceClock ssdpd tclsh; do
@@ -177,7 +178,7 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, zulu8-jre-headless | zulu11-jre-headless | openjdk-8-jre-headless | openjdk-11-jre-headless, ipcalc, net-tools, rsync, ifupdown"
+    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, zulu8-jre-headless | zulu11-jre-headless | openjdk-8-jre-headless | openjdk-11-jre-headless, ipcalc, net-tools, rsync, ifupdown, lua-bit32, lua-filesystem, lua-socket, lighttpd-mod-magnet, iptables | nftables"
     if [ "$ARCH" == amd64 ]; then
       DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
     fi

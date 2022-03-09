@@ -8,6 +8,7 @@ mkdir -p /var/status
 
 rm -f /var/status/startupFinished
 rm -f /var/status/debmatic_*
+rm -f /var/status/HMServerStarted
 rm -f /var/rf_*
 rm -f /var/hm_*
 rm -f /var/hmip_*

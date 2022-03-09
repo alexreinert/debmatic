@@ -14,10 +14,12 @@ Environment=LOGLEVEL_REGA=2
 EnvironmentFile=/var/hm_mode
 EnvironmentFile=-/etc/config/syslog
 ExecStartPre=-/usr/share/debmatic/bin/wait_network_up.sh
+ExecStartPre=/usr/share/debmatic/bin/add_fw_block.sh "debmatic_rega" 8183 31999
 ExecStart=/usr/share/debmatic/bin/start_rega.sh
 ExecStartPost=-/usr/share/debmatic/bin/wait_sysvar_creation.tcl
 ExecStop=/usr/share/debmatic/bin/stop_rega.sh
 ExecStopPost=/bin/rm -f /var/run/ReGaHss.pid
+ExecStopPost=/usr/share/debmatic/bin/delete_fw_block.sh "debmatic_rega" 8183 31999
 Restart=on-failure
 RestartSec=5s
 TimeoutSec=180s
