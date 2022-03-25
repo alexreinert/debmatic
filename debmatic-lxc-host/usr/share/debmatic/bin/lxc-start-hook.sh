@@ -86,8 +86,8 @@ do
     UART_DEV="raw-uart$dev_no"
   fi
 
-  if [ -e "/sys/devices/virtual/raw-uart/$UART_DEV" ]; then
-    allow_device `cat /sys/devices/virtual/raw-uart/$UART_DEV/dev`
+  if [ -e "/sys/class/raw-uart/$UART_DEV" ]; then
+    allow_device `cat /sys/class/raw-uart/$UART_DEV/dev`
   fi
 done
 
