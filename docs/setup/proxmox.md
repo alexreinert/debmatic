@@ -39,7 +39,7 @@ Es darf nur einen einzigen (aktiven) Container mit debmatic geben.
 8. Neustart des Containers
 
 #### Container
-### Installation
+##### Installation
 1. Notwendige Pakete für die Installation installieren (als Benutzer root)
    ```bash
    apt install sudo apt-transport-https gnupg
@@ -55,3 +55,23 @@ Es darf nur einen einzigen (aktiven) Container mit debmatic geben.
    sudo apt install debmatic
    ```
 4. Viel Spaß mit der Nutzung von debmatic
+
+#### Troubleshooting
+1. Wenn bei der Installation im Container eine Fehlermeldung der Form
+   ```bash
+   Error! There are no instances of module: pivccu
+   [...]
+   Error! Your kernel headers for kernel 5.4.174-2-pve cannot be found.
+   Please install the linux-headers-5.4.174-2-pve package,
+   ```
+   auftritt gibt es dafür zwei mögliche Ursachen:
+   
+   a) 
+   Die Installationspakete für den Host `pivccu-modules-dkms` und `debmatic-lxc-host` wurden fälschlicherweise im Container ausgeführt.
+
+   b)
+   Aufgrund einer  Abhängigkeit von `debmatic` zu `pivccu-modules-dkms` wurde dies auf dem Container bei der Installation von `debmatic` automatisch installiert. Es kann entfernt werden via
+   ```bash
+   sudo apt remove pivccu-modules-dkms
+   ```
+   Siehe hierzu Issue #300.
