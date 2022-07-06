@@ -20,7 +20,7 @@ else
   fi
 fi
 
-JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java -Xmx128m -Dlog4j.configuration=file:///etc/config/log4j.xml -Dfile.encoding=ISO-8859-1 $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HMSERVER_DEV -cp ${CLAZZPATH}:/opt/HMServer/$HMSERVER_BIN.jar $HMSERVER_ARGS &
+JAVA_HOME=$JAVA_HOME $JAVA_HOME/bin/java -Xmx128m -Dlog4j.configuration=file:///etc/config/log4j2.xml -Dfile.encoding=ISO-8859-1 $JAVA_ARGS -Dgnu.io.rxtx.SerialPorts=$HMSERVER_DEV -cp ${CLAZZPATH}:/opt/HMServer/$HMSERVER_BIN.jar $HMSERVER_ARGS &
 echo $! > /var/run/HMIPServer.pid
 
 for i in {1..120}; do

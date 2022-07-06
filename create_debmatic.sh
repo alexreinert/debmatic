@@ -1,21 +1,21 @@
 #!/bin/bash
 
-CCU_VERSION="3.63.9"
+CCU_VERSION="3.65.6"
 
-ARCHIVE_TAG="45b38865f6b60f16f825b75f0bdc8a9738831ee0"
+ARCHIVE_TAG="94d68d0c001ed813431ddffcd3f029ec0e0221c7"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
 CCU_DOWNLOAD_URL="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-$CCU_VERSION.tgz"
 CCU_DOWNLOAD_URL="https://homematic-ip.com/sites/default/files/downloads/ccu3-$CCU_VERSION.tgz"
 
-JP_HB_DEVICES_ADDON_ARCHIVE_TAG="5.9a"
+JP_HB_DEVICES_ADDON_ARCHIVE_TAG="6.0"
 JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addon/archive/$JP_HB_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=93
+PKG_BUILD=94
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -70,7 +70,7 @@ for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/patch/common/*.patch; do
   fi
   patch -N -l -p3 -r - --no-backup-if-mismatch -i $file
 done
-for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/patch/ge_345/*.patch; do
+for file in $WORK_DIR/JP-HB-Devices-addon/src/addon/patch/ge_365/*.patch; do
   patch -N -l -p3 -s --dry-run -r - --no-backup-if-mismatch -i $file
   if [ $? -eq 1 ]; then
     dos2unix $file
@@ -135,6 +135,7 @@ do
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/HS485D/bin/* $TARGET_DIR/bin/
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/RFD/bin/* $TARGET_DIR/bin/
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/WebUI/bin/* $TARGET_DIR/bin/
+  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/WebUI-Beta/bin/ReGaHss $TARGET_DIR/bin/ReGaHss.community
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/LinuxBasis/bin/* $TARGET_DIR/bin/
 
   mkdir -p $TARGET_DIR/lib/debmatic
@@ -157,7 +158,7 @@ do
   cp -pR $WORK_DIR/ccu/firmware $TARGET_DIR/
   cp -pR $WORK_DIR/repo/firmware/HM-MOD-UART $TARGET_DIR/firmware/
   mkdir -p $TARGET_DIR/firmware/HmIP-RFUSB
-  cp -pR $WORK_DIR/repo/firmware/HmIP-RFUSB-Beta/dualcopro_update_blhmip-*.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/
+  cp -pR $WORK_DIR/repo/firmware/HmIP-RFUSB/dualcopro_update_blhmip-*.eq3 $TARGET_DIR/firmware/HmIP-RFUSB/
 
   mkdir -p $TARGET_DIR/opt
   cp -pR $WORK_DIR/ccu/opt/HMServer $TARGET_DIR/opt/

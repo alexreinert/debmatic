@@ -1,6 +1,6 @@
-diff -ruN --no-dereference fw.3.63.9.orig/bin/hm_autoconf fw.3.63.9.debmatic/bin/hm_autoconf
---- fw.3.63.9.orig/bin/hm_autoconf
-+++ fw.3.63.9.debmatic/bin/hm_autoconf
+diff -ruN --no-dereference fw.3.65.6.orig/bin/hm_autoconf fw.3.65.6.debmatic/bin/hm_autoconf
+--- fw.3.65.6.orig/bin/hm_autoconf
++++ fw.3.65.6.debmatic/bin/hm_autoconf
 @@ -41,9 +41,9 @@
  
      load tclrega.so
@@ -243,9 +243,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/bin/hm_autoconf fw.3.63.9.debmatic/bin
                set procname "conf_channel_$ch_descr(TYPE)"
                if {[llength [info procs $procname]]} {
                    if [catch { $procname $url $ise_ch_id ch_descr } errMsg] {
-diff -ruN --no-dereference fw.3.63.9.orig/bin/hm_startup fw.3.63.9.debmatic/bin/hm_startup
---- fw.3.63.9.orig/bin/hm_startup
-+++ fw.3.63.9.debmatic/bin/hm_startup
+diff -ruN --no-dereference fw.3.65.6.orig/bin/hm_startup fw.3.65.6.debmatic/bin/hm_startup
+--- fw.3.65.6.orig/bin/hm_startup
++++ fw.3.65.6.debmatic/bin/hm_startup
 @@ -1,27 +1,7 @@
  #!/bin/tclsh
  
@@ -420,9 +420,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/bin/hm_startup fw.3.63.9.debmatic/bin/
  checkDevices
 +create_default_objects
 +
-diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/ccu/restartReGa.tcl fw.3.63.9.debmatic/www/api/methods/ccu/restartReGa.tcl
---- fw.3.63.9.orig/www/api/methods/ccu/restartReGa.tcl
-+++ fw.3.63.9.debmatic/www/api/methods/ccu/restartReGa.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/api/methods/ccu/restartReGa.tcl fw.3.65.6.debmatic/www/api/methods/ccu/restartReGa.tcl
+--- fw.3.65.6.orig/www/api/methods/ccu/restartReGa.tcl
++++ fw.3.65.6.debmatic/www/api/methods/ccu/restartReGa.tcl
 @@ -7,4 +7,4 @@
  # Rückgabewert: kein
  ##
@@ -430,9 +430,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/ccu/restartReGa.tcl fw
 -catch {exec /etc/init.d/S70ReGaHss restart}
 \ No newline at end of file
 +catch {exec systemctl restart debmatic-rega.service}
-diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/session/create.tcl fw.3.63.9.debmatic/www/api/methods/session/create.tcl
---- fw.3.63.9.orig/www/api/methods/session/create.tcl
-+++ fw.3.63.9.debmatic/www/api/methods/session/create.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/api/methods/session/create.tcl fw.3.65.6.debmatic/www/api/methods/session/create.tcl
+--- fw.3.65.6.orig/www/api/methods/session/create.tcl
++++ fw.3.65.6.debmatic/www/api/methods/session/create.tcl
 @@ -11,7 +11,7 @@
  
  package require http
@@ -442,9 +442,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/session/create.tcl fw.
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/session/login.tcl fw.3.63.9.debmatic/www/api/methods/session/login.tcl
---- fw.3.63.9.orig/www/api/methods/session/login.tcl
-+++ fw.3.63.9.debmatic/www/api/methods/session/login.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/api/methods/session/login.tcl fw.3.65.6.debmatic/www/api/methods/session/login.tcl
+--- fw.3.65.6.orig/www/api/methods/session/login.tcl
++++ fw.3.65.6.debmatic/www/api/methods/session/login.tcl
 @@ -12,7 +12,7 @@
  
  package require http
@@ -454,9 +454,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/session/login.tcl fw.3
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/session/renew.tcl fw.3.63.9.debmatic/www/api/methods/session/renew.tcl
---- fw.3.63.9.orig/www/api/methods/session/renew.tcl
-+++ fw.3.63.9.debmatic/www/api/methods/session/renew.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/api/methods/session/renew.tcl fw.3.65.6.debmatic/www/api/methods/session/renew.tcl
+--- fw.3.65.6.orig/www/api/methods/session/renew.tcl
++++ fw.3.65.6.debmatic/www/api/methods/session/renew.tcl
 @@ -12,7 +12,7 @@
  package require http
  
@@ -466,9 +466,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/session/renew.tcl fw.3
  
  ::http::cleanup [::http::geturl $url]
  
-diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/user/restarthmipserver.tcl fw.3.63.9.debmatic/www/api/methods/user/restarthmipserver.tcl
---- fw.3.63.9.orig/www/api/methods/user/restarthmipserver.tcl
-+++ fw.3.63.9.debmatic/www/api/methods/user/restarthmipserver.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/api/methods/user/restarthmipserver.tcl fw.3.65.6.debmatic/www/api/methods/user/restarthmipserver.tcl
+--- fw.3.65.6.orig/www/api/methods/user/restarthmipserver.tcl
++++ fw.3.65.6.debmatic/www/api/methods/user/restarthmipserver.tcl
 @@ -7,6 +7,5 @@
  #
  # Rückgabewert: true
@@ -477,9 +477,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/user/restarthmipserver
 -exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/user/restartlighttpd.tcl fw.3.63.9.debmatic/www/api/methods/user/restartlighttpd.tcl
---- fw.3.63.9.orig/www/api/methods/user/restartlighttpd.tcl
-+++ fw.3.63.9.debmatic/www/api/methods/user/restartlighttpd.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/api/methods/user/restartlighttpd.tcl fw.3.65.6.debmatic/www/api/methods/user/restartlighttpd.tcl
+--- fw.3.65.6.orig/www/api/methods/user/restartlighttpd.tcl
++++ fw.3.65.6.debmatic/www/api/methods/user/restartlighttpd.tcl
 @@ -7,8 +7,7 @@
  #
  # Rückgabewert: true
@@ -491,9 +491,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/api/methods/user/restartlighttpd.t
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/backup.tcl fw.3.63.9.debmatic/www/config/backup.tcl
---- fw.3.63.9.orig/www/config/backup.tcl
-+++ fw.3.63.9.debmatic/www/config/backup.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/backup.tcl fw.3.65.6.debmatic/www/config/backup.tcl
+--- fw.3.65.6.orig/www/config/backup.tcl
++++ fw.3.65.6.debmatic/www/config/backup.tcl
 @@ -8,14 +8,14 @@
  proc create_backup {} {
    set HOSTNAME [exec hostname]
@@ -518,9 +518,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/backup.tcl fw.3.63.9.debmat
 -}
 \ No newline at end of file
 +}
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/control_panel.cgi fw.3.63.9.debmatic/www/config/control_panel.cgi
---- fw.3.63.9.orig/www/config/control_panel.cgi
-+++ fw.3.63.9.debmatic/www/config/control_panel.cgi
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/control_panel.cgi fw.3.65.6.debmatic/www/config/control_panel.cgi
+--- fw.3.65.6.orig/www/config/control_panel.cgi
++++ fw.3.65.6.debmatic/www/config/control_panel.cgi
 @@ -102,16 +102,6 @@
    }
  }
@@ -599,9 +599,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/control_panel.cgi fw.3.63.9
    puts {
      <!-- Kopplungen -->
      <td>
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/cp_maintenance.cgi fw.3.63.9.debmatic/www/config/cp_maintenance.cgi
---- fw.3.63.9.orig/www/config/cp_maintenance.cgi
-+++ fw.3.63.9.debmatic/www/config/cp_maintenance.cgi
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/cp_maintenance.cgi fw.3.65.6.debmatic/www/config/cp_maintenance.cgi
+--- fw.3.65.6.orig/www/config/cp_maintenance.cgi
++++ fw.3.65.6.debmatic/www/config/cp_maintenance.cgi
 @@ -379,171 +379,10 @@
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
@@ -817,9 +817,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/cp_maintenance.cgi fw.3.63.
    
    puts "Content-Type:application/x-download"
    puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/cp_security.cgi fw.3.63.9.debmatic/www/config/cp_security.cgi
---- fw.3.63.9.orig/www/config/cp_security.cgi
-+++ fw.3.63.9.debmatic/www/config/cp_security.cgi
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/cp_security.cgi fw.3.65.6.debmatic/www/config/cp_security.cgi
+--- fw.3.65.6.orig/www/config/cp_security.cgi
++++ fw.3.65.6.debmatic/www/config/cp_security.cgi
 @@ -297,7 +297,6 @@
      } else {
        exec touch /usr/local/.doFactoryReset
@@ -1021,9 +1021,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/cp_security.cgi fw.3.63.9.d
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/cp_time.cgi fw.3.63.9.debmatic/www/config/cp_time.cgi
---- fw.3.63.9.orig/www/config/cp_time.cgi
-+++ fw.3.63.9.debmatic/www/config/cp_time.cgi
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/cp_time.cgi fw.3.65.6.debmatic/www/config/cp_time.cgi
+--- fw.3.65.6.orig/www/config/cp_time.cgi
++++ fw.3.65.6.debmatic/www/config/cp_time.cgi
 @@ -144,7 +144,7 @@
    global env LOCATIONS TIMEZONES
    
@@ -1134,9 +1134,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/cp_time.cgi fw.3.63.9.debma
        set country ""
        foreach location $LOCATIONS {
          if { [lindex $location 0] == "-" } {
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl fw.3.63.9.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
---- fw.3.63.9.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
-+++ fw.3.63.9.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl fw.3.65.6.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
+--- fw.3.65.6.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
++++ fw.3.65.6.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
 @@ -26,7 +26,7 @@
  
    puts "<script type=\"text/javascript\">load_JSFunc('/config/easymodes/MASTER_LANG/HmIP-ParamHelp.js');</script>"
@@ -1146,9 +1146,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/easymodes/etc/hmipChannelCo
      append html "[getNoParametersToSet]"
      return $html
    }
-diff -ruN --no-dereference fw.3.63.9.orig/www/config/help.cgi fw.3.63.9.debmatic/www/config/help.cgi
---- fw.3.63.9.orig/www/config/help.cgi
-+++ fw.3.63.9.debmatic/www/config/help.cgi
+diff -ruN --no-dereference fw.3.65.6.orig/www/config/help.cgi fw.3.65.6.debmatic/www/config/help.cgi
+--- fw.3.65.6.orig/www/config/help.cgi
++++ fw.3.65.6.debmatic/www/config/help.cgi
 @@ -3,8 +3,8 @@
  source common.tcl
  load tclrega.so
@@ -1168,10 +1168,10 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/config/help.cgi fw.3.63.9.debmatic
                  puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
                puts "</ul>"
        puts "</td>"
-diff -ruN --no-dereference fw.3.63.9.orig/www/rega/esp/datapointconfigurator.fn fw.3.63.9.debmatic/www/rega/esp/datapointconfigurator.fn
---- fw.3.63.9.orig/www/rega/esp/datapointconfigurator.fn
-+++ fw.3.63.9.debmatic/www/rega/esp/datapointconfigurator.fn
-@@ -712,7 +712,7 @@
+diff -ruN --no-dereference fw.3.65.6.orig/www/rega/esp/datapointconfigurator.fn fw.3.65.6.debmatic/www/rega/esp/datapointconfigurator.fn
+--- fw.3.65.6.orig/www/rega/esp/datapointconfigurator.fn
++++ fw.3.65.6.debmatic/www/rega/esp/datapointconfigurator.fn
+@@ -713,7 +713,7 @@
                Call("/esp/controls/hap.fn::CreateHAP()");
              }
  
@@ -1180,9 +1180,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/rega/esp/datapointconfigurator.fn 
                WriteLine( "<script>conInfo('Create CoPro Control.');</script>" );
                sLastControlName = CN_MAINTENANCE;
                isKnownControl = true;
-diff -ruN --no-dereference fw.3.63.9.orig/www/rega/esp/functions.fn fw.3.63.9.debmatic/www/rega/esp/functions.fn
---- fw.3.63.9.orig/www/rega/esp/functions.fn
-+++ fw.3.63.9.debmatic/www/rega/esp/functions.fn
+diff -ruN --no-dereference fw.3.65.6.orig/www/rega/esp/functions.fn fw.3.65.6.debmatic/www/rega/esp/functions.fn
+--- fw.3.65.6.orig/www/rega/esp/functions.fn
++++ fw.3.65.6.debmatic/www/rega/esp/functions.fn
 @@ -411,7 +411,7 @@
            bShowChannel = false;
          }
@@ -1192,21 +1192,21 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/rega/esp/functions.fn fw.3.63.9.de
            bShowChannel = false;
          }
        }
-diff -ruN --no-dereference fw.3.63.9.orig/www/rega/pages/index.htm fw.3.63.9.debmatic/www/rega/pages/index.htm
---- fw.3.63.9.orig/www/rega/pages/index.htm
-+++ fw.3.63.9.debmatic/www/rega/pages/index.htm
+diff -ruN --no-dereference fw.3.65.6.orig/www/rega/pages/index.htm fw.3.65.6.debmatic/www/rega/pages/index.htm
+--- fw.3.65.6.orig/www/rega/pages/index.htm
++++ fw.3.65.6.debmatic/www/rega/pages/index.htm
 @@ -71,7 +71,7 @@
        /*########################################################################*/
  
        PLATFORM = "Central";
--    WEBUI_VERSION = "3.63.9"
+-    WEBUI_VERSION = "3.65.6"
 +    WEBUI_VERSION = "{PKG_VERSION}"
  
        /**
         * Flags
-diff -ruN --no-dereference fw.3.63.9.orig/www/rega/pages/tabs/startpage.htm fw.3.63.9.debmatic/www/rega/pages/tabs/startpage.htm
---- fw.3.63.9.orig/www/rega/pages/tabs/startpage.htm
-+++ fw.3.63.9.debmatic/www/rega/pages/tabs/startpage.htm
+diff -ruN --no-dereference fw.3.65.6.orig/www/rega/pages/tabs/startpage.htm fw.3.65.6.debmatic/www/rega/pages/tabs/startpage.htm
+--- fw.3.65.6.orig/www/rega/pages/tabs/startpage.htm
++++ fw.3.65.6.debmatic/www/rega/pages/tabs/startpage.htm
 @@ -278,13 +278,13 @@
    WebUI.resize();
    StartPage.showUpdate();
@@ -1223,9 +1223,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/rega/pages/tabs/startpage.htm fw.3
        StartPage.showAllDeviceFirmware();
        jQuery("#forceUpdate").remove();
    }
-diff -ruN --no-dereference fw.3.63.9.orig/www/tcl/eq3/session.tcl fw.3.63.9.debmatic/www/tcl/eq3/session.tcl
---- fw.3.63.9.orig/www/tcl/eq3/session.tcl
-+++ fw.3.63.9.debmatic/www/tcl/eq3/session.tcl
+diff -ruN --no-dereference fw.3.65.6.orig/www/tcl/eq3/session.tcl fw.3.65.6.debmatic/www/tcl/eq3/session.tcl
+--- fw.3.65.6.orig/www/tcl/eq3/session.tcl
++++ fw.3.65.6.debmatic/www/tcl/eq3/session.tcl
 @@ -5,8 +5,8 @@
  
  package require http
@@ -1237,9 +1237,9 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/tcl/eq3/session.tcl fw.3.63.9.debm
  
  ##
  # session_getHttpHeader
-diff -ruN --no-dereference fw.3.63.9.orig/www/tools/js/model/devicetypelist.js fw.3.63.9.debmatic/www/tools/js/model/devicetypelist.js
---- fw.3.63.9.orig/www/tools/js/model/devicetypelist.js
-+++ fw.3.63.9.debmatic/www/tools/js/model/devicetypelist.js
+diff -ruN --no-dereference fw.3.65.6.orig/www/tools/js/model/devicetypelist.js fw.3.65.6.debmatic/www/tools/js/model/devicetypelist.js
+--- fw.3.65.6.orig/www/tools/js/model/devicetypelist.js
++++ fw.3.65.6.debmatic/www/tools/js/model/devicetypelist.js
 @@ -18,7 +18,8 @@
      "HMW-RCV-50",
      "HM-Sec-SD-Team",
@@ -1257,10 +1257,10 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/tools/js/model/devicetypelist.js f
 - 
 \ No newline at end of file
 + 
-diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js fw.3.63.9.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
---- fw.3.63.9.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js
-+++ fw.3.63.9.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
-@@ -294,6 +294,7 @@
+diff -ruN --no-dereference fw.3.65.6.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js fw.3.65.6.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
+--- fw.3.65.6.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js
++++ fw.3.65.6.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
+@@ -297,6 +297,7 @@
      "PSM-UK": "Homematic IP Zwischenstecker Schalten/Messen UK",
      "RC8": "Homematic IP Fernbedienung, 8 Kanal",
      "RPI-RF-MOD" : "CO-PROCESSOR",
@@ -1268,16 +1268,16 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/de/translate.lang.de
      "SMI": "Homematic IP Bewegungsmelder innen",
      "SMO": "Homematic IP Bewegungsmelder au%DFen",
      "SRH": "Homematic IP Fenster-/ Drehgriffkontakt",
-@@ -324,4 +325,4 @@
+@@ -328,4 +329,4 @@
      "ZEL_STG_RM_WT_2": "Funk-Wandtaster 2-fach im 55er Rahmen",
      "The END": ""
    }
 -});
 \ No newline at end of file
 +});
-diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/de/translate.lang.js fw.3.63.9.debmatic/www/webui/js/lang/de/translate.lang.js
---- fw.3.63.9.orig/www/webui/js/lang/de/translate.lang.js
-+++ fw.3.63.9.debmatic/www/webui/js/lang/de/translate.lang.js
+diff -ruN --no-dereference fw.3.65.6.orig/www/webui/js/lang/de/translate.lang.js fw.3.65.6.debmatic/www/webui/js/lang/de/translate.lang.js
+--- fw.3.65.6.orig/www/webui/js/lang/de/translate.lang.js
++++ fw.3.65.6.debmatic/www/webui/js/lang/de/translate.lang.js
 @@ -460,6 +460,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
      "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
@@ -1297,10 +1297,10 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/de/translate.lang.js
      "optionLastValue" : "Letzter Wert",
      "optionNoModification" : "Keine %C4nderung",
      "optionNone" : "Keine",
-diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js fw.3.63.9.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
---- fw.3.63.9.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js
-+++ fw.3.63.9.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
-@@ -294,6 +294,7 @@
+diff -ruN --no-dereference fw.3.65.6.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js fw.3.65.6.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
+--- fw.3.65.6.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js
++++ fw.3.65.6.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
+@@ -297,6 +297,7 @@
      "PSM-UK": "Homematic IP Pluggable Switch and Meter UK",
      "RC8": "Homematic IP Remote Contro, 8-channel",
      "RPI-RF-MOD" : "CO-PROCESSOR",
@@ -1308,16 +1308,16 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/en/translate.lang.de
      "SMI": "Homematic IP Motion Detector - indoor",
      "SMO": "Homematic IP Motion Detector, outdoor",
      "SRH": "Homematic IP Rotary Handle Sensor",
-@@ -324,4 +325,4 @@
+@@ -328,4 +329,4 @@
      "ZEL_STG_RM_WT_2": "Wireless Push-button 2-channel in 55mm frame",
      "The END": ""
    }
 -});
 \ No newline at end of file
 +});
-diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/en/translate.lang.js fw.3.63.9.debmatic/www/webui/js/lang/en/translate.lang.js
---- fw.3.63.9.orig/www/webui/js/lang/en/translate.lang.js
-+++ fw.3.63.9.debmatic/www/webui/js/lang/en/translate.lang.js
+diff -ruN --no-dereference fw.3.65.6.orig/www/webui/js/lang/en/translate.lang.js fw.3.65.6.debmatic/www/webui/js/lang/en/translate.lang.js
+--- fw.3.65.6.orig/www/webui/js/lang/en/translate.lang.js
++++ fw.3.65.6.debmatic/www/webui/js/lang/en/translate.lang.js
 @@ -459,6 +459,7 @@
      "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
      "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
@@ -1337,13 +1337,13 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/js/lang/en/translate.lang.js
      "optionLastValue" : "Last value",
      "optionNoModification" : "No change",
      "optionNone" : "None",
-diff -ruN --no-dereference fw.3.63.9.orig/www/webui/webui.js fw.3.63.9.debmatic/www/webui/webui.js
---- fw.3.63.9.orig/www/webui/webui.js
-+++ fw.3.63.9.debmatic/www/webui/webui.js
-@@ -2076,6 +2076,12 @@
- DEV_PATHS["263 146"]["50"] = "/config/img/devices/50/7_hm-lc-bl1-fm_thumb.png";
- DEV_PATHS["263 146"]["250"] = "/config/img/devices/250/7_hm-lc-bl1-fm.png";
- DEV_HIGHLIGHT["263 146"] = new Object();
+diff -ruN --no-dereference fw.3.65.6.orig/www/webui/webui.js fw.3.65.6.debmatic/www/webui/webui.js
+--- fw.3.65.6.orig/www/webui/webui.js
++++ fw.3.65.6.debmatic/www/webui/webui.js
+@@ -402,6 +402,12 @@
+ DEV_PATHS["HM-Sec-TiS"]["50"] = "/config/img/devices/50/47_hm-sec-tis_thumb.png";
+ DEV_PATHS["HM-Sec-TiS"]["250"] = "/config/img/devices/250/47_hm-sec-tis.png";
+ DEV_HIGHLIGHT["HM-Sec-TiS"] = new Object();
 +DEV_LIST.push('HmIP-RFUSB');
 +DEV_DESCRIPTION["HmIP-RFUSB"] = "HmIP-RFUSB";
 +DEV_PATHS["HmIP-RFUSB"] = new Object();
@@ -1353,7 +1353,7 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/webui.js fw.3.63.9.debmatic/
  DEV_LIST.push('HmIP-RCV-50');
  DEV_DESCRIPTION["HmIP-RCV-50"] = "HmIP-RCV-50";
  DEV_PATHS["HmIP-RCV-50"] = new Object();
-@@ -6797,12 +6803,7 @@
+@@ -6841,12 +6847,7 @@
            WebUI.resize();
            jQuery(".Layer0").show();
            homematic("CCU.setSecurityHint");
@@ -1367,7 +1367,7 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/webui.js fw.3.63.9.debmatic/
          }
        }, "html");
      });
-@@ -9476,7 +9477,8 @@
+@@ -9520,7 +9521,8 @@
      "HM-Sec-SD-Team",
      "HM-Sec-SD-2-Team",
      "HmIP-CCU3",
@@ -1377,7 +1377,7 @@ diff -ruN --no-dereference fw.3.63.9.orig/www/webui/webui.js fw.3.63.9.debmatic/
    ],
    
    /**
-@@ -24641,7 +24643,7 @@
+@@ -24707,7 +24709,7 @@
      var script = document.createElement("script");
      script.id = "homematic_com_script";
      script.type = "text/javascript";
