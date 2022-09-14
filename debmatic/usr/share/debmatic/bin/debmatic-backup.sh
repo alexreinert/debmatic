@@ -24,7 +24,7 @@ fi
 TMPDIR=`mktemp -d`
 
 cd /
-tar czf $TMPDIR/usr_local.tar.gz etc/config --transform 's/^/usr\/local\//g'
+tar czf $TMPDIR/usr_local.tar.gz usr/local/addons etc/config --transform 's/^/usr\/local\//g'
 
 crypttool -s -t 1 < $TMPDIR/usr_local.tar.gz > $TMPDIR/signature
 crypttool -g -t 1 > $TMPDIR/key_index

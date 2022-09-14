@@ -15,6 +15,9 @@ case "$1" in
     if [ ! -e /usr/sbin/debmatic-backup ]; then
       ln -s /usr/share/debmatic/bin/debmatic-backup.sh /usr/sbin/debmatic-backup
     fi
+    if [ ! -e /usr/sbin/debmatic-restore ]; then
+      ln -s /usr/share/debmatic/bin/debmatic-restore.sh /usr/sbin/debmatic-restore
+    fi
 
     cp /usr/share/debmatic/VERSION /boot/VERSION
 

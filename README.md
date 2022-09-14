@@ -73,6 +73,12 @@ sudo debmatic-backup
 ```
 Dieses Backup enthält nur die Einstellungen der CCU und ersetzt daher nicht ein Backup des Gesamtsystems.
 
+### Restore
+Ein Restore kann entweder über die WebUI erfolgen oder auf der Konsole über
+```bash
+sudo debmatic-restore $BACKUPFILE
+```
+
 ### Addons
 Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [Cloudmatic Connect](https://www.cloudmatic.de) (Paketname cloudmatic)
