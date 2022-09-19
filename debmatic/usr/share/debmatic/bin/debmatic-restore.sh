@@ -12,8 +12,7 @@ if [ $# -ne 1 ] || [ ! -f "$1" ]; then
   exit 1
 fi
 
-CURDIR=`pwd`
-
+CONFIGDIR="/etc/config"
 BACKUPFILE=`realpath $1`
 
 if [ `systemctl is-active debmatic-rega.service` == "active" ]; then
@@ -24,18 +23,26 @@ TMPDIR=`mktemp -d`
 
 systemctl stop debmatic.service
 
-tar --warning=no-timestamp --no-same-owner -xf $BACKUPFILE -C $TMPDIR/
+# now remove the whole /etc/config
+find $CONFIGDIR -mindepth 1 -maxdepth 1 -exec rm -rf {} \;
 
-# extract usr_local.tar.gz but make sure NOT to unarchive anything outside
-tar -xf $TMPDIR/usr_local.tar.gz --warning=no-timestamp --no-same-owner --strip-components=2 -C /
+if [ ! "$(ls -A /etc/config)" ]; then
+  tar --warning=no-timestamp --no-same-owner -xf $BACKUPFILE -C $TMPDIR/
 
-rm /etc/config/localtime
-ln -s /usr/share/zoneinfo/Europe/Berlin localtime
+  # extract usr_local.tar.gz but make sure NOT to unarchive anything outside
+  tar -xf $TMPDIR/usr_local.tar.gz --warning=no-timestamp --no-same-owner --strip-components=2 -C /
 
-cd $CURDIR
-rm -rf $TMPDIR
+  # fix $CONFIGDIR/localtime
+  rm $CONFIGDIR/localtime
+  ln -s /usr/share/zoneinfo/Europe/Berlin $CONFIGDIR/localtime
 
-sync
+#  cd $CURDIR
+  rm -rf $TMPDIR
+
+  sync
+else
+  echo "DebMatic data-directory not empty, please check ${CONFIGDIR}"
+fi
 
 systemctl start debmatic.service
 
