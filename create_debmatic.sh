@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=96
+PKG_BUILD=97
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -194,7 +194,7 @@ EOF
 
   cd $WORK_DIR
 
-  dpkg-deb --build debmatic-$PKG_VERSION-$ARCH
+  dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
 done
 
 cp debmatic-*.deb $CURRENT_DIR
