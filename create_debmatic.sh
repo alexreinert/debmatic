@@ -38,13 +38,8 @@ tar xzf ccu3.tar.gz
 
 gunzip rootfs.ext4.gz
 
-mkdir $WORK_DIR/image
-mount -t ext4 -o loop,ro rootfs.ext4 $WORK_DIR/image
-
 mkdir $WORK_DIR/ccu
-cp -pR $WORK_DIR/image/* $WORK_DIR/ccu/
-
-umount $WORK_DIR/image
+7z x -o$WORK_DIR/ccu rootfs.ext4
 
 cd $WORK_DIR/ccu
 patch -E -l -p1 < $CURRENT_DIR/debmatic.patch
@@ -194,7 +189,7 @@ EOF
 
   cd $WORK_DIR
 
-  dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
+  fakeroot dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
 done
 
 cp debmatic-*.deb $CURRENT_DIR

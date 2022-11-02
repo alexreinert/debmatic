@@ -46,7 +46,7 @@ do
 
   cd $WORK_DIR
 
-  dpkg-deb --build cuxd-$PKG_VERSION-$ARCH
+  fakeroot dpkg-deb --build cuxd-$PKG_VERSION-$ARCH
 done
 
 cp cuxd-*.deb $CURRENT_DIR

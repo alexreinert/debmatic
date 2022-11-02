@@ -23,7 +23,7 @@ done
 
 cd $WORK_DIR
 
-dpkg-deb --build homematic-check-mk-$PKG_VERSION
+fakeroot dpkg-deb --build homematic-check-mk-$PKG_VERSION
 
 cp homematic-check-mk-*.deb $CURRENT_DIR
 

@@ -44,7 +44,7 @@ done
 
 cd $WORK_DIR
 
-dpkg-deb --build hb-uni-sensor1-$PKG_VERSION
+fakeroot dpkg-deb --build hb-uni-sensor1-$PKG_VERSION
 
 cp hb-uni-sensor1-*.deb $CURRENT_DIR
 

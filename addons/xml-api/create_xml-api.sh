@@ -33,7 +33,7 @@ done
 
 cd $WORK_DIR
 
-dpkg-deb --build xml-api-$PKG_VERSION
+fakeroot dpkg-deb --build xml-api-$PKG_VERSION
 
 cp xml-api-*.deb $CURRENT_DIR
 

@@ -23,7 +23,7 @@ done
 
 cd $WORK_DIR
 
-dpkg-deb --build cloudmatic-$PKG_VERSION
+fakeroot dpkg-deb --build cloudmatic-$PKG_VERSION
 
 cp cloudmatic-*.deb $CURRENT_DIR
 
