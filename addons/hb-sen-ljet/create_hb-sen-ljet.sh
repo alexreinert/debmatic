@@ -44,7 +44,7 @@ done
 
 cd $WORK_DIR
 
-dpkg-deb --build hb-sen-ljet-$PKG_VERSION
+fakeroot dpkg-deb --build hb-sen-ljet-$PKG_VERSION
 
 cp hb-sen-ljet-*.deb $CURRENT_DIR
 

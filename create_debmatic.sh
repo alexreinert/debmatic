@@ -194,7 +194,7 @@ EOF
 
   cd $WORK_DIR
 
-  dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
+  fakeroot dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
 done
 
 cp debmatic-*.deb $CURRENT_DIR

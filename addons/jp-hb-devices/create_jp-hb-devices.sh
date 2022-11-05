@@ -32,7 +32,7 @@ done
 
 cd $WORK_DIR
 
-dpkg-deb --build jp-hb-devices-$PKG_VERSION
+fakeroot dpkg-deb --build jp-hb-devices-$PKG_VERSION
 
 cp jp-hb-devices-*.deb $CURRENT_DIR
 

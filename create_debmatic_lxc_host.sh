@@ -19,7 +19,7 @@ for file in $TARGET_DIR/DEBIAN/*; do
   sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file
 done
 
-dpkg-deb --build debmatic-lxc-host-$PKG_VERSION
+fakeroot dpkg-deb --build debmatic-lxc-host-$PKG_VERSION
 
 cp debmatic-*.deb $CURRENT_DIR
 
