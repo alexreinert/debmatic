@@ -13,10 +13,12 @@ WORK_DIR=$(mktemp -d)
 
 PKG_VERSION=$ADDON_VERSION-$PKG_BUILD
 
+umask 0022 # use root default umask (0022), instead of default user umask (0002)
+
 cd $WORK_DIR
 
 wget -O repo.tar.gz $ADDON_DOWNLOAD_URL
-tar xzf repo.tar.gz
+tar xzfp repo.tar.gz
 mv SmartHome-$ARCHIVE_TAG repo
 
 TARGET_DIR=$WORK_DIR/hb-uni-sensor1-$PKG_VERSION

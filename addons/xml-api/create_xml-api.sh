@@ -8,6 +8,8 @@ XML_API_DOWNLOAD_URL="https://github.com/jens-maus/XML-API/archive/$ARCHIVE_TAG.
 
 PKG_BUILD=2
 
+umask 0022 # use root default umask (0022), instead of default user umask (0002)
+
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
 
@@ -16,7 +18,7 @@ PKG_VERSION=$XML_API_VERSION-$PKG_BUILD
 cd $WORK_DIR
 
 wget -O xml-api.tar.gz $XML_API_DOWNLOAD_URL
-tar xzf xml-api.tar.gz
+tar xzfp xml-api.tar.gz
 mv XML-API-$ARCHIVE_TAG repo
 
 TARGET_DIR=$WORK_DIR/xml-api-$PKG_VERSION

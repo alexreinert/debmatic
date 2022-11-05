@@ -17,6 +17,8 @@ HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/
 
 PKG_BUILD=97
 
+umask 0022 # use root default umask (0022), instead of default user umask (0002)
+
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
 
@@ -25,7 +27,7 @@ PKG_VERSION=$CCU_VERSION-$PKG_BUILD
 cd $WORK_DIR
 
 wget -O occu.tar.gz $OCCU_DOWNLOAD_URL
-tar xzf occu.tar.gz
+tar xzfp occu.tar.gz
 mv occu-$ARCHIVE_TAG repo
 
 cd $WORK_DIR/repo
@@ -34,17 +36,12 @@ patch -E -l -p1 < $CURRENT_DIR/occu.patch
 wget -O /dev/null --save-cookies=cookies.txt --keep-session-cookies $CCU_DOWNLOAD_SPLASH_URL
 wget -O ccu3.tar.gz --load-cookies=cookies.txt --referer=$CCU_DOWNLOAD_SPLASH_URL $CCU_DOWNLOAD_URL
 
-tar xzf ccu3.tar.gz
+tar xzfp ccu3.tar.gz
 
 gunzip rootfs.ext4.gz
 
-mkdir $WORK_DIR/image
-mount -t ext4 -o loop,ro rootfs.ext4 $WORK_DIR/image
-
 mkdir $WORK_DIR/ccu
-cp -pR $WORK_DIR/image/* $WORK_DIR/ccu/
-
-umount $WORK_DIR/image
+fuse2fs -o fakeroot rootfs.ext4 $WORK_DIR/ccu
 
 cd $WORK_DIR/ccu
 patch -E -l -p1 < $CURRENT_DIR/debmatic.patch
@@ -53,7 +50,7 @@ sed -i "s/\(array[[:space:]]*set[[:space:]]*DEV_PATHS[[:space:]]*{\)/\1$DEVDBINS
 
 cd $WORK_DIR
 wget -O JP-HB-Devices-addon.tar.gz $JP_HB_DEVICES_ADDON_DOWNLOAD_URL
-tar xzf JP-HB-Devices-addon.tar.gz
+tar xzfp JP-HB-Devices-addon.tar.gz
 mv JP-HB-Devices-addon-$JP_HB_DEVICES_ADDON_ARCHIVE_TAG JP-HB-Devices-addon
 
 cd $WORK_DIR/ccu/www
@@ -107,7 +104,7 @@ done < $WORK_DIR/JP-HB-Devices-addon/src/addon/devdb.csv
 
 cd $WORK_DIR
 wget -O HB-TM-Devices-addon.tar.gz $HB_TM_DEVICES_ADDON_DOWNLOAD_URL
-tar xzf HB-TM-Devices-addon.tar.gz
+tar xzfp HB-TM-Devices-addon.tar.gz
 mv SmartHome-$HB_TM_DEVICES_ADDON_ARCHIVE_TAG HB-TM-Devices-addon
 
 cd $WORK_DIR/ccu/www
@@ -196,6 +193,8 @@ EOF
 
   fakeroot dpkg-deb --build -Zxz debmatic-$PKG_VERSION-$ARCH
 done
+
+umount $WORK_DIR/ccu
 
 cp debmatic-*.deb $CURRENT_DIR
 

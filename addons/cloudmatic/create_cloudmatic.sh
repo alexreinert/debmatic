@@ -9,6 +9,8 @@ WORK_DIR=$(mktemp -d)
 
 PKG_VERSION=$ADDON_VERSION-$PKG_BUILD
 
+umask 0022 # use root default umask (0022), instead of default user umask (0002)
+
 cd $WORK_DIR
 
 TARGET_DIR=$WORK_DIR/cloudmatic-$PKG_VERSION

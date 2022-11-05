@@ -7,6 +7,8 @@ WORK_DIR=$(mktemp -d)
 
 PKG_VERSION=1.0.$PKG_BUILD
 
+umask 0022 # use root default umask (0022), instead of default user umask (0002)
+
 cd $WORK_DIR
 
 TARGET_DIR=$WORK_DIR/debmatic-lxc-host-$PKG_VERSION

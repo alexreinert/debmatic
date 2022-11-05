@@ -9,6 +9,8 @@ WORK_DIR=$(mktemp -d)
 
 PKG_VERSION=$CUXD_VERSION-$PKG_BUILD
 
+umask 0022 # use root default umask (0022), instead of default user umask (0002)
+
 cd $WORK_DIR
 
 declare -A architectures=(["armhf"]="87961" ["arm64"]="87961" ["i386"]="87960" ["amd64"]="87960")
@@ -20,7 +22,7 @@ do
   mkdir -p $WORK_DIR/repo-$ARCH
   cd $WORK_DIR/repo-$ARCH
   wget -O cuxd.tar.gz $ARCH_DOWNLOAD_URL
-  tar xzf cuxd.tar.gz
+  tar xzfp cuxd.tar.gz
 
   TARGET_DIR=$WORK_DIR/cuxd-$PKG_VERSION-$ARCH
 
