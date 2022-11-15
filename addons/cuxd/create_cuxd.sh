@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CUXD_VERSION=2.10.0
+CUXD_VERSION=2.10.1
 
-PKG_BUILD=8
+PKG_BUILD=9
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -11,7 +11,7 @@ PKG_VERSION=$CUXD_VERSION-$PKG_BUILD
 
 cd $WORK_DIR
 
-declare -A architectures=(["armhf"]="100916" ["arm64"]="100916" ["i386"]="100915" ["amd64"]="100915")
+declare -A architectures=(["armhf"]="101168" ["arm64"]="101168" ["i386"]="101167" ["amd64"]="101167")
 
 for ARCH in "${!architectures[@]}"
 do
