@@ -3,7 +3,7 @@ Version: {PKG_VERSION}
 Architecture: {PKG_ARCH}
 Maintainer: Alexander Reinert <alex@areinert.de>
 {DEPENDS}
-Recommends: curl, digitemp, dfu-programmer, etherwake, socat
+Recommends: curl, digitemp, dfu-programmer, etherwake, socat, libc6 (>= 2.29)
 Section: debmatic-addons
 Priority: extra
 Homepage: http://cuxd.de
