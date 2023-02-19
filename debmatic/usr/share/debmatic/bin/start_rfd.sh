@@ -45,7 +45,7 @@ fi
 for i in {1..60}; do
   sleep 2
 
-  if [ -e /var/status/rfd.status ] && [ "`cat /var/status/rfd.status`" == "`pidof /bin/rfd`" ]; then
+  if [ -e /var/status/rfd.status ] && [ "`cat /var/status/rfd.status`" == "`cat /var/run/rfd.pid`" ]; then
     break
   fi
 done

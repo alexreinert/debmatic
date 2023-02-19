@@ -2,7 +2,7 @@
 
 CUXD_VERSION=2.10.1
 
-PKG_BUILD=10
+PKG_BUILD=11
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -31,12 +31,11 @@ do
   cp -a $CURRENT_DIR/cuxd/* $TARGET_DIR 
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: debmatic (>= 3.43.15-10)"
+    DEPENDS="Pre-Depends: debmatic (>= 3.67.10-100)"
     if [ "$ARCH" == amd64 ]; then
-      DEPENDS="$DEPENDS, libc6-i386 (>= 2.28)"
-    fi
-    if [ "$ARCH" == i386 ]; then
-      DEPENDS="$DEPENDS, libc6 (>= 2.28)"
+      DEPENDS="$DEPENDS, libc6-i386 (>= 2.29)"
+    else
+      DEPENDS="$DEPENDS, libc6 (>= 2.29)"
     fi
 
     sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file

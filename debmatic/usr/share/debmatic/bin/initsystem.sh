@@ -4,6 +4,12 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
+for file in `ls /usr/share/debmatic/lib/ld`; do
+  if [ ! -e /lib/$file ]; then
+    ln -s /usr/share/debmatic/lib/ld/$file /lib/$file
+  fi
+done
+
 mkdir -p /var/status
 
 rm -f /var/status/startupFinished

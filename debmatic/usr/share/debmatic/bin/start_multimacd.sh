@@ -13,8 +13,7 @@ sed "s|^Coprocessor Device Path = .*$|Coprocessor Device Path = ${HM_HOST_GPIO_U
 for i in {1..10}; do
   sleep 2
 
-  if [ -e /var/status/multimacd.status ] && [ "`cat /var/status/multimacd.status`" == "`pidof /bin/multimacd`" ]; then
-    cp -f /var/status/multimacd.status /var/run/multimacd.pid
+  if [ -e /var/status/multimacd.status ] && [ "`cat /var/status/multimacd.status`" == "`cat /var/run/multimacd.pid`" ]; then
     break
   fi
 done

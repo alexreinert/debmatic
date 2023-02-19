@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=99
+PKG_BUILD=100
 
 CURRENT_DIR=$(pwd)
 WORK_DIR=$(mktemp -d)
@@ -123,7 +123,7 @@ done
 
 cd $WORK_DIR
 
-declare -A architectures=(["armhf"]="arm-gnueabihf" ["arm64"]="arm-gnueabihf" ["i386"]="X86_32_Debian_Wheezy" ["amd64"]="X86_32_Debian_Wheezy")
+declare -A architectures=(["armhf"]="arm-gnueabihf-gcc8" ["arm64"]="arm-gnueabihf-gcc8" ["i386"]="X86_32_GCC8" ["amd64"]="X86_32_GCC8")
 for ARCH in "${!architectures[@]}"
 do
   ARCH_SOURCE_DIR=${architectures[$ARCH]}
@@ -138,21 +138,37 @@ do
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/WebUI-Beta/bin/ReGaHss $TARGET_DIR/bin/ReGaHss.community
   cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/LinuxBasis/bin/* $TARGET_DIR/bin/
 
-  mkdir -p $TARGET_DIR/lib/debmatic
-  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/HS485D/lib/* $TARGET_DIR/lib/
-  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/RFD/lib/* $TARGET_DIR/lib/
-  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/WebUI/lib/* $TARGET_DIR/lib/
-  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/LinuxBasis/lib/* $TARGET_DIR/lib/
+  mkdir -p $TARGET_DIR/usr/share/debmatic/lib/ld
+  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/HS485D/lib/* $TARGET_DIR/usr/share/debmatic/lib
+  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/RFD/lib/* $TARGET_DIR/usr/share/debmatic/lib
+  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/WebUI/lib/* $TARGET_DIR/usr/share/debmatic/lib
+  cp -pR $WORK_DIR/repo/$ARCH_SOURCE_DIR/packages-eQ-3/LinuxBasis/lib/* $TARGET_DIR/usr/share/debmatic/lib
+
+  mkdir -p $TARGET_DIR/lib/
   cp -pR $WORK_DIR/ccu/lib/*.tcl $TARGET_DIR/lib/
 
-  if [ "$ARCH" == "arm64" ]; then
-    for file in avrprog crypttool eq3configcmd eq3configd eq3-uds-services hs485d hs485dLoader hss_led multimacd ReGaHss.community ReGaHss.normal rfd SetInterfaceClock ssdpd tclsh; do
-      cp $WORK_DIR/ccu/bin/$file $TARGET_DIR/bin/
+  if [ "$ARCH" == "amd64" ]; then
+    mkdir $WORK_DIR/amd64
+    wget -O libusb_i386.deb http://ftp.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0-0_1.0.24-3_i386.deb
+    wget -O libudev_i386.deb http://ftp.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u1_i386.deb
+    dpkg -x libusb_i386.deb $WORK_DIR/amd64
+    dpkg -x libudev_i386.deb $WORK_DIR/amd64
+    cp -pR $WORK_DIR/amd64/usr/lib/i386-linux-gnu/* $TARGET_DIR/usr/share/debmatic/lib
+  elif [ "$ARCH" == "arm64" ]; then
+    mkdir $WORK_DIR/arm64
+    wget -O libusb_armhf.deb http://ftp.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0-0_1.0.24-3_armhf.deb
+    wget -O libudev_armhf.deb http://ftp.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u1_armhf.deb
+    wget -O libc_armhf.deb http://ftp.debian.org/debian/pool/main/g/glibc/libc6_2.31-13+deb11u5_armhf.deb
+    wget -O libstdc++6_armhf.deb http://ftp.debian.org/debian/pool/main/g/gcc-10/libstdc++6_10.2.1-6_armhf.deb
+    wget -O libgcc-s1_armhf.deb http://ftp.debian.org/debian/pool/main/g/gcc-10/libgcc-s1_10.2.1-6_armhf.deb
+    for file in `ls *_armhf.deb`; do
+      dpkg -x $file $WORK_DIR/arm64
     done
-
-    for file in ld-linux-armhf.so.3 libelvutils.so libeq3config.so libeq3udss.so libhsscomm.so libLanDeviceUtils.so libtcl8.2.so libUnifiedLanComm.so libxmlparser.so libXmlRpc.so tclrega.so tclrpc.so tclticks.so libc.so.6 libdl.so.2 libgcc_s.so.1 libm.so.6 libpthread.so.0 librt.so.1 libstdc++.so.6; do
-      cp $WORK_DIR/ccu/lib/$file $TARGET_DIR/lib/ || cp $WORK_DIR/ccu/usr/lib/$file $TARGET_DIR/lib/
+    cp -pR $WORK_DIR/arm64/usr/lib/arm-linux-gnueabihf/* $TARGET_DIR/usr/share/debmatic/lib
+    for file in libc.so.6 libdl.so.2 libgcc_s.so.1 libm.so.6 libpthread.so.0 librt.so.1; do
+      cp -pRL $WORK_DIR/arm64/lib/arm-linux-gnueabihf/$file $TARGET_DIR/usr/share/debmatic/lib
     done
+    cp -pRL $WORK_DIR/arm64/lib/arm-linux-gnueabihf/ld-linux-armhf.so.3 $TARGET_DIR/usr/share/debmatic/lib/ld/
   fi
 
   cp -pR $WORK_DIR/ccu/firmware $TARGET_DIR/
@@ -179,9 +195,11 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, zulu8-jre-headless | zulu11-jre-headless | openjdk-8-jre-headless | openjdk-11-jre-headless, ipcalc, net-tools, rsync, ifupdown, lua-bit32, lua-filesystem, lua-socket, lighttpd-mod-magnet, iptables | nftables"
+    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, zulu8-jre-headless | zulu11-jre-headless | openjdk-8-jre-headless | openjdk-11-jre-headless, ipcalc, net-tools, rsync, ifupdown, lua-bit32, lua-filesystem, lua-socket, lighttpd-mod-magnet, iptables | nftables, libusb-1.0-0"
     if [ "$ARCH" == amd64 ]; then
-      DEPENDS="$DEPENDS, libc6-i386, lib32stdc++6"
+      DEPENDS="$DEPENDS, libc6-i386 (>= 2.29), lib32stdc++6"
+    else
+      DEPENDS="$DEPENDS, libc6 (>= 2.29), libstdc++6"
     fi
 
     sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file
