@@ -9,6 +9,11 @@ case "$1" in
   configure|abort-upgrade)
     ldconfig
 
+    if [ -d /lib/tcl8.2 ] && [ ! `ls -A /lib/tcl8.2/` ]; then
+      rmdir /lib/tcl8.2
+      ln -s /usr/share/debmatic/lib/tcl8.2 /lib/tcl8.2
+    fi
+
     udevadm control --reload-rules && udevadm trigger
 
     if [ ! -e /usr/sbin/debmatic-info ]; then
