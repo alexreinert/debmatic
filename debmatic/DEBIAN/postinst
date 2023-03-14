@@ -9,7 +9,7 @@ case "$1" in
   configure|abort-upgrade)
     ldconfig
 
-    if [ -d /lib/tcl8.2 ] && [ ! `ls -A /lib/tcl8.2/` ]; then
+    if [ -d /lib/tcl8.2 ] && [ ! -L /lib/tcl8.2 ] && [ `find /lib/tcl8.2/ | tail -n +2 | wc -l` -eq 0 ]; then
       rmdir /lib/tcl8.2
       ln -s /usr/share/debmatic/lib/tcl8.2 /lib/tcl8.2
     fi
