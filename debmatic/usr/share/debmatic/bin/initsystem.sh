@@ -25,6 +25,7 @@ rm -f /var/status/hasLink
 rm -f /var/*.handlers
 rm -f /var/status/*.connstat
 rm -f /var/SESSIONS.dat
+rm -f /var/tmp/vrcMigrationGate
 
 . /usr/share/debmatic/bin/detect_hardware.inc
 
