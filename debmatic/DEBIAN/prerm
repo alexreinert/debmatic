@@ -1,28 +1,52 @@
 #!/bin/bash
 
-set -e
+function throw {
+  echo $1
+  exit 1
+}
+
+function run {
+  echo -n "$1 ... "
+  shift
+  ERR=`$* 2>&1` && RC=$? || RC=$?
+  if [ $RC -eq 0 ]; then
+    echo -e "\033[0;32mDone\033[0;0m"
+  else
+    echo -e "\033[1;91mFAILED\033[0;0m"
+    echo "$ERR"
+    exit 1
+  fi
+}
+
+function disable_services {
+  for timer in `ls /lib/systemd/system/debmatic*.timer | xargs -n 1 basename`
+  do
+    systemctl disable $timer || throw "Could not disable timer $timer"
+  done
+  for service in `ls /lib/systemd/system/debmatic*.service | xargs -n 1 basename`
+  do
+    if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
+      systemctl disable $service || throw "Could not disable service $service"
+    fi
+  done
+}
+
+function disable_lighttpd {
+  lighttpd-disable-mod debmatic || throw "Could not disable debmatic lighttpd module"
+  systemctl force-reload lighttpd.service || throw "Could not reload lighttpd configuration"
+}
+
+function cleanup_files {
+  rm -f /usr/sbin/debmatic-* || throw "Could not remove symlinks in /usr/sbin"
+  rm -f /boot/VERSION || throw "Could not remove /boot/VERSION"
+}
 
 case "$1" in
   remove|upgrade|deconfigure)
-    systemctl stop debmatic.service
-
-    for timer in `ls /lib/systemd/system/debmatic*.timer | xargs -n 1 basename`
-    do
-      systemctl disable $timer
-    done
-    for service in `ls /lib/systemd/system/debmatic*.service | xargs -n 1 basename`
-    do
-      if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
-        systemctl disable $service
-      fi
-    done
-
-    lighttpd-disable-mod debmatic
-    systemctl force-reload lighttpd.service
-
-    rm -f /usr/sbin/debmatic-*
-
-    rm -f /boot/VERSION
+    run "Stopping debmatic"            systemctl stop debmatic.service
+    run "Disable debmatic services"    disable_services
+    run "Disable lighttps integration" disable_lighttpd
+    run "Remove obsolete files"        cleanup_files
     ;;
 
   failed-upgrade)

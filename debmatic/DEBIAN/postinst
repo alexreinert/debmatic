@@ -3,49 +3,80 @@ CONFIGFILE=/etc/default/debmatic
 
 . /usr/share/debconf/confmodule
 
-set -e
+function throw {
+  echo $1
+  exit 1
+}
+
+function run {
+  echo -n "$1 ... "
+  shift
+  ERR=`$* 2>&1` && RC=$? || RC=$?
+  if [ $RC -eq 0 ]; then
+    echo -e "\033[0;32mDone\033[0;0m"
+  else
+    echo -e "\033[1;91mFAILED\033[0;0m"
+    echo "$ERR"
+    exit 1
+  fi
+}
+
+function fix_tcl_symlink {
+  if [ -d /lib/tcl8.2 ] && [ ! -L /lib/tcl8.2 ] && [ `find /lib/tcl8.2/ | tail -n +2 | wc -l` -eq 0 ]; then
+    rmdir /lib/tcl8.2 || throw "Could not remove /lib/tcl8.2"
+    ln -s /usr/share/debmatic/lib/tcl8.2 /lib/tcl8.2 || throw "Could not create symlink /lib/tcl8.2"
+  fi
+}
+
+function reload_udev {
+  udevadm control --reload-rules && udevadm trigger || throw "Could not reload udev rules"
+}
+
+function create_debmatic_symlinks {
+  if [ ! -e /usr/sbin/debmatic-info ]; then
+    ln -s /usr/share/debmatic/bin/debmatic-info.sh /usr/sbin/debmatic-info || throw "Could not create debmatic-info symlink"
+  fi
+  if [ ! -e /usr/sbin/debmatic-backup ]; then
+    ln -s /usr/share/debmatic/bin/debmatic-backup.sh /usr/sbin/debmatic-backup || throw "Could not create debmatic-backup symlink"
+  fi
+}
+
+function enable_debmatic_services {
+  for service in `ls /lib/systemd/system/debmatic*.service | xargs -n 1 basename`
+  do
+    if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
+      systemctl enable $service || throw "Could not enable service $service"
+    fi
+  done
+  for timer in `ls /lib/systemd/system/debmatic*.timer | xargs -n 1 basename`
+  do
+    systemctl enable $timer || throw "Could not enable timer $timer"
+  done
+}
+
+function enable_lighttpd_mod {
+  lighttpd-enable-mod debmatic || throw "Could not enable debmatic lighttpd module"
+  systemctl force-reload lighttpd.service || throw "Could not reload lighttpd configuration"
+}
+
+function run_postinst_hooks {
+  if [ -d /usr/share/debmatic/hooks/postinst ]; then
+    run-parts /usr/share/debmatic/hooks/postinst || throw "Failed to run postinst hooks"
+  fi
+}
 
 case "$1" in
   configure|abort-upgrade)
-    ldconfig
-
-    if [ -d /lib/tcl8.2 ] && [ ! -L /lib/tcl8.2 ] && [ `find /lib/tcl8.2/ | tail -n +2 | wc -l` -eq 0 ]; then
-      rmdir /lib/tcl8.2
-      ln -s /usr/share/debmatic/lib/tcl8.2 /lib/tcl8.2
-    fi
-
-    udevadm control --reload-rules && udevadm trigger
-
-    if [ ! -e /usr/sbin/debmatic-info ]; then
-      ln -s /usr/share/debmatic/bin/debmatic-info.sh /usr/sbin/debmatic-info
-    fi
-    if [ ! -e /usr/sbin/debmatic-backup ]; then
-      ln -s /usr/share/debmatic/bin/debmatic-backup.sh /usr/sbin/debmatic-backup
-    fi
-
-    cp /usr/share/debmatic/VERSION /boot/VERSION
-
-    systemctl daemon-reload
-
-    for service in `ls /lib/systemd/system/debmatic*.service | xargs -n 1 basename`
-    do
-      if [ ! -e /lib/systemd/system/"${service%.service}.timer" ]; then
-        systemctl enable $service
-      fi
-    done
-    for timer in `ls /lib/systemd/system/debmatic*.timer | xargs -n 1 basename`
-    do
-      systemctl enable $timer
-    done
-
-    lighttpd-enable-mod debmatic
-    systemctl force-reload lighttpd.service
-
-    if [ -d /usr/share/debmatic/hooks/postinst ]; then
-      run-parts /usr/share/debmatic/hooks/postinst
-    fi
-
-    systemctl start debmatic.service
+    run "Reload loader config"         ldconfig
+    run "Fix TCL symlinks"             fix_tcl_symlink
+    run "Reload udev rules"            reload_udev
+    run "Ensure command symlinks"      create_debmatic_symlinks
+    run "Create /boot/VERSION"         cp /usr/share/debmatic/VERSION /boot/VERSION
+    run "Reload systemd configuration" systemctl daemon-reload
+    run "Enable debmatic services"     enable_debmatic_services
+    run "Enable lighttpd integration"  enable_lighttpd_mod
+    run "Run postinst hooks"           run_postinst_hooks
+    run "Start debmatic"               systemctl start debmatic.service
     ;;
 
   reconfigure|abort-remove|abort-deconfigure)

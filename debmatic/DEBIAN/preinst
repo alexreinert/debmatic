@@ -2,24 +2,46 @@
 
 . /usr/share/debconf/confmodule
 
-case "$1" in
-  install|upgrade)
-    if [ ! -z "$2" ]; then
-      OLD_CCU_VERSION=`echo "$2" | sed 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\)-[0-9]\+/\1/g'`
+function throw {
+  echo $1
+  exit 1
+}
 
-      if [ "{CCU_VERSION}" != "$OLD_CCU_VERSION" ]; then
-        db_fset debmatic/has_backup seen false
-        db_input critical debmatic/has_backup || true
+function run {
+  echo -n "$1 ... "
+  shift
+  ERR=`$* 2>&1` && RC=$? || RC=$?
+  if [ $RC -eq 0 ]; then
+    echo -e "\033[0;32mDone\033[0;0m"
+  else
+    echo -e "\033[1;91mFAILED\033[0;0m"
+    echo "$ERR"
+    exit 1
+  fi
+}
+
+function warn_on_new_ccu_version {
+  if [ ! -z "$2" ]; then
+    OLD_CCU_VERSION=`echo "$2" | sed 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\)-[0-9]\+/\1/g'`
+
+    if [ "{CCU_VERSION}" != "$OLD_CCU_VERSION" ]; then
+      db_fset debmatic/has_backup seen false
+      db_input critical debmatic/has_backup || true
+      db_go
+
+      db_get debmatic/has_backup
+      if [ "$RET" = "false" ]; then
+        db_input critical debmatic/err_no_backup || true
         db_go
-
-        db_get debmatic/has_backup
-        if [ "$RET" = "false" ]; then
-          db_input critical debmatic/err_no_backup || true
-          db_go
-          exit 2
-        fi
+        exit 2
       fi
     fi
+  fi
+}
+
+case "$1" in
+  install|upgrade)
+    warn_on_new_ccu_version
     ;;
 
   abort-upgrade)
