@@ -39,14 +39,16 @@ if [ ! -z "$HB_RF_ETH_ADDRESS" ]; then
     done
   fi
 
-  for try in {0..30}; do
-    if [ -e /sys/class/hb-rf-eth/hb-rf-eth/connect ]; then
-      echo "$HB_RF_ETH_ADDRESS" > /sys/class/hb-rf-eth/hb-rf-eth/connect && break
-    else
-      echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
-    fi
-    sleep 2
-  done
+  if [ -e /sys/module/hb_rf_eth/parameters/connect ]; then
+    for try in {0..30}; do
+      if [ -e /sys/class/hb-rf-eth/hb-rf-eth/connect ]; then
+        echo "$HB_RF_ETH_ADDRESS" > /sys/class/hb-rf-eth/hb-rf-eth/connect && break
+      else
+        echo "$HB_RF_ETH_ADDRESS" > /sys/module/hb_rf_eth/parameters/connect && break
+      fi
+      sleep 2
+    done
+  fi
 fi
 
 for syspath in $(find /sys/bus/usb/devices/); do
@@ -100,8 +102,6 @@ do
     if [ ! -e "/dev/$UART_DEV" ]; then
       mknod "/dev/$UART_DEV" c `cat /sys/class/raw-uart/$UART_DEV/dev | tr ':' ' '`
     fi
-
-    echo 1 > /sys/class/raw-uart/$UART_DEV/reset_radio_module
 
     MODULE_INFO=`detect_radio_module /dev/$UART_DEV` && RC=$? || RC=$?
     if [ $RC -eq 0 ]; then
