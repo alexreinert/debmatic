@@ -69,7 +69,12 @@ case "$1" in
   configure|abort-upgrade)
     run "Reload loader config"         ldconfig
     run "Fix TCL symlinks"             fix_tcl_symlink
-    run "Reload udev rules"            reload_udev
+    IS_LXC=`cat "/proc/1/environ" | tr '\000' '\n' | grep -q "container=lxc" && echo 1 || echo 0`
+    if [ "$IS_LXC" == "1" ]; then
+      echo "Running inside LXC Container, skipping reload of udev rules..."
+    else
+      run "Reload udev rules"            reload_udev
+    fi
     run "Ensure command symlinks"      create_debmatic_symlinks
     run "Create /boot/VERSION"         cp /usr/share/debmatic/VERSION /boot/VERSION
     run "Reload systemd configuration" systemctl daemon-reload

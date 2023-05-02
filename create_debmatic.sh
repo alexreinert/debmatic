@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=106
+PKG_BUILD=107
 
 function throw {
   echo $1
@@ -255,17 +255,16 @@ PLATFORM=$ARCH
 EOF
 
   for file in $TARGET_DIR/DEBIAN/*; do
-    DEPENDS="Pre-Depends: detect-radio-module, wait-sysfs-notify, systemd, debconf (>= 0.5) | debconf-2.0, lighttpd, zulu8-jre-headless | zulu11-jre-headless | openjdk-8-jre-headless | openjdk-11-jre-headless, ipcalc, net-tools, rsync, ifupdown, lua-bit32, lua-filesystem, lua-socket, lighttpd-mod-magnet, iptables | nftables, libusb-1.0-0"
     if [ "$ARCH" == amd64 ]; then
-      DEPENDS="$DEPENDS, libc6-i386 (>= 2.29), lib32stdc++6"
+      LIBC_DEPENDS="libc6-i386 (>= 2.29), lib32stdc++6"
     else
-      DEPENDS="$DEPENDS, libc6 (>= 2.29), libstdc++6"
+      LIBC_DEPENDS="libc6 (>= 2.29), libstdc++6"
     fi
 
     sed -i "s/{PKG_VERSION}/$PKG_VERSION/g" $file
     sed -i "s/{PKG_ARCH}/$ARCH/g" $file
     sed -i "s/{CCU_VERSION}/$CCU_VERSION/g" $file
-    sed -i "s/{DEPENDS}/$DEPENDS/g" $file
+    sed -i "s/{LIBC_DEPENDS}/$LIBC_DEPENDS/g" $file
   done
 
   sed -i "s/{PKG_VERSION}/$CCU_VERSION.$PKG_BUILD/g" $TARGET_DIR/www/rega/pages/index.htm

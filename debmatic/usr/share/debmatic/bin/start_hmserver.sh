@@ -1,5 +1,5 @@
 #!/bin/bash
-JAVA_HOME=$(update-java-alternatives --jre-headless --list | grep "\\W\(108\|111\|211\|180\)[0-9]\+\\W" | tr -s " " | sort -k2 | tail -1 | cut -d" " -f3)
+JAVA_HOME=$(update-java-alternatives --jre-headless --list | grep "\\W\(108\|111\|171\|181\|191\|180[0-9][0-9][0-9]\|211[0-9][0-9][0-9]\)[0-9]\\W" | tr -s " " | sort -k2 | tail -1 | cut -d" " -f3)
 
 CLAZZPATH=$(find /opt/HMServer/ -type f -name "*.jar" | grep -v "HM\(IP\)\?Server.jar" | xargs echo | sed s/' '/':'/g)
 
