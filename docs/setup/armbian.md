@@ -7,8 +7,8 @@
 0. Volles Backup der SD Karte erstellen
 1. Hinzufügen des debmatic apt Repositories
    ```bash
-   wget -q -O - https://www.debmatic.de/debmatic/public.key | sudo apt-key add -
-   sudo bash -c 'echo "deb https://www.debmatic.de/debmatic stable main" > /etc/apt/sources.list.d/debmatic.list'
+   wget -q -O - https://apt.debmatic.de/debmatic/public.key | sudo tee /usr/share/keyrings/debmatic.asc
+   echo "deb [signed-by=/usr/share/keyrings/debmatic.asc] https://apt.debmatic.de/debmatic stable main" | sudo tee /etc/apt/sources.list.d/debmatic.list
    sudo apt update
    ```
 3. Installation der Kernel Header
