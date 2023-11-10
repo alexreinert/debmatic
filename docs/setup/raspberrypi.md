@@ -1,7 +1,7 @@
 ### Vorraussetzung
 
-* Raspberry Pi 2B/3B/3B+/4B
-* RaspberryPi OS Bullseye (32 Bit Image oder 64 Bit Image; der Mischbetrieb 32 Bit Image und 64 Bit Kernel wird nicht unterstützt)
+* Raspberry Pi 2B/3B/3B+/4B/5B
+* RaspberryPi OS Bullseye oder Bookworm (32 Bit Image oder 64 Bit Image; der Mischbetrieb 32 Bit Image und 64 Bit Kernel wird nicht unterstützt)
 
 ### Installation
 0. Volles Backup der SD Karte erstellen

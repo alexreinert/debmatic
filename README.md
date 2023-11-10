@@ -28,7 +28,7 @@ Die Entwicklung von debmatic ist sehr kostenintensiv, z.B. werden viele verschie
 
 ### Voraussetzung für HM-MOD-RPI-PCB und RPI-RF-MOD
 * Unterstützter Single Board Computer
-  * Raspberry Pi 2B/3B/3B+/4B mit Raspberry Pi OS Bullseye
+  * Raspberry Pi 2B/3B/3B+/4B/5B mit Raspberry Pi OS Bullseye oder Bookworm
   * Asus Tinkerboard mit Armbian und Mainline kernel
   * Asus Tinkerboard S mit Armbian und Mainline kernel
   * Banana Pi M1 mit Armbian und Mainline kernel (LEDs vom RPI-RF-MOD werden hardwaremäßig nicht unterstützt)
