@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CCU_VERSION="3.71.12"
+CCU_VERSION="3.73.9"
 
-ARCHIVE_TAG="b7cd484b6e9c6d151ed3c559c2dec00567ed96fb"
+ARCHIVE_TAG="0b895a9a46f1f4fb4729d59b9881ad4f9521d783"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=109
+PKG_BUILD=111
 
 function throw {
   echo $1
@@ -209,7 +209,7 @@ function build_arch_package {
   if [ "$ARCH" == "amd64" ]; then
     mkdir $WORK_DIR/amd64
     run "Download libusb_i386.deb" wget -O libusb_i386.deb http://ftp.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0-0_1.0.24-3_i386.deb
-    run "Download libudev_i386.deb" wget -O libudev_i386.deb http://ftp.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u2_i386.deb
+    run "Download libudev_i386.deb" wget -O libudev_i386.deb http://ftp.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u4_i386.deb
     for file in `ls *_i386.deb`; do
       run "Extract $file" dpkg -x $file $WORK_DIR/amd64
     done
@@ -217,7 +217,7 @@ function build_arch_package {
   elif [ "$ARCH" == "arm64" ]; then
     mkdir $WORK_DIR/arm64
     run "Download libusb_armhf.deb" wget -O libusb_armhf.deb http://ftp.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0-0_1.0.24-3_armhf.deb
-    run "Download libudev_armhf.deb" wget -O libudev_armhf.deb http://ftp.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u2_armhf.deb
+    run "Download libudev_armhf.deb" wget -O libudev_armhf.deb http://ftp.debian.org/debian/pool/main/s/systemd/libudev1_247.3-7+deb11u4_armhf.deb
     run "Download libc_armhf.deb" wget -O libc_armhf.deb http://ftp.debian.org/debian/pool/main/g/glibc/libc6_2.31-13+deb11u5_armhf.deb
     run "Download libstdc++6_armhf.deb" wget -O libstdc++6_armhf.deb http://ftp.debian.org/debian/pool/main/g/gcc-10/libstdc++6_10.2.1-6_armhf.deb
     run "Download libgcc-s1_armhf.deb" wget -O libgcc-s1_armhf.deb http://ftp.debian.org/debian/pool/main/g/gcc-10/libgcc-s1_10.2.1-6_armhf.deb
