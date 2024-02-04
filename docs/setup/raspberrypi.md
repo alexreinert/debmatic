@@ -27,14 +27,14 @@
 6. UART Schnittstelle der GPIO Leiste aktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird oder falls ein Raspberry Pi 2B eingesetzt wird)
    * Option 1: Bluetooth deaktivieren
       ```bash
-      sudo bash -c 'cat << EOT >> /boot/config.txt
+      sudo bash -c 'cat << EOT >> /boot/firmware/config.txt
       dtoverlay=pi3-disable-bt
       EOT'
       sudo systemctl disable hciuart.service
       ```
    * Option 2: Bluetooth über Soft-UART betreiben
       ```bash
-      sudo bash -c 'cat << EOT >> /boot/config.txt
+      sudo bash -c 'cat << EOT >> /boot/firmware/config.txt
       dtoverlay=pi3-miniuart-bt
       enable_uart=1
       force_turbo=1
@@ -43,8 +43,8 @@
       ```
 7. Serielle Konsole deaktivieren (Dieser Schritt kann übersprungen werden, falls kein Funkmodul direkt auf die GPIO Leiste aufgesteckt wird)
    ```bash
-   sudo sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
-   sudo sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
+   sudo sed -i /boot/firmware/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
+   sudo sed -i /boot/firmware/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
    ```
 8. Neustart
    ```bash
