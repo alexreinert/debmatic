@@ -1,0 +1,32 @@
+#!/bin/sh
+
+PKGNAME=hm-print
+PKG_DIR=/usr/local/addons/${PKGNAME}
+
+ADDONNAME=print
+ADDON_DIR=/usr/local/etc/config/addons/${ADDONNAME}
+WWW_DIR=/usr/local/etc/config/addons/www/${ADDONNAME}
+
+case "$1" in
+
+    upgrade)
+        # if old package exist then reset modified files to original
+        if [ -f ${PKG_DIR}/programmedrucken ]; then
+            echo "Running package's own rc.d script (uninstall)"
+            ${PKG_DIR}/programmedrucken uninstall
+        fi
+        # remove links to homematic directories
+        echo "Remove links to homematic directories"
+        rm ${ADDON_DIR} 2>/dev/null || true
+        rm ${WWW_DIR}   2>/dev/null || true
+        # remove old files
+        echo "Remove old files"
+        rm -fr ${PKG_DIR}
+        ;;
+
+    *)
+        # ignore install, abort-upgrade
+        ;;
+
+esac
+

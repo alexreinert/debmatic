@@ -1,0 +1,29 @@
+#!/bin/bash
+
+PKGNAME=hm-print
+PKG_DIR=/usr/local/addons/${PKGNAME}
+
+ADDONNAME=print
+ADDON_DIR=/usr/local/etc/config/addons/${ADDONNAME}
+WWW_DIR=/usr/local/etc/config/addons/www/${ADDONNAME}
+
+case "$1" in
+
+    configure)
+        echo "Create links to homematic directories"
+        ln -s ${PKG_DIR} ${ADDON_DIR}
+        ln -s ${PKG_DIR} ${WWW_DIR}
+        # run modified rc.d script
+        echo "Running package's own rc.d script (start)"
+        ${PKG_DIR}/programmedrucken start || exit 1
+        # restart debmatic required
+        echo "Installation done! You need to restart debmatic"
+        echo "run: sudo systemctl restart debmatic"
+        ;;
+
+    *)
+        # ignore reconfigure, abort-upgrade, abort-remove, abort-deconfigure
+        ;;
+
+esac
+

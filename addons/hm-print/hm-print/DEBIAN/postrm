@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PKGNAME=hm-print
+PKG_DIR=/usr/local/addons/${PKGNAME}
+
+ADDONNAME=print
+ADDON_DIR=/usr/local/etc/config/addons/${ADDONNAME}
+WWW_DIR=/usr/local/etc/config/addons/www/${ADDONNAME}
+
+case "$1" in
+
+    remove)
+        # restart debmatic required
+        echo "Remove done! You need to restart debmatic"
+        echo "run: sudo systemctl restart debmatic"
+        ;;
+
+    *)
+        # ignore purge, upgrade, failed-upgrade, abort-install, abort-upgrade, disappear
+        ;;
+
+esac
+

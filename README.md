@@ -81,6 +81,7 @@ Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [Homematic check_mk addon](https://github.com/alexreinert/homematic_check_mk) (Paketname homematic-check-mk)
 * [HB-TM-Devices](https://github.com/TomMajor/SmartHome) (Ist bereits in debmatic enthalten)
 * [XML-API](https://github.com/jens-maus/XML-API) (Paketname xml-api)
+* [HM-Print](https://github.com/homematic-community/hm-print) aka [ProgrammeDrucken](https://homematic-forum.de/forum/viewtopic.php?f=41&t=19296) (Paketname hm-print)
 
 ### Restore
 Backups können über die WebUI eingespielt werden.
