@@ -1,0 +1,28 @@
+#!/bin/bash
+
+PKGNAME=hm-print
+PKG_DIR=/usr/local/addons/${PKGNAME}
+
+ADDONNAME=print
+ADDON_DIR=/usr/local/etc/config/addons/${ADDONNAME}
+WWW_DIR=/usr/local/etc/config/addons/www/${ADDONNAME}
+
+case "$1" in
+
+    remove)
+        echo "Running package's own rc.d script (uninstall)"
+        ${PKG_DIR}/programmedrucken uninstall || exit 1
+
+        echo "Remove links to homematic directories"
+        rm ${ADDON_DIR} 2>/dev/null || true
+        rm ${WWW_DIR}   2>/dev/null || true
+
+        echo "Removing package files"
+        # done by dpkg
+        ;;
+
+    *)
+        # ignore upgrade, deconfigure, failed-upgrade
+        ;;
+
+esac

@@ -1,0 +1,11 @@
+Package: hm-print
+Version: {PKG_VERSION}
+Architecture: all
+Installed-Size: 336
+Maintainer: Various, see Homepage
+Uploader: Christian Schoenebeck <christian.schoenebeck@gmail.com>
+Pre-Depends: debmatic (>= 3.73.9)
+Section: debmatic-addons
+Priority: extra
+Homepage: https://github.com/homematic-community/hm-print
+Description: hm-print addon for debmatic
