@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CCU_VERSION="3.79.6"
+CCU_VERSION="3.81.5"
 
-ARCHIVE_TAG="2425967d089bb4ec31a98130e7f995737bb129d1"
+ARCHIVE_TAG="90d33e50563e944a4cc0f5d9f8f36d0a81caaa3d"
 OCCU_DOWNLOAD_URL="https://github.com/eq-3/occu/archive/$ARCHIVE_TAG.tar.gz"
 
 CCU_DOWNLOAD_SPLASH_URL="https://www.eq-3.de/service/downloads.html"
@@ -15,7 +15,7 @@ JP_HB_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/jp112sdl/JP-HB-Devices-addo
 HB_TM_DEVICES_ADDON_ARCHIVE_TAG="ab7bdeba2c180d5b6fc453a010d4ee2b882a929d"
 HB_TM_DEVICES_ADDON_DOWNLOAD_URL="https://github.com/TomMajor/SmartHome/archive/$HB_TM_DEVICES_ADDON_ARCHIVE_TAG.tar.gz"
 
-PKG_BUILD=119
+PKG_BUILD=120
 
 function throw {
   echo $1
