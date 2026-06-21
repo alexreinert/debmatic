@@ -2,6 +2,11 @@
 Description=debmatic hmserver
 PartOf=debmatic.service
 After=debmatic.service
+# Same as rfd: a lone multimacd restart must take HMIPServer down with it so it
+# releases /dev/mmd_hmip; otherwise the module stays loaded half-wedged and the
+# HmIP stack stays dead until a reboot while BidCos keeps working.
+After=debmatic-multimacd.service
+PartOf=debmatic-multimacd.service
 Before=debmatic-rega.service
 Before=debmatic-startupfinished.service
 

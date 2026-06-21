@@ -2,6 +2,11 @@
 Description=debmatic rfd
 PartOf=debmatic.service
 After=debmatic.service
+# A lone "systemctl restart debmatic-multimacd" must take rfd down with it, so
+# rfd releases its eq3loop slave device (/dev/mmd_bidcos) and multimacd's
+# ExecStopPost rmmod can unload the module cleanly instead of failing "in use".
+After=debmatic-multimacd.service
+PartOf=debmatic-multimacd.service
 Before=debmatic-hmserver.service
 Before=debmatic-rega.service
 Before=debmatic-startupfinished.service
