@@ -1,4 +1,7 @@
-package.path = '/usr/share/debmatic/bin/?.lua;' .. package.path
+local debmatic_package_path = '/usr/share/debmatic/bin/?.lua;'
+if not string.find(package.path, debmatic_package_path, 1, true) then
+  package.path = debmatic_package_path .. package.path
+end
 
 local realm = "CCU"
 local host = "127.0.0.1"
