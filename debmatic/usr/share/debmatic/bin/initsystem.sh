@@ -4,9 +4,10 @@ if [ -e /etc/default/debmatic ]; then
   . /etc/default/debmatic
 fi
 
-for file in `ls /usr/share/debmatic/lib/ld`; do
-  if [ ! -e /lib/$file ]; then
-    ln -s /usr/share/debmatic/lib/ld/$file /lib/$file
+for file in /usr/share/debmatic/lib/ld/*; do
+  [ -e "$file" ] || continue
+  if [ ! -e "/lib/${file##*/}" ]; then
+    ln -s "$file" "/lib/${file##*/}"
   fi
 done
 

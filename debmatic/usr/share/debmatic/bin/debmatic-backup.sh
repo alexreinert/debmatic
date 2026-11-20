@@ -28,7 +28,7 @@ tar czf $TMPDIR/usr_local.tar.gz etc/config --transform 's/^/usr\/local\//g'
 
 crypttool -s -t 1 < $TMPDIR/usr_local.tar.gz > $TMPDIR/signature
 crypttool -g -t 1 > $TMPDIR/key_index
-cp /boot/VERSION $TMPDIR/firmware_version
+cp /VERSION $TMPDIR/firmware_version
 
 cd $TMPDIR
 
