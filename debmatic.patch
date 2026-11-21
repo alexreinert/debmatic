@@ -1,620 +1,204 @@
-diff -ruN --no-dereference fw.3.85.7.orig/bin/hm_autoconf fw.3.85.7.debmatic/bin/hm_autoconf
---- fw.3.85.7.orig/bin/hm_autoconf
-+++ fw.3.85.7.debmatic/bin/hm_autoconf
-@@ -41,9 +41,9 @@
- 
-     load tclrega.so
-     load tclrpc.so
--    
-+
-     # List of default functions (german "Gewerke") that will be automatically generated
--     set FUNCTIONLIST {
-+    array set FUNCTIONLIST {
-         LIGHT           funcLight
-         HEATING         funcHeating
-         CLIMATECONTROL  funcClimateControl
-@@ -55,22 +55,7 @@
-         CENTRAL         funcCentral
-         ENERGY          funcEnergy
-     }
--   
--    # List of default rooms that will be automatically generated
--    set ROOMLIST {
--        "roomLivingRoom"
--        "roomKitchen"
--        "roomBedroom"
--        "roomChildrensRoom1"
--        "roomChildrensRoom2"
--        "roomOffice"
--        "roomBathroom"
--        "roomGarage"
--        "roomHWR"
--        "roomGarden"
--        "roomTerrace"
--    }
--    
-+
-     # Mapping of channel type to default function for the channel
-     array set CHANNEL_FUNCTIONS {
-         BLIND                   LIGHT
-@@ -128,6 +113,11 @@
-         rega "dom.GetObject($dev_id).ReadyConfig(true);"
-         puts "ReadyConfig($dev_id)"
-     }
-+
-+    proc conf_device_HmIP-RFUSB { url dev_id desc_var } {
-+        rega "dom.GetObject($dev_id).ReadyConfig(true);"
-+        puts "ReadyConfig($dev_id)"
-+    }
- 	
- 	proc conf_device_HmIP-CCU3 { url dev_id desc_var } {
-         rega "dom.GetObject($dev_id).ReadyConfig(true);"
-@@ -151,7 +141,6 @@
-     
-     proc conf_value_WEATHER.RAIN_COUNTER { url ch_id ch_desc_var value_desc_var} {
-         create_rain_calculation $ch_id
--        
-     }
-     
-     proc conf_value_DISPLAY.SERVICE_COUNT { url ch_id ch_desc_var value_desc_var} {
-@@ -162,90 +151,6 @@
-         create_sysvar_to_value_prg $ch_id ALARM_COUNT 40 "Alarmmeldungen anzeigen"
-     }
-     
--    proc create_objects {collection enum_type names} {
--        set ids [rega "dom.GetObject($collection).EnumIDs()"]
--        set i 0
--        foreach name $names {
--            set id [lindex $ids $i]
--            if { "$id" == "" } {
--                #create object first
--                set script "\
--                    var new_id = -1;\n\
--                    object o = dom.CreateObject( OT_ENUM, \"new object\" );\n\
--                    if( o ) \{\n\
--                        o.EnumType( $enum_type );\n\
--                        boolean res = dom.GetObject( $collection ).Add( o );\n\
--                        if( res ) \{\n\
--                            new_id = o.ID();\n\
--                        \} else \{\n\
--                            dom.DeleteObject( o.ID() );\n\
--                        \}\n\
--                    \}\
--                "
--                #puts "Executing $script"
--                array set r [rega_script $script]
--                set id $r(new_id)
--                if { $id < 0 } {
--                    puts "Error creating object"
--                }
--            }
--            rega "dom.GetObject($id).Name(\"[lindex $names $i]\")"
--            rega "dom.GetObject($id).Enabled(true)"
--            incr i
--        }
--        return [lsort [rega "dom.GetObject($collection).EnumUsedIDs()"]]
--    }
--    
--    proc create_functions {} {
--        global FUNCTIONLIST
--        for { set i 1 } { $i < [llength $FUNCTIONLIST] } { incr i 2 } {
--            lappend names [lindex $FUNCTIONLIST $i]
--        }
--        return [create_objects ID_FUNCTIONS etFunction $names]
--    }
--    
--    proc create_rooms {} {
--        global ROOMLIST
--        return [create_objects ID_ROOMS etRoom $ROOMLIST]
--    }
--    
--    proc create_sysvars {} {
--        rega_script {
--            object sv=dom.CreateObject(OT_ALARMDP, "${sysVarAlarmZone1}");
--            dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
--            sv.DPInfo("${sysVarAlarmZone1Msg}");
--            sv.ValueUnit("");
--            sv.ValueType( ivtBinary );
--            sv.ValueSubType( istAlarm );
--            sv.ValueName1("${sysVarAlarmZone1Triggered}");
--            sv.ValueName0("${sysVarAlarmZone1NotTriggered}");
--            sv.AlType(atSystem);
--            sv.AlArm(true);            
--            
--            sv=dom.GetObject(ID_PRESENT);
--            dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
--            sv.Name("${sysVarPresence}");
--            sv.DPInfo("${sysVarPresenceMsg}");
--            sv.ValueUnit("");
--            sv.ValueName1("${sysVarPresencePresent}");
--            sv.ValueName0("${sysVarPresenceNotPresent}");
--            
--            sv=dom.GetObject(40);
--            dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
--            sv.Name("${sysVarAlarmMessages}");
--            sv.DPInfo("${sysVarAlarmMessagesCount}");
--            sv.Internal(0);
--            
--            sv=dom.GetObject(41);
--            dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
--            sv.Name("${sysVarServiceMessages}");
--            sv.DPInfo("${sysVarServiceMessagesCount}");
--            sv.Internal(0);
--            
--        }
--    }
--    
--    
-     proc create_sysvar_to_value_prg {ch_id value sv_id prg_name} {
-         set script "string ch_id=\"$ch_id\";\nstring value_name=\"$value\";\nstring sv_id=$sv_id;\nstring prg_name=\"$prg_name\";\n"
-         append script {
-@@ -514,7 +419,9 @@
-         string ifaces;
-         foreach(if_id, dom.GetObject(ID_INTERFACES).EnumUsedIDs()){
-             object o=dom.GetObject(if_id);
--            ifaces = ifaces # if_id # " {" # o.InterfaceUrl() # " " # o.Name() # "} ";
-+            if(o.InterfaceUrl() != "") {
-+              ifaces = ifaces # if_id # " {" # o.InterfaceUrl() # " " # o.Name() # "} ";
-+            }
-         }
-         string dev_id;
-         string devs;
-@@ -531,35 +438,22 @@
-                 }
-             }
-         }
--        string functions=dom.GetObject(ID_FUNCTIONS).EnumUsedIDs();
--        string rooms=dom.GetObject(ID_ROOMS).EnumUsedIDs();
--        string sysvars=dom.GetObject(ID_SYSTEM_VARIABLES).EnumUsedIDs();
-+        string func_id;
-+        string functions;
-+        foreach (func_id, dom.GetObject(ID_FUNCTIONS).EnumUsedIDs()){
-+            functions = functions # " {" # dom.GetObject(func_id).Name() # "} " # func_id;
-+        }
-     }]
-     
-     array set ifmap $result(ifaces)
-     array set devmap $result(devs)
--    
--    set ise_functions [lsort $result(functions)]
--    if { [llength $ise_functions] == 0 } {
--        puts "No functions defined, creating default functions"
--        set ise_functions [create_functions]
--    }
--    
--    if { [llength $result(rooms)] == 0 } { 
--        puts "No rooms defined, creating default rooms"
--        create_rooms
--    }
--    
--    if { [llength $result(sysvars)] == 0 } {
--        puts "No system variables defined, creating default system variables"
--        create_sysvars
--    }
--    
--    set i 0
--    foreach function_id $ise_functions {
--        if { $i >= [llength $FUNCTIONLIST] } break;
--        set FUNCTIONMAP([lindex $FUNCTIONLIST $i]) $function_id
--        incr i 2
-+
-+    array set ise_functions $result(functions)
-+
-+    foreach func [array names FUNCTIONLIST] {
-+        if {[info exists ise_functions($FUNCTIONLIST($func))]} {
-+            set FUNCTIONMAP($func) $ise_functions($FUNCTIONLIST($func))
-+        }
-     }
- 
-     # We need a catch because OSRAM Lightify causes an error (/tmp/hm_autoconf_xxx.log) because a list must have an even number of elements.
-@@ -592,20 +486,26 @@
-               array_clear ch_descr
-               array set ch_descr [xmlrpc $url getDeviceDescription $ch_address]
-               if [info exist DEVICE_FUNCTIONS($dev_descr(TYPE))] {
--                  catch {
--                      rega "dom.GetObject($FUNCTIONMAP($DEVICE_FUNCTIONS($dev_descr(TYPE)))).Add($ise_ch_id)"
-+                  if [info exist FUNCTIONMAP($DEVICE_FUNCTIONS($dev_descr(TYPE)))] {
-+                      catch {
-+                          rega "dom.GetObject($FUNCTIONMAP($DEVICE_FUNCTIONS($dev_descr(TYPE)))).Add($ise_ch_id)"
-+                      }
-                   }
-               }
-               if [info exist CHANNEL_FUNCTIONS($ch_descr(TYPE))] {
--                  catch {
--                      rega "dom.GetObject($FUNCTIONMAP($CHANNEL_FUNCTIONS($ch_descr(TYPE)))).Add($ise_ch_id)"
-+                  if [info exist FUNCTIONMAP($CHANNEL_FUNCTIONS($ch_descr(TYPE)))] {
-+                      catch {
-+                          rega "dom.GetObject($FUNCTIONMAP($CHANNEL_FUNCTIONS($ch_descr(TYPE)))).Add($ise_ch_id)"
-+                      }
-+                  }
-+              }
-+              if { [string equal $ch_descr(PARENT_TYPE) "HmIP-RCV-50"] == 1 } {
-+                  if [info exist FUNCTIONMAP(CENTRAL)] {
-+                      catch {
-+                          rega "dom.GetObject($FUNCTIONMAP(CENTRAL)).Add($ise_ch_id)"
-+                      }
-                   }
-               }
--	          if { [string equal $ch_descr(PARENT_TYPE) "HmIP-RCV-50"] == 1 } {
--		          catch {
--		              rega "dom.GetObject($FUNCTIONMAP(CENTRAL)).Add($ise_ch_id)"
--		          }
--	          }
-               set procname "conf_channel_$ch_descr(TYPE)"
-               if {[llength [info procs $procname]]} {
-                   if [catch { $procname $url $ise_ch_id ch_descr } errMsg] {
-diff -ruN --no-dereference fw.3.85.7.orig/bin/hm_startup fw.3.85.7.debmatic/bin/hm_startup
---- fw.3.85.7.orig/bin/hm_startup
-+++ fw.3.85.7.debmatic/bin/hm_startup
-@@ -1,30 +1,10 @@
- #!/bin/tclsh
- 
--#*******************************************************************************
--#* hm_startup
--#* Wird beim Starten von ise ReGa ausgeführt.
--#*
--#* Aufgaben:
--#*   - sucht fertig konfigurierte Geräte und setzt deren Kanäle ebenfalls auf
--#*     "fertig konfiguriert"
--#*
--#* Autor      : Falk Werner
--#* Erstellt am: 23.07.2008
--#*******************************************************************************
--
--################################################################################
--# Module                                                                       #
--################################################################################
--
- load tclrega.so
- load tclrpc.so
- 
--################################################################################
--# Prozeduren                                                                   #
--################################################################################
--
- #*******************************************************************************
--#* Sucht fertig konfigurierte Geräte und setzt deren Kanäle auf "fertig
-+#* Sucht fertig konfigurierte Geräte und setzt deren Kanäle auf "fertig 
- #* konfiguriert".
- #*******************************************************************************
- proc checkDevices { } {
-@@ -58,6 +38,140 @@
-   }
- }
- 
-+# List of default functions (german "Gewerke") that will be automatically generated
-+set FUNCTIONLIST {
-+  "funcLight"
-+  "funcHeating"
-+  "funcClimateControl"
-+  "funcWeather"
-+  "funcEnvironment"
-+  "funcSecurity"
-+  "funcLock"
-+  "funcButton"
-+  "funcCentral"
-+  "funcEnergy"
-+}
-+
-+# List of default rooms that will be automatically generated
-+set ROOMLIST {
-+  "roomLivingRoom"
-+  "roomKitchen"
-+  "roomBedroom"
-+  "roomChildrensRoom1"
-+  "roomChildrensRoom2"
-+  "roomOffice"
-+  "roomBathroom"
-+  "roomGarage"
-+  "roomHWR"
-+  "roomGarden"
-+  "roomTerrace"
-+}
-+
-+proc create_objects {collection enum_type names} {
-+  set ids [rega "dom.GetObject($collection).EnumIDs()"]
-+  set i 0
-+
-+  foreach name $names {
-+    set id [lindex $ids $i]
-+    if { "$id" == "" } {
-+      #create object first
-+      set script "\
-+        var new_id = -1;\n\
-+        object o = dom.CreateObject( OT_ENUM, \"new object\" );\n\
-+        if( o ) \{\n\
-+          o.EnumType( $enum_type );\n\
-+          boolean res = dom.GetObject( $collection ).Add( o );\n\
-+          if( res ) \{\n\
-+            new_id = o.ID();\n\
-+          \} else \{\n\
-+            dom.DeleteObject( o.ID() );\n\
-+          \}\n\
-+        \}\
-+        "
-+      #puts "Executing $script"
-+      array set r [rega_script $script]
-+      set id $r(new_id)
-+      if { $id < 0 } {
-+        puts "Error creating object"
-+      }
-+    }
-+
-+    rega "dom.GetObject($id).Name(\"[lindex $names $i]\")"
-+    rega "dom.GetObject($id).Enabled(true)"
-+    incr i
-+  }
-+
-+  return [lsort [rega "dom.GetObject($collection).EnumUsedIDs()"]]
-+}
-+
-+proc create_default_functions {} {
-+  global FUNCTIONLIST
-+  return [create_objects ID_FUNCTIONS etFunction $FUNCTIONLIST]
-+}
-+
-+proc create_default_rooms {} {
-+  global ROOMLIST
-+  return [create_objects ID_ROOMS etRoom $ROOMLIST]
-+}
-+
-+proc create_default_sysvars {} {
-+  rega_script {
-+    object sv=dom.CreateObject(OT_ALARMDP, "${sysVarAlarmZone1}");
-+    dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
-+    sv.DPInfo("${sysVarAlarmZone1Msg}");
-+    sv.ValueUnit("");
-+    sv.ValueType( ivtBinary );
-+    sv.ValueSubType( istAlarm );
-+    sv.ValueName1("${sysVarAlarmZone1Triggered}");
-+    sv.ValueName0("${sysVarAlarmZone1NotTriggered}");
-+    sv.AlType(atSystem);
-+    sv.AlArm(true);
-+
-+    sv=dom.GetObject(ID_PRESENT);
-+    dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
-+    sv.Name("${sysVarPresence}");
-+    sv.DPInfo("${sysVarPresenceMsg}");
-+    sv.ValueUnit("");
-+    sv.ValueName1("${sysVarPresencePresent}");
-+    sv.ValueName0("${sysVarPresenceNotPresent}");
-+
-+    sv=dom.GetObject(40);
-+    dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
-+    sv.Name("${sysVarAlarmMessages}");
-+    sv.DPInfo("${sysVarAlarmMessagesCount}");
-+    sv.Internal(0);
-+
-+    sv=dom.GetObject(41);
-+    dom.GetObject(ID_SYSTEM_VARIABLES).Add(sv.ID());
-+    sv.Name("${sysVarServiceMessages}");
-+    sv.DPInfo("${sysVarServiceMessagesCount}");
-+    sv.Internal(0);
-+  }
-+}
-+
-+proc create_default_objects {} {
-+  array set result [rega_script {
-+    string functions=dom.GetObject(ID_FUNCTIONS).EnumUsedIDs();
-+    string rooms=dom.GetObject(ID_ROOMS).EnumUsedIDs();
-+    string sysvars=dom.GetObject(ID_SYSTEM_VARIABLES).EnumUsedIDs();
-+  }]
-+
-+  set ise_functions [lsort $result(functions)]
-+  if { [llength $ise_functions] == 0 } {
-+    puts "No functions defined, creating default functions"
-+    create_default_functions
-+  }
-+
-+  if { [llength $result(rooms)] == 0 } {
-+    puts "No rooms defined, creating default rooms"
-+    create_default_rooms
-+  }
-+
-+  if { [llength $result(sysvars)] == 0 } {
-+    puts "No system variables defined, creating default system variables"
-+    create_default_sysvars
-+  }
-+}
- 
- ################################################################################
- # Einsprungpunkt                                                               #
-@@ -79,3 +193,5 @@
-   }
- }
- 
-+create_default_objects
-+
-diff -ruN --no-dereference fw.3.85.7.orig/www/api/methods/ccu/restartReGa.tcl fw.3.85.7.debmatic/www/api/methods/ccu/restartReGa.tcl
---- fw.3.85.7.orig/www/api/methods/ccu/restartReGa.tcl
-+++ fw.3.85.7.debmatic/www/api/methods/ccu/restartReGa.tcl
-@@ -7,4 +7,4 @@
- # Rückgabewert: kein
+diff --git a/www/api/methods/ccu/restartReGa.tcl b/www/api/methods/ccu/restartReGa.tcl
+index e536940..06ec0f9 100644
+--- a/www/api/methods/ccu/restartReGa.tcl
++++ b/www/api/methods/ccu/restartReGa.tcl
+@@ -7,6 +7,6 @@
+ # RÃ¼ckgabewert: kein
  ##
  
--catch {exec /etc/init.d/S70ReGaHss restart}
-\ No newline at end of file
+-catch {exec /usr/bin/monit restart ReGaHss}
 +catch {exec systemctl restart debmatic-rega.service}
-diff -ruN --no-dereference fw.3.85.7.orig/www/api/methods/session/create.tcl fw.3.85.7.debmatic/www/api/methods/session/create.tcl
---- fw.3.85.7.orig/www/api/methods/session/create.tcl
-+++ fw.3.85.7.debmatic/www/api/methods/session/create.tcl
+ 
+ jsonrpc_response ""
+diff --git a/www/api/methods/session/create.tcl b/www/api/methods/session/create.tcl
+index 61ba683..0fb7fd7 100644
+--- a/www/api/methods/session/create.tcl
++++ b/www/api/methods/session/create.tcl
 @@ -11,7 +11,7 @@
  
  package require http
  
--set LOGIN_URL {127.0.0.1/login.htm}
-+set LOGIN_URL {127.0.0.1:8181/login.htm}
+-set LOGIN_URL {http://127.0.0.1/login.htm}
++set LOGIN_URL {http://127.0.0.1:8181/login.htm}
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.85.7.orig/www/api/methods/session/login.tcl fw.3.85.7.debmatic/www/api/methods/session/login.tcl
---- fw.3.85.7.orig/www/api/methods/session/login.tcl
-+++ fw.3.85.7.debmatic/www/api/methods/session/login.tcl
+diff --git a/www/api/methods/session/login.tcl b/www/api/methods/session/login.tcl
+index d8dca0a..e15979b 100644
+--- a/www/api/methods/session/login.tcl
++++ b/www/api/methods/session/login.tcl
 @@ -12,7 +12,7 @@
  
  package require http
  
--set LOGIN_URL 127.0.0.1/login.htm
-+set LOGIN_URL 127.0.0.1:8181/login.htm
+-set LOGIN_URL http://127.0.0.1/login.htm
++set LOGIN_URL http://127.0.0.1:8181/login.htm
  
  ##
  # getHttpHeader
-diff -ruN --no-dereference fw.3.85.7.orig/www/api/methods/session/renew.tcl fw.3.85.7.debmatic/www/api/methods/session/renew.tcl
---- fw.3.85.7.orig/www/api/methods/session/renew.tcl
-+++ fw.3.85.7.debmatic/www/api/methods/session/renew.tcl
+diff --git a/www/api/methods/session/renew.tcl b/www/api/methods/session/renew.tcl
+index 120578f..eda4218 100644
+--- a/www/api/methods/session/renew.tcl
++++ b/www/api/methods/session/renew.tcl
 @@ -12,7 +12,7 @@
  package require http
  
  set sid $args(_session_id_)
--set url "127.0.0.1/pages/index.htm?sid=@$sid@"
-+set url "127.0.0.1:8181/pages/index.htm?sid=@$sid@"
+-set url "http://127.0.0.1/pages/index.htm?sid=@$sid@"
++set url "http://127.0.0.1:8181/pages/index.htm?sid=@$sid@"
  
  ::http::cleanup [::http::geturl $url]
  
-diff -ruN --no-dereference fw.3.85.7.orig/www/api/methods/user/restarthmipserver.tcl fw.3.85.7.debmatic/www/api/methods/user/restarthmipserver.tcl
---- fw.3.85.7.orig/www/api/methods/user/restarthmipserver.tcl
-+++ fw.3.85.7.debmatic/www/api/methods/user/restarthmipserver.tcl
-@@ -7,6 +7,5 @@
+diff --git a/www/api/methods/user/restarthmipserver.tcl b/www/api/methods/user/restarthmipserver.tcl
+index 95a2fee..95db2f7 100644
+--- a/www/api/methods/user/restarthmipserver.tcl
++++ b/www/api/methods/user/restarthmipserver.tcl
+@@ -7,5 +7,5 @@
  #
  # Rückgabewert: true
  
--#exec /etc/init.d/S62HMServer start &
--exec -- /usr/bin/nohup /etc/init.d/S62HMServer restart >/dev/null &
+-exec /usr/bin/monit restart HMIPServer >/dev/null &
 +exec systemctl restart debmatic-hmserver.service
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.85.7.orig/www/api/methods/user/restartlighttpd.tcl fw.3.85.7.debmatic/www/api/methods/user/restartlighttpd.tcl
---- fw.3.85.7.orig/www/api/methods/user/restartlighttpd.tcl
-+++ fw.3.85.7.debmatic/www/api/methods/user/restartlighttpd.tcl
-@@ -7,8 +7,7 @@
+diff --git a/www/api/methods/user/restartlighttpd.tcl b/www/api/methods/user/restartlighttpd.tcl
+index dd96962..6b52935 100644
+--- a/www/api/methods/user/restartlighttpd.tcl
++++ b/www/api/methods/user/restartlighttpd.tcl
+@@ -7,6 +7,7 @@
  #
- # Rückgabewert: true
+ # RÃ¼ckgabewert: true
  
--exec echo "restart-lighttpd" | socat - UNIX-CONNECT:/tmp/eq3-services.uds >/dev/null
--#exec -- /usr/bin/nohup /etc/init.d/S50lighttpd restart >/dev/null
--#exec /etc/init.d/S50lighttpd restart
+-exec /usr/bin/monit restart lighttpd
 +exec systemctl restart lighttpd.service
 +exec systemctl restart debmatic-lighttpd.service
  
  jsonrpc_response true
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/backup.tcl fw.3.85.7.debmatic/www/config/backup.tcl
---- fw.3.85.7.orig/www/config/backup.tcl
-+++ fw.3.85.7.debmatic/www/config/backup.tcl
-@@ -8,14 +8,14 @@
- proc create_backup {} {
-   set HOSTNAME [exec hostname]
-   set iso8601_date [exec date -Iseconds]
--  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
-+  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
-   #save DOM
-   rega system.Save()
-   cd /
-   if {[getProduct] < 3 } {
-     catch { exec tar czf /tmp/usr_local.tar.gz usr/local }
+diff --git a/www/config/backup.tcl b/www/config/backup.tcl
+index 336b032..09662dd 100644
+--- a/www/config/backup.tcl
++++ b/www/config/backup.tcl
+@@ -28,9 +28,9 @@ proc create_backup {} {
+   regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-].+)$} $iso8601_date dummy year month day hour minute second zone
+   set backupfile [set HOSTNAME]-$system_version-$year-$month-$day-$hour$minute.sbk
+   # cleanup previous runs
+-  catch { exec rm -f /usr/local/tmp/last_backup.sbk }
+-  # call createBackup.sh to create consistent backup
+-  if { [catch {exec /bin/createBackup.sh /usr/local/tmp/last_backup.sbk 2>/dev/null} results] } {
++  catch { exec rm -f /tmp/last_backup.sbk }
++  # create a Debian-compatible backup
++  if { [catch {exec /usr/share/debmatic/bin/create_webui_backup.sh /tmp/last_backup.sbk} results] } {
+     if { [lindex $::errorCode 0] == "CHILDSTATUS" } {
+       set result [lindex $::errorCode 2]
+     } else {
+@@ -41,15 +41,15 @@ proc create_backup {} {
+     set result 0
+   }
+ 
+-  # cleanup last_backup.sbk file if createBackup.sh returned an error code
++  # cleanup backup file if the helper returned an error code
+   if { $result != 0 } {
+-    catch { exec rm -f /usr/local/tmp/last_backup.sbk }
++    catch { exec rm -f /tmp/last_backup.sbk }
+     puts ""
+     puts "ERROR: creating backup returned unexpected error code $result"
+     puts ""
+     puts $results
    } else {
--    catch { exec tar --owner=root --group=root --exclude=usr/local/tmp --exclude=/usr/local/.firmwareUpdate --exclude=usr/local/lost+found --exclude=usr/local/eQ-3-Backup --exclude-tag=.nobackup --one-file-system --ignore-failed-read -czf /tmp/usr_local.tar.gz usr/local }
-+    catch { exec tar --owner=root --group=root --exclude=usr/local/tmp --exclude=/usr/local/.firmwareUpdate --exclude=usr/local/lost+found --exclude=usr/local/eQ-3-Backup --exclude-tag=.nobackup --one-file-system --ignore-failed-read -czf /tmp/usr_local.tar.gz etc/config --transform "s/^/usr\\/local\\//g" }
+-    puts "X-Sendfile: /usr/local/tmp/last_backup.sbk"
++    puts "X-Sendfile: /tmp/last_backup.sbk"
+     puts "Content-Type: application/octet-stream"
+     puts "Content-Disposition: attachment; filename=\"$backupfile\"\n"
    }
-   
-   cd /tmp/
-@@ -36,4 +36,4 @@
-   }
-   close $fd
-   file delete -force /tmp/usr_local.tar.gz /tmp/firmware_version /tmp/signature
--}
-\ No newline at end of file
-+}
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/control_panel.cgi fw.3.85.7.debmatic/www/config/control_panel.cgi
---- fw.3.85.7.orig/www/config/control_panel.cgi
-+++ fw.3.85.7.debmatic/www/config/control_panel.cgi
-@@ -102,16 +102,6 @@
+diff --git a/www/config/control_panel.cgi b/www/config/control_panel.cgi
+index c31fcb1..dcfdba7 100644
+--- a/www/config/control_panel.cgi
++++ b/www/config/control_panel.cgi
+@@ -90,36 +90,8 @@ if {[isOldCCU]} {
    }
  }
      
 -puts { 
 -    <!-- Netzwerkeinstellungen -->
--    <td>
+-    <div class="cpCell">
 -      <div class="cpButton">
 -        <div class="StdTableBtn CLASS21701" onclick="showNetworkCP()">${btnSysConfNetworkConfig}</div>
 -        <div class="StdTableBtnHelp"><img id="showNetworkCPHelp" src="/ise/img/help.png"></div>
 -      </div>
--    </td>
+-    </div>
 -}
--
- if {![isOldCCU]} {
-   puts {
-     </tr>
-@@ -119,27 +109,6 @@
-   }
- }
  
--
+ 
 -if {[getProduct] >= 3} {
 -  puts {
--    <td>
+-    <div class="cpCell">
 -      <div class="cpButton">
 -        <div class="StdTableBtn CLASS21701" onclick="new FirewallConfigDialog();">${btnSysConfFirewallConfig}</div>
 -        <div class="StdTableBtnHelp"><img id="newFirewallConfigDialogHelp" src="/ise/img/help.png"></div>
 -      </div>
--    </td>
+-    </div>
 -  }
 -} else {
 -  puts {
--    <td>
+-    <div class="cpCell">
 -      <div class="cpButton">
 -        <div class="StdTableBtn CLASS21701" onclick="new FirewallConfigDialog_CCU2();">${btnSysConfFirewallConfig}</div>
 -        <div class="StdTableBtnHelp"><img id="newFirewallConfigDialogHelp" src="/ise/img/help.png"></div>
 -      </div>
--    </td>
+-    </div>
 -  }
 -}
--
+ 
  if {[isOldCCU]} {
    puts {
-     <td>
-@@ -162,14 +131,6 @@
+@@ -144,13 +116,6 @@ if {[isOldCCU]} {
        </div>
-     </td>
+     </div>
  
 -    <!-- Zusatzsoftware -->
--    <td>
+-    <div class="cpCell">
 -      <div class="cpButton">
 -        <div  class="StdTableBtn CLASS21701" onclick="showSoftwareCP();">${btnSysConfAdditionalSoft}</div>
 -        <div class="StdTableBtnHelp"><img id="showSoftwareCPHelp" src="/ise/img/help.png"></div>
 -      </div>
--    </td>
--
+-    </div>
+ 
      <!-- Storage Settings -->
-     <td>
-       <div class="cpButton">
-@@ -183,17 +144,6 @@
-     <tr>
+     <div class="cpCell">
+@@ -161,16 +126,6 @@ if {[isOldCCU]} {
+     </div>
    }
  
 -  if {[getProduct] >= 3} {
 -    puts {
 -      <!-- Button Security Wizard - slimmed down InstallWizard without the admin password dialog -->
 -
--      <td>
+-      <div class="cpCell">
 -        <div  class="StdTableBtn CLASS21701" onclick="new DialogChooseSecuritySettings();">${btnSecuritySettings}</div>
 -        <div class="StdTableBtnHelp"><img id="showSecuritySettingsCPHelp" src="/ise/img/help.png"></div>
--      </td>
+-      </div>
 -    }
 -  }
--
+ 
    puts {
      <!-- Kopplungen -->
-     <td>
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.7.debmatic/www/config/cp_maintenance.cgi
---- fw.3.85.7.orig/www/config/cp_maintenance.cgi
-+++ fw.3.85.7.debmatic/www/config/cp_maintenance.cgi
-@@ -379,171 +379,10 @@
+diff --git a/www/config/cp_maintenance.cgi b/www/config/cp_maintenance.cgi
+index d00b6a5..18e0c1a 100644
+--- a/www/config/cp_maintenance.cgi
++++ b/www/config/cp_maintenance.cgi
+@@ -504,180 +504,15 @@ proc action_put_page {} {
                  # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
                }
              }
+-            if {[get_platform] != "oci" && [get_platform] != "lxc"} {
 -            table_row {
 -              table_data {align="left"} {colspan="3"} {
 -                #puts "[bold "Software-Update durchfï¿½hren"]"
--                puts "<b>\${dialogSettingsCMLblPerformSoftwareUpdate}</b>"
+-                puts "<br/><b>\${dialogSettingsCMLblPerformSoftwareUpdate}</b>"
+-              }
+-            }
+-            table_row {
+-              table_data {align="left"} {colspan="3"} {id="availableUserSpace"} {
+-                puts "<i>\${dialogSettingsCMLblFreeUserSpace} $USERFSFREE_GB (&gt;&nbsp;$USERFSFREE_GB_REQ GB \${dialogSettingsCMLblFreeUserSpaceRequired})</i>"
 -              }
 -            }
 -            table_row {
@@ -624,7 +208,7 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -                    table_row {
 -                      table_data {
 -                        division {class="CLASS20905" style="display: none"} {id="btnFwDirectDownload"} {} "onClick=\"performDirectDownload();\"" {}
--                        division {class="CLASS20905"}  "onClick=\"showCCULicense(true);\"" {puts "\${btnDirectFwUpload}"}
+-                        division {class="CLASS20910"} {id="btnFwDirectDownload2"} "onClick=\"performDirectDownload();\"" {puts "\${btnDirectFwUpload}"}
 -                      }
 -                    }
 -                  }
@@ -639,19 +223,16 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -            }
 -            table_row {
 -              td {width="20"} {}
--              table_data {align="left"} {
+-              table_data {align="left"} {colspan="2"} {
 -                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep1}"
 -              }
--              table_data {
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {colspan="2"} {
 -                division {class="popupControls CLASS20905"} {
--                  table {
--                    table_row {
--                      table_data {
--                        division {class="CLASS20908" style="display: none"} {id="btnFwDownload"} {} "onClick=\"window.location.href='$REMOTE_FIRMWARE_SCRIPT?cmd=download&version=$cur_version&serial=$serial&lang=de&product=HM-CCU[getProduct]';\"" {}
--                        division {class="CLASS20908"}  "onClick=\"showCCULicense(false);\"" {puts "\${dialogSettingsCMBtnPerformSoftwareUpdateDownload}"}
--                      }
--                    }
--                  }
+-                  division {class="CLASS20908" style="display: none;"} {id="btnFwDownload"} {} "onClick=\"window.location.href='$REMOTE_FIRMWARE_SCRIPT?cmd=download&version=$cur_version&serial=$serial&lang=de&product=HM-CCU[getProduct]';\"" {}
+-                  division {class="CLASS20908" style="width: 150px; margin-left: 20px;"} "onClick=\"window.open('https://github.com/openccu/openccu/releases/latest','_blank');\"" {puts "\${dialogSettingsCMBtnPerformSoftwareUpdateDownload}"}
 -                }
 -              }
 -            }
@@ -663,30 +244,25 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -            }
 -            table_row {
 -              td {width="20"} {}
--              table_data {colspan="2"} {
--                form "$env(SCRIPT_NAME)?sid=$sid" name=firmware_form {target=firmware_upload_iframe} enctype=multipart/form-data method=post {
--                  export action=firmware_upload
--                  export downloadOnly=$downloadOnly
--                  file_button firmware_file size=30 maxlength=1000000
+-              table_data {align="left"} {colspan="2"} {
+-                form "/config/fileupload.ccc?sid=$sid&action=firmware_upload&downloadOnly=$downloadOnly&url=$env(SCRIPT_NAME)" {target=firmware_upload_iframe} name=firmware_form enctype=multipart/form-data method=post {
+-                  file_button firmware_file size=30 maxlength=1000000 accept='.zip,.tgz,.tar,.img,.ext4,.vfat,application/zip,application/gzip,application/x-tar'
 -                }
 -                puts {<iframe name="firmware_upload_iframe" style="display: none;"></iframe>}
 -              }
 -            }
 -            table_row {
 -              td {width="20"} {}
--              table_data {align="left"} {
+-              table_data {align="left"} {colspan="2"} {
 -                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep3}"
 -              }
--              table_data {
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {colspan="2"} {
 -                division {class="popupControls CLASS20905"} {
--                  table {
--                    table_row {
--                      table_data {
--                        division {class="CLASS20919"} {onClick="stopHmIPServer();document.firmware_form.submit();showUserHint();"} {
--                          puts "\${dialogSettingsCMBtnPerformSoftwareUpdateUpload}"
--                        }
--                      }
--                    }
+-                  division {class="CLASS20919" style="width: 150px; margin-left: 20px;"} {onClick="stopHmIPServer();document.firmware_form.submit();showUserHint();"} {id="btnSoftwareUpdateUpload"} {
+-                    puts "\${dialogSettingsCMBtnPerformSoftwareUpdateUpload}"
 -                  }
 -                }
 -              }
@@ -697,38 +273,27 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep4}"
 -              }
 -            }
--          }
--        }
--        table_data {align="left"} {class="CLASS20921"} {
--          puts "\${dialogSettingsCMHintSoftwareUpdate1}"
--          number_list {class="j_noForcedUpdate"} {
--            li {
--              ${dialogSettingsCMHintSoftwareUpdate2}            }
--            li {
--               ${dialogSettingsCMHintSoftwareUpdate3}
+-            } else {
+-              table_row {
+-                table_data {align="left"} {colspan="3"} {
+-                  puts "<br/>\${dialogSettingsCMLblPerformSoftwareUpdateVirt}"
+-                }
+-              }
 -            }
--            li {
--               ${dialogSettingsCMHintSoftwareUpdate3a}
--            }
--            set bat_level [get_bat_level]
--            if {$bat_level < 50} {
--              set msg " \${dialogSettingsCMHintSoftwareUpdate4a} $bat_level%. "
--              append msg  \${dialogSettingsCMHintSoftwareUpdate4b}
--              li $msg
--            }
--          }
--
--          division {class="j_forcedUpdate" style="padding:10px;"} {
--            puts "<br/>\${dialogSettingsCMHintSoftwareUpdate2}"
--          }
--        }
--      }
+           }
+         }
+         table_data {align="center"} {class="CLASS20921"} {
+-          puts "<img src='/ise/img/occu-logo_small_gray.png' alt='OpenCCU'><br/>"
+-          puts "\${dialogSettingsCMHintSoftwareUpdateOpenCCU}"
++          puts "\${dialogSettingsDebmaticDonateHint}"
+         }
+       }
 -      table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
 -        table_data {class="CLASS20903"} $styleMaxWidth {
 -          #puts "Zentralen-<br>"
 -          #puts "Neustart"
 -          puts "\${dialogSettingsCMTDCCURestart}"
--
+ 
 -        }
 -        table_data {class="CLASS20904"} {
 -          division {class="popupControls CLASS20905"} {
@@ -741,7 +306,7 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -          puts "\${dialogSettingsCMHintRestart}"
 -        }
 -      }
--
+ 
 -      if {[getProduct] >= 3} {
 -        table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
 -          table_data {class="CLASS20903"} $styleMaxWidth {
@@ -759,7 +324,7 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -          }
 -        }
 -      }
--
+ 
 -      # Abgesicherter Modus
 -      table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
 -        table_data {class="CLASS20903"} $styleMaxWidth {
@@ -772,18 +337,41 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -            division {class="CLASS20910 colorGradient50px"} {onClick="OnEnterSafeMode();"} {
 -              puts "\${dialogSettingsCMBtnCCURestartSafe}"
 -            }
-           }
-         }
-         table_data {align="left"} {class="CLASS20904"} {
+-          }
+-        }
+-        table_data {align="left"} {class="CLASS20904"} {
 -          puts "\${dialogSettingsCMHintRestartSafeMode}"
-+          puts "\${dialogSettingsDebmaticDonateHint}"
-         }
-       }
+-        }
+-      }
+-
+-      # Recovery Modus
+-      if {[get_platform] != "oci" && [get_platform] != "lxc"} {
+-        table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
+-            table_data {class="CLASS20903"} $styleMaxWidth {
+-                #puts "Recovery<br>"
+-                #puts "Modus"
+-                puts "\${dialogSettingsCMTDCCURecoveryMode}"
+-            }
+-            table_data {class="CLASS20904"} {
+-                division {class="popupControls CLASS20905"} {
+-                    division {class="CLASS20910 colorGradient50px"} {onClick="OnEnterRecoveryMode();"} {
+-                        puts "\${dialogSettingsCMBtnCCURestartRecovery}"
+-                    }
+-                }
+-            }
+-            table_data {align="left"} {class="CLASS20904"} {
+-                puts "\${dialogSettingsCMHintRestartRecoveryMode}"
+-            }
+-        }
+-      }
  
-@@ -698,14 +537,6 @@
+       table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
+         table_data {class="CLASS20903"} $styleMaxWidth  {
+@@ -765,14 +600,6 @@ proc action_put_page {} {
+                       }
                      }
                    }
-                   table_row {
+-                  table_row {
 -                    table_data {align="left"} {
 -                      puts "\${dialogSettingsCMLblLogSysLogServerAddress}"
 -                    }
@@ -791,11 +379,10 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
 -                      catch {cgi_text log_server=[get_logserver] {size="25"} {id="text_log_server"}}
 -                    }
 -                  }
--                  table_row {
+                   table_row {
                      table_data {
                      }
-                     table_data {align="left"} {
-@@ -764,7 +595,7 @@
+@@ -834,7 +661,7 @@ proc action_put_page {} {
          pb += "&level_hs485d="+document.getElementById("select_log_hs485d").value;
          //pb += "&level_pfmd="+document.getElementById("select_log_pfmd").value;
          pb += "&level_rega="+document.getElementById("select_log_rega").value;
@@ -804,41 +391,22 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_maintenance.cgi fw.3.85.
          
          var opts = {
            postBody: pb,
-@@ -1363,16 +1194,13 @@
+@@ -1531,7 +1358,6 @@ proc action_apply_logging {} {
      puts "Failure"
      return
    }
--  catch {exec killall syslogd}
--  catch {exec killall klogd}
--  exec /etc/init.d/S07logging start
+-  exec /usr/bin/monit restart syslogd
    puts "Success -confirm"
  }
  
- proc action_download_logfile {} {
-   set HOSTNAME [exec hostname]
-   set iso8601_date [exec date -Iseconds]
--  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
-+  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
-   
-   puts "Content-Type:application/x-download"
-   puts "Content-Disposition:attachment;filename=[set HOSTNAME]-$year-$month-$day.log\n"
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_security.cgi fw.3.85.7.debmatic/www/config/cp_security.cgi
---- fw.3.85.7.orig/www/config/cp_security.cgi
-+++ fw.3.85.7.debmatic/www/config/cp_security.cgi
-@@ -297,7 +297,6 @@
-     } else {
-       exec touch /usr/local/.doFactoryReset
-     }
--    exec kill -SIGQUIT 1
-   }]} {
+diff --git a/www/config/cp_security.cgi b/www/config/cp_security.cgi
+index f21c75c..92bb9df 100644
+--- a/www/config/cp_security.cgi
++++ b/www/config/cp_security.cgi
+@@ -817,18 +817,6 @@ proc action_backup_restore_go {} {
  
-     # TWIST-22
-@@ -801,25 +800,9 @@
-   set source_minor [lindex $source_version 1]
-   set source_patch [lindex $source_version 2]
- 
--  # Check if a backup with HmIP support can be used without problems - A CCU with a version < 2.17.14 had no HmIP support. Therefore we don't check such backups
--  # (For CCU2_CCU2 this check has been executed above)
+   # Check if a backup with HmIP support can be used without problems - A CCU with a version < 2.17.14 had no HmIP support. Therefore we don't check such backups
+   # (For CCU2_CCU2 this check has been executed above)
 -  if { "CCU2_CCU2" != $migration_mode } {
 -    if {($source_major >= 3) || (($source_major == 2)  && ($source_minor > 17)) || (($source_major == 2) && ($source_minor == 17) && ($source_patch >= 14))} {
 -      set checkBackupState [checkUserBackupValidility $migration_mode]
@@ -854,16 +422,10 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_security.cgi fw.3.85.7.d
    cgi_javascript {puts "MessageBox.close();"}
  
    if { "false" == $backuperror } {
--    exec mount -o remount,ro /usr/local
--    exec mount -o remount,rw /usr/local
-     division {class="popupTitle"} {
-       puts "\${dialogSettingsSecurityMessageSysBackupRestartSystemTitle}"
-     }
-@@ -1132,61 +1115,6 @@
-         puts "\${dialogSettingsSecurityHintSessionTimeout2}"
+@@ -1154,60 +1142,6 @@ proc action_put_page {} {
        }
        }
--
+ 
 -      # activate ssh
 -      table_row {class="CLASS20806"} {
 -      table_data {class="CLASS20807"} {
@@ -921,7 +483,7 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_security.cgi fw.3.85.7.d
        # auth
        if { [getProduct]  >= 3 } {
          table_row {class="CLASS20806"} {
-@@ -1214,95 +1142,6 @@
+@@ -1235,95 +1169,6 @@ proc action_put_page {} {
            }
          }
        }
@@ -1015,30 +577,22 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_security.cgi fw.3.85.7.d
 -        }
 -      }
      }
+     }
    }
-   division {class="popupControls"} {
-@@ -1542,7 +1381,7 @@
- }
+@@ -1567,7 +1412,7 @@ proc read_version { filename } {
  
  proc action_reboot {} {
--  exec /sbin/reboot
+   puts ""
+-  exec /sbin/reboot -d 2 2>/dev/null >/dev/null &
 +  exec systemctl restart debmatic.service
  }
  
  proc _version_compare { v1 v2 } {
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_time.cgi fw.3.85.7.debmatic/www/config/cp_time.cgi
---- fw.3.85.7.orig/www/config/cp_time.cgi
-+++ fw.3.85.7.debmatic/www/config/cp_time.cgi
-@@ -144,7 +144,7 @@
-   global env LOCATIONS TIMEZONES
-   
-   set iso8601_date [exec date -Iseconds]
--  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+)$} $iso8601_date dummy year month day hour minute second zone
-+  regexp {^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)([+-]\d+:?\d*)$} $iso8601_date dummy year month day hour minute second zone
-   
-   puts "<div id=\"dragTime\">"
- 
-@@ -155,100 +155,6 @@
+diff --git a/www/config/cp_time.cgi b/www/config/cp_time.cgi
+index 501d753..5639c5c 100644
+--- a/www/config/cp_time.cgi
++++ b/www/config/cp_time.cgi
+@@ -798,106 +798,6 @@ proc action_put_page {} {
    
    division {class="CLASS21500"} {
      table {class="popupTable"} {border="1"} {
@@ -1077,6 +631,7 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_time.cgi fw.3.85.7.debma
 -                      puts "."
 -                      cgi_text year=$year {size="4"} {maxlength="4"} {id="text_year"}
 -                    }
+-                    if {[get_platform] != "oci" && [get_platform] != "lxc"} {
 -                    table_data {align="left"} {
 -                      division {class="popupControls CLASS21506"} {
 -                        division {class="CLASS21507"} {onClick="apply_time()"} {
@@ -1085,7 +640,9 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_time.cgi fw.3.85.7.debma
 -                        }
 -                      }
 -                    }
+-                    }
 -                  }
+-                  if {[get_platform] != "oci" && [get_platform] != "lxc"} {
 -                  table_row {
 -                    table_data {colspan="2"} {}
 -                    table_data {align="left"} {class="CLASS21510"} {
@@ -1097,12 +654,14 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_time.cgi fw.3.85.7.debma
 -                      }
 -                    }
 -                  }
+-                  }
 -                }
 -              }
 -            }
 -          }
 -        }
 -      }
+-      if {[get_platform] != "oci" && [get_platform] != "lxc"} {
 -      table_row {class="CLASS21502"} {
 -        table_data {class="CLASS21503"} {
 -          #puts "NTP-Server"
@@ -1136,84 +695,37 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/config/cp_time.cgi fw.3.85.7.debma
 -          }
 -        }
 -      }
+-      }
        set country ""
        foreach location $LOCATIONS {
          if { [lindex $location 0] == "-" } {
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl fw.3.85.7.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
---- fw.3.85.7.orig/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
-+++ fw.3.85.7.debmatic/www/config/easymodes/etc/hmipChannelConfigDialogs.tcl
-@@ -41,7 +41,7 @@
- 
-   puts "<script type=\"text/javascript\">load_JSFunc('/config/easymodes/MASTER_LANG/HmIP-ParamHelp.js');</script>"
- 
--  if {([string equal $devType "HmIP-CCU3"] == 1) || ([string equal $devType "RPI-RF-MOD"] == 1)} {
-+  if {([string equal $devType "HmIP-CCU3"] == 1) || ([string equal $devType "RPI-RF-MOD"] == 1) || ([string equal $devType "HmIP-RFUSB"] == 1)} {
-     append html "[getNoParametersToSet]"
-     return $html
-   }
-diff -ruN --no-dereference fw.3.85.7.orig/www/config/help.cgi fw.3.85.7.debmatic/www/config/help.cgi
---- fw.3.85.7.orig/www/config/help.cgi
-+++ fw.3.85.7.debmatic/www/config/help.cgi
-@@ -3,8 +3,8 @@
+diff --git a/www/config/help.cgi b/www/config/help.cgi
+index bd4102e..be3b8ff 100644
+--- a/www/config/help.cgi
++++ b/www/config/help.cgi
+@@ -3,7 +3,7 @@ source cgi.tcl
  source common.tcl
  load tclrega.so
  
--set PRODUCT_NAME "Zentrale"
--set PRODUCT_ID "CCU[getProduct]"
+-set PRODUCT_NAME "OpenCCU"
 +set PRODUCT_NAME "debmatic"
-+set PRODUCT_ID "CCU"
+ set PRODUCT_ID "CCU"
  # set HOMEMATIC_URL "http://www.homematic.com"
  set HOMEMATIC_URL "http://www.eq-3.de"
- set HOMEMATIC_IP_URL "https://www.homematic-ip.com"
-@@ -59,6 +59,7 @@
-                 puts "<li><h1 class='helpTitle'><u>\${menuHelpPage}</u></h1></li>"
-                 puts "<li><a target='_blank' href=\'$HM_HELP_URL\'>\${dialogHelpLinkOnlineHelpA}</a></li>"
-                 puts "<li><a target='_blank' href=\'$IP_HELP_URL\'>\${dialogHelpLinkOnlineHelpB}</a></li>"
-+                puts "<li><a target='_blank' href='https://www.debmatic.de/'>debmatic</a></li>"
-                 puts "<li><a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a></li>"
-               puts "</ul>"
+@@ -241,6 +241,7 @@ proc action_put_page {} {
+         puts "<a target='_blank' href='https://github.com/openccu/openccu/wiki'>OpenCCU Documentation</a><br/>"
+         puts "<a target='_blank' href=\'$HM_HELP_URL\'>\${dialogHelpLinkOnlineHelpA}</a><br/>"
+         puts "<a target='_blank' href=\'$IP_HELP_URL\'>\${dialogHelpLinkOnlineHelpB}</a><br/>"
++        puts "<a target='_blank' href='https://www.debmatic.de/'>debmatic</a><br/>"
+         puts "<a target='_blank' href='/licenseinfo.htm'>\${lblLicenseInformation}</a><br/>"
        puts "</td>"
-diff -ruN --no-dereference fw.3.85.7.orig/www/rega/esp/datapointconfigurator.fn fw.3.85.7.debmatic/www/rega/esp/datapointconfigurator.fn
---- fw.3.85.7.orig/www/rega/esp/datapointconfigurator.fn
-+++ fw.3.85.7.debmatic/www/rega/esp/datapointconfigurator.fn
-@@ -801,7 +801,7 @@
-               Call("/esp/controls/hap.fn::CreateHAP()");
-             }
  
--            if ((ch.Label() == "RPI-RF-MOD") || (ch.Label() =="HmIP-CCU3")) {
-+            if ((ch.Label() == "RPI-RF-MOD") || (ch.Label() =="HmIP-CCU3") || (ch.Label() =="HmIP-RFUSB")) {
-               WriteLine( "<script>conInfo('Create CoPro Control.');</script>" );
-               sLastControlName = CN_MAINTENANCE;
-               isKnownControl = true;
-diff -ruN --no-dereference fw.3.85.7.orig/www/rega/esp/functions.fn fw.3.85.7.debmatic/www/rega/esp/functions.fn
---- fw.3.85.7.orig/www/rega/esp/functions.fn
-+++ fw.3.85.7.debmatic/www/rega/esp/functions.fn
-@@ -438,7 +438,7 @@
-           bShowChannel = false;
-         }
-       } else {
--        if ((oDevHssType != "HmIP-CCU3") && (oDevHssType != "HmIP-HAP")  && (oDevHssType != "HmIP-HAP-A")  && (oDevHssType != "HmIP-HAP2") && (oDevHssType != "HmIP-HAP2-A") && (oDevHssType != "HmIP-HAP-B1")  && (oDevHssType != "HmIP-HAP JS1") && (oDevHssType != "RPI-RF-MOD")) {
-+        if ((oDevHssType != "HmIP-CCU3") && (oDevHssType != "HmIP-HAP")  && (oDevHssType != "HmIP-HAP-A")  && (oDevHssType != "HmIP-HAP2") && (oDevHssType != "HmIP-HAP2-A") && (oDevHssType != "HmIP-HAP-B1")  && (oDevHssType != "HmIP-HAP JS1") && (oDevHssType != "RPI-RF-MOD") && (oDevHssType != "HmIP-RFUSB")) {
-           bShowChannel = false;
-         }
-       }
-diff -ruN --no-dereference fw.3.85.7.orig/www/rega/pages/index.htm fw.3.85.7.debmatic/www/rega/pages/index.htm
---- fw.3.85.7.orig/www/rega/pages/index.htm
-+++ fw.3.85.7.debmatic/www/rega/pages/index.htm
-@@ -72,7 +72,7 @@
-       /*########################################################################*/
- 
-       PLATFORM = "Central";
--    WEBUI_VERSION = "3.85.7"
-+    WEBUI_VERSION = "{PKG_VERSION}"
- 
-       /**
-        * Flags
-diff -ruN --no-dereference fw.3.85.7.orig/www/rega/pages/tabs/startpage.htm fw.3.85.7.debmatic/www/rega/pages/tabs/startpage.htm
---- fw.3.85.7.orig/www/rega/pages/tabs/startpage.htm
-+++ fw.3.85.7.debmatic/www/rega/pages/tabs/startpage.htm
-@@ -287,13 +287,13 @@
-   WebUI.resize();
+diff --git a/www/rega/pages/tabs/startpage.htm b/www/rega/pages/tabs/startpage.htm
+index a6d680b..fb4ffe6 100644
+--- a/www/rega/pages/tabs/startpage.htm
++++ b/www/rega/pages/tabs/startpage.htm
+@@ -402,14 +402,14 @@
+   var product = 0;
    StartPage.showUpdate();
    if (forceUpdate) {
 -      StartPage.showCurrentFirmware();
@@ -1223,143 +735,90 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/rega/pages/tabs/startpage.htm fw.3
        jQuery("#favSelector").show();
        jQuery("#favView").show();
        StartPage.showUpdate();
+       StartPage.showAddonUpdate();
 -      StartPage.showCurrentFirmware();
 +      jQuery("#currentFirmware").text(WEBUI_VERSION);
        StartPage.showAllDeviceFirmware();
+       StartPage.showDutyCycle();
        jQuery("#forceUpdate").remove();
-   }
-diff -ruN --no-dereference fw.3.85.7.orig/www/tcl/eq3/session.tcl fw.3.85.7.debmatic/www/tcl/eq3/session.tcl
---- fw.3.85.7.orig/www/tcl/eq3/session.tcl
-+++ fw.3.85.7.debmatic/www/tcl/eq3/session.tcl
+diff --git a/www/tcl/eq3/session.tcl b/www/tcl/eq3/session.tcl
+index 2b7106e..aa08d9a 100644
+--- a/www/tcl/eq3/session.tcl
++++ b/www/tcl/eq3/session.tcl
 @@ -5,8 +5,8 @@
  
  package require http
  
--set LOGIN_URL 127.0.0.1/login.htm
--set RENEW_URL 127.0.0.1/pages/index.htm
-+set LOGIN_URL 127.0.0.1:8181/login.htm
-+set RENEW_URL 127.0.0.1:8181/pages/index.htm
+-set LOGIN_URL http://127.0.0.1/login.htm
+-set RENEW_URL http://127.0.0.1/pages/index.htm
++set LOGIN_URL http://127.0.0.1:8181/login.htm
++set RENEW_URL http://127.0.0.1:8181/pages/index.htm
  
  ##
  # session_getHttpHeader
-diff -ruN --no-dereference fw.3.85.7.orig/www/tools/js/model/devicetypelist.js fw.3.85.7.debmatic/www/tools/js/model/devicetypelist.js
---- fw.3.85.7.orig/www/tools/js/model/devicetypelist.js
-+++ fw.3.85.7.debmatic/www/tools/js/model/devicetypelist.js
-@@ -18,7 +18,8 @@
-     "HMW-RCV-50",
-     "HM-Sec-SD-Team",
-     "HmIP-CCU3",
--    "RPI-RF-MOD"
-+    "RPI-RF-MOD",
-+    "HmIP-RFUSB"
-   ],
-   
-   /**
-@@ -110,4 +111,4 @@
-   }
- 
- });
-- 
-\ No newline at end of file
-+ 
-diff -ruN --no-dereference fw.3.85.7.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js fw.3.85.7.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
---- fw.3.85.7.orig/www/webui/js/lang/de/translate.lang.deviceDescription.js
-+++ fw.3.85.7.debmatic/www/webui/js/lang/de/translate.lang.deviceDescription.js
-@@ -339,6 +339,7 @@
-     "RC8": "Homematic IP Fernbedienung, 8 Kanal",
-     "RF-LAN-Sniffer" : "RF-LAN-Sniffer",
-     "RPI-RF-MOD" : "CO-PROCESSOR",
-+    "HmIP-RFUSB" : "CO-PROCESSOR",
-     "SMI": "Homematic IP Bewegungsmelder innen",
-     "SMO": "Homematic IP Bewegungsmelder au%DFen",
-     "SRH": "Homematic IP Fenster-/ Drehgriffkontakt",
-@@ -374,4 +375,4 @@
-     "ZEL_STG_RM_WT_2": "Funk-Wandtaster 2-fach im 55er Rahmen",
-     "The END": ""
-   }
--});
-\ No newline at end of file
-+});
-diff -ruN --no-dereference fw.3.85.7.orig/www/webui/js/lang/de/translate.lang.js fw.3.85.7.debmatic/www/webui/js/lang/de/translate.lang.js
---- fw.3.85.7.orig/www/webui/js/lang/de/translate.lang.js
-+++ fw.3.85.7.debmatic/www/webui/js/lang/de/translate.lang.js
-@@ -461,6 +461,7 @@
-     "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
-     "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
+diff --git a/www/webui/js/lang/de/translate.lang.js b/www/webui/js/lang/de/translate.lang.js
+index 55fa7dd..11a6acc 100644
+--- a/www/webui/js/lang/de/translate.lang.js
++++ b/www/webui/js/lang/de/translate.lang.js
+@@ -499,6 +499,7 @@ jQuery.extend(true,langJSON, {
+     "dialogSettingsCMLblFreeUserSpaceRequired" : "erforderlich",
+     "dialogSettingsCMLblFreeUserSpaceUnknown" : "unbekannt",
      "dialogSettingsCMLblActualSoftwareVersion" : "Aktuelle Software-Version:",
 +    "dialogSettingsDebmaticDonateHint" : "Bitte unterst%FCtzen Sie die Entwicklung von debmatic mit einer Spende via <a href='https://ko-fi.com/alexreinert' rel='nofollow'>Ko-fi</a>, <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> oder einer Aufmerksamkeit auf meinem <a href='https://www.debmatic.de/donate/amazon'>Amazon Wunschzettel</a>.",
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
-     "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
-@@ -994,6 +995,10 @@
+     "dialogSettingsCMLblPerformSoftwareUpdateVirt" : "Wenn Sie ein Update der OpenCCU Version durchf%FChren wollen, so k%F6nnen Sie dies im Kontext ihrer eingesetzten Virtualisierungsl%F6sung (HomeAssistant, Docker, LXC, etc.) durchf%FChren. Bitte konsultieren Sie hierzu die entsprechende OpenCCU Dokumentation.",
+@@ -1111,6 +1112,9 @@ jQuery.extend(true,langJSON, {
+     "Ukraine" : "Ukraine",
      "USA" : "USA",
      "dummy" : "dummy",
- 
 +    "hb_eth_connection_description" : "HB-RF-ETH Verbindungsstatus",
 +    "hb_eth_connection_connected" : "Verbunden",
 +    "hb_eth_connection_disconnected" : "Getrennt",
-+
+ 
      "optionLastValue" : "Letzter Wert",
      "optionNoModification" : "Keine %C4nderung",
-     "optionNone" : "Keine",
-diff -ruN --no-dereference fw.3.85.7.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js fw.3.85.7.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
---- fw.3.85.7.orig/www/webui/js/lang/en/translate.lang.deviceDescription.js
-+++ fw.3.85.7.debmatic/www/webui/js/lang/en/translate.lang.deviceDescription.js
-@@ -333,6 +333,7 @@
-     "RC8": "Homematic IP Remote Contro, 8-channel",
-     "RF-LAN-Sniffer" : "RF-LAN-Sniffer",
-     "RPI-RF-MOD" : "CO-PROCESSOR",
-+    "HmIP-RFUSB" : "CO-PROCESSOR",
-     "SMI": "Homematic IP Motion Detector - indoor",
-     "SMO": "Homematic IP Motion Detector, outdoor",
-     "SRH": "Homematic IP Rotary Handle Sensor",
-@@ -368,4 +369,4 @@
-     "ZEL_STG_RM_WT_2": "Wireless Push-button 2-channel in 55mm frame",
-     "The END": ""
-   }
--});
-\ No newline at end of file
-+});
-diff -ruN --no-dereference fw.3.85.7.orig/www/webui/js/lang/en/translate.lang.js fw.3.85.7.debmatic/www/webui/js/lang/en/translate.lang.js
---- fw.3.85.7.orig/www/webui/js/lang/en/translate.lang.js
-+++ fw.3.85.7.debmatic/www/webui/js/lang/en/translate.lang.js
-@@ -460,6 +460,7 @@
-     "dialogSettingsCMTDCCUSafeMode" : "Safe<br/>mode",
-     "dialogSettingsCMTDErrorProtocol" : "Error<br/>log",
+diff --git a/www/webui/js/lang/en/translate.lang.deviceDescription.js b/www/webui/js/lang/en/translate.lang.deviceDescription.js
+index b892b78..8f108d2 100644
+--- a/www/webui/js/lang/en/translate.lang.deviceDescription.js
++++ b/www/webui/js/lang/en/translate.lang.deviceDescription.js
+@@ -241,7 +241,7 @@ jQuery.extend(true,langJSON, {
+     "HmIP-PCBS2": "Homematic IP Switch Circuit Board - 2 channels",
+     "HmIP-PMFS": "Homematic IP Mains Failure Surveillance",
+     "HmIP-RCV-50": "Virtual Remote Control",
+-    "HmIP-RFUSB": "Homematic IP Central Control Unit",
++    "HmIP-RFUSB": "CO-PROCESSOR",
+     "HmIP-RGBW" : "Homematic IP LED Controller - RGBW",
+     "HmIP-SAM": "Homematic IP Acceleration Sensor",
+     "HmIP-SCTH230" : "Homematic IP CO2 Sensor, 230 V",
+diff --git a/www/webui/js/lang/en/translate.lang.js b/www/webui/js/lang/en/translate.lang.js
+index b34e029..b41ed80 100644
+--- a/www/webui/js/lang/en/translate.lang.js
++++ b/www/webui/js/lang/en/translate.lang.js
+@@ -498,6 +498,7 @@ jQuery.extend(true,langJSON, {
+     "dialogSettingsCMLblFreeUserSpaceRequired" : "required",
+     "dialogSettingsCMLblFreeUserSpaceUnknown" : "unknown",
      "dialogSettingsCMLblActualSoftwareVersion" : "Current software version:",
-+    "dialogSettingsDebmaticDonateHint" : "Please support the development of debmatic with a donation via <a href='https://ko-fi.com/alexreinert' rel='nofollow'>Ko-fi</a>, <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.debmatic.de/donate/amazon'>Amazom wishlist</a>.",
++    "dialogSettingsDebmaticDonateHint" : "Please support the development of debmatic with a donation via <a href='https://ko-fi.com/alexreinert' rel='nofollow'>Ko-fi</a>, <a href='https://www.debmatic.de/donate/paypal' rel='nofollow'>PayPal</a> or a gift of my <a href='https://www.debmatic.de/donate/amazon'>Amazon wishlist</a>.",
      "dialogSettingsCMLblAvailableSoftwareVersion" : "Available software version:",
      "dialogSettingsCMLblPerformSoftwareUpdate" : "Perform software update",
-     "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Step 1: Download new software",
-@@ -1070,6 +1071,10 @@
+     "dialogSettingsCMLblPerformSoftwareUpdateVirt" : "If you want to update the OpenCCU version, you can do this in the context of the virtualization solution you are using (HomeAssistant, Docker, LXC, etc.). Please consult the corresponding OpenCCU documentation.",
+@@ -1189,6 +1190,9 @@ jQuery.extend(true,langJSON, {
+     "Ukraine" : "Ukraine",
      "USA" : "USA",
      "dummy" : "dummy",
- 
 +    "hb_eth_connection_description" : "HB-RF-ETH connection state",
 +    "hb_eth_connection_connected" : "Connected",
 +    "hb_eth_connection_disconnected" : "Disconnected",
-+
+ 
      "optionLastValue" : "Last value",
      "optionNoModification" : "No change",
-     "optionNone" : "None",
-diff -ruN --no-dereference fw.3.85.7.orig/www/webui/webui.js fw.3.85.7.debmatic/www/webui/webui.js
---- fw.3.85.7.orig/www/webui/webui.js
-+++ fw.3.85.7.debmatic/www/webui/webui.js
-@@ -4579,6 +4579,12 @@
- DEV_LIST.push('RPI-RF-MOD');
- DEV_DESCRIPTION["RPI-RF-MOD"] = "RPI-RF-MOD";
- DEV_PATHS["RPI-RF-MOD"] = new Object();
-+DEV_LIST.push('HmIP-RFUSB');
-+DEV_DESCRIPTION["HmIP-RFUSB"] = "HmIP-RFUSB";
-+DEV_PATHS["HmIP-RFUSB"] = new Object();
-+DEV_PATHS["HmIP-RFUSB"]["50"] = "/config/img/devices/50/CCU3_thumb.png";
-+DEV_PATHS["HmIP-RFUSB"]["250"] = "/config/img/devices/250/CCU3.png";
-+DEV_HIGHLIGHT["HmIP-RFUSB"] = new Object();
- DEV_PATHS["RPI-RF-MOD"]["50"] = "/config/img/devices/50/CCU3_thumb.png";
- DEV_PATHS["RPI-RF-MOD"]["250"] = "/config/img/devices/250/CCU3.png";
- DEV_HIGHLIGHT["RPI-RF-MOD"] = new Object();
-@@ -7832,12 +7838,7 @@
-           WebUI.resize();
+diff --git a/www/webui/webui.js b/www/webui/webui.js
+index f7b7356..c0e31e1 100644
+--- a/www/webui/webui.js
++++ b/www/webui/webui.js
+@@ -7998,12 +7998,7 @@ function showSecurityDialog() {
+         if (action == 1) {
            jQuery(".Layer0").show();
            homematic("CCU.setSecurityHint");
 -          if (getProduct() >= 3) {
@@ -1372,21 +831,11 @@ diff -ruN --no-dereference fw.3.85.7.orig/www/webui/webui.js fw.3.85.7.debmatic/
          }
        }, "html");
      });
-@@ -10516,7 +10517,8 @@
-     "HM-Sec-SD-Team",
-     "HM-Sec-SD-2-Team",
-     "HmIP-CCU3",
--    "RPI-RF-MOD"
-+    "RPI-RF-MOD",
-+    "HmIP-RFUSB"
-   ],
-   
-   /**
-@@ -28371,8 +28373,10 @@
+@@ -29104,8 +29099,10 @@ homematic.com =
      var script = document.createElement("script");
      script.id = "homematic_com_script";
      script.type = "text/javascript";
--    script.src = this.m_URLServer + "/firmware/download?cmd=js_check_version&version="+WEBUI_VERSION+"&product="+this.m_product+"&serial=" + this.serial;
+-    script.src = "https://openccu.de/LATEST-VERSION.js?v=" + WEBUI_VERSION + "&p=" + PRODUCT;
 +    script.src = "https://www.debmatic.de/latestVersion?version="+WEBUI_VERSION+"&product="+this.m_product+"&serial=" + this.serial;
      $("body").appendChild(script);
 +
