@@ -28,6 +28,118 @@ function fix_tcl_symlink {
   fi
 }
 
+function restore_tcl_interpreter {
+  local depends pattern runtime files target path diversion
+
+  if [ -x /bin/tclsh ] && [ ! -d /bin/tclsh ]; then
+    return 0
+  fi
+
+  [ -n "${1:-}" ] || throw "Tcl migration: Missing interpreter during initial installation."
+  [ /bin -ef /usr/bin ] || throw "Tcl migration: Unsupported filesystem layout."
+  [ ! -e /usr/bin/tclsh ] && [ ! -L /usr/bin/tclsh ] ||
+    throw "Tcl migration: Existing path will not be overwritten."
+
+  files=$(LC_ALL=C dpkg-query -W -f='${Status}' tcl) ||
+    throw "Tcl migration: Could not query tcl status."
+  [ "$files" = "install ok installed" ] || throw "Tcl migration: tcl is not configured."
+  depends=$(LC_ALL=C dpkg-query -W -f='${Depends}' tcl) ||
+    throw "Tcl migration: Could not query tcl dependencies."
+  pattern='^tcl([0-9]+\.[0-9]+)[[:space:]]+\((<<|<=|=|>=|>>)[[:space:]]+[^()[:space:]]+\)$'
+  [[ "$depends" =~ $pattern ]] ||
+    throw "Tcl migration: Unsupported or ambiguous dependency: $depends"
+  runtime="tcl${BASH_REMATCH[1]}"
+
+  files=$(LC_ALL=C dpkg-query -W -f='${Status}' "$runtime") ||
+    throw "Tcl migration: Could not query $runtime status."
+  [ "$files" = "install ok installed" ] || throw "Tcl migration: $runtime is not configured."
+  files=$(LC_ALL=C dpkg-query -L tcl) ||
+    throw "Tcl migration: Could not query tcl file list."
+  grep -Fxq /usr/bin/tclsh <<< "$files" ||
+    throw "Tcl migration: tcl does not list /usr/bin/tclsh."
+
+  target="/usr/bin/tclsh${runtime#tcl}"
+  files=$(LC_ALL=C dpkg-query -L "$runtime") ||
+    throw "Tcl migration: Could not query $runtime file list."
+  grep -Fxq "$target" <<< "$files" ||
+    throw "Tcl migration: $runtime does not list $target."
+  [ -x "$target" ] && [ ! -d "$target" ] ||
+    throw "Tcl migration: Target is not executable: $target"
+
+  for path in /bin/tclsh /usr/bin/tclsh "$target"; do
+    diversion=$(LC_ALL=C dpkg-divert --listpackage "$path") ||
+      throw "Tcl migration: Could not query diversion for $path."
+    [ -z "$diversion" ] || throw "Tcl migration: Diverted path: $path"
+  done
+
+  # dpkg removes the old debmatic /bin/tclsh through the merged-/usr alias.
+  ln -sT -- "${target##*/}" /usr/bin/tclsh ||
+    throw "Tcl migration: Could not restore /usr/bin/tclsh."
+  [ -x /bin/tclsh ] || throw "Tcl migration: Interpreter unavailable after migration."
+  echo "Tcl migration: restored /usr/bin/tclsh -> ${target##*/}"
+}
+
+function migrate_rega_selection {
+  (
+    local selector=/etc/config/ReGaHssVersion
+    local backup="${selector}.pre-openccu"
+    local selection temporary=""
+
+    if [ ! -e "$selector" ] && [ ! -L "$selector" ]; then
+      exit 0
+    fi
+    [ -f "$selector" ] || throw "ReGa migration: Unexpected selector file type."
+    selection=$(cat "$selector") || throw "ReGa migration: Could not read selection."
+    [ "$selection" = COMMUNITY ] || exit 0
+
+    if [ -x /bin/ReGaHss.community ] && [ ! -d /bin/ReGaHss.community ]; then
+      exit 0
+    fi
+    [ ! -e /bin/ReGaHss.community ] && [ ! -L /bin/ReGaHss.community ] ||
+      throw "ReGa migration: Existing COMMUNITY binary is not executable."
+    [ -n "${1:-}" ] || throw "ReGa migration: COMMUNITY is unavailable during initial installation."
+    [ ! -L "$selector" ] || throw "ReGa migration: Selector symlink will not be changed."
+    [ -x /bin/ReGaHss.normal ] && [ ! -d /bin/ReGaHss.normal ] ||
+      throw "ReGa migration: NORMAL binary is not executable."
+
+    trap 'if [ -n "$temporary" ]; then
+      rm -f -- "$temporary" || { echo "ReGa migration: Could not remove temporary file." >&2; exit 1; }
+    fi' EXIT
+
+    if [ -e "$backup" ] || [ -L "$backup" ]; then
+      [ -f "$backup" ] && [ ! -L "$backup" ] ||
+        throw "ReGa migration: Existing backup has an unexpected file type."
+      cmp -s -- "$selector" "$backup" ||
+        throw "ReGa migration: Existing backup differs from current selection."
+    else
+      temporary=$(mktemp "${selector}.XXXXXX") ||
+        throw "ReGa migration: Could not create temporary backup."
+      cp --preserve=all -- "$selector" "$temporary" ||
+        throw "ReGa migration: Could not copy original selection."
+      # Publishing a separate copy via hard link cannot overwrite an existing backup.
+      ln -- "$temporary" "$backup" || throw "ReGa migration: Could not publish backup."
+      rm -- "$temporary" || throw "ReGa migration: Could not remove temporary backup."
+      temporary=""
+    fi
+
+    temporary=$(mktemp "${selector}.XXXXXX") ||
+      throw "ReGa migration: Could not create temporary selection."
+    cp --preserve=all -- "$selector" "$temporary" ||
+      throw "ReGa migration: Could not preserve selector attributes."
+    printf 'NORMAL\n' > "$temporary" || throw "ReGa migration: Could not write NORMAL selection."
+    [ -f "$selector" ] && [ ! -L "$selector" ] ||
+      throw "ReGa migration: Selector file type changed during migration."
+    cmp -s -- "$selector" "$backup" ||
+      throw "ReGa migration: Selection changed during migration."
+    mv -T -- "$temporary" "$selector" || throw "ReGa migration: Could not replace selection."
+    temporary=""
+
+    selection=$(cat "$selector") || throw "ReGa migration: Could not verify selection."
+    [ "$selection" = NORMAL ] || throw "ReGa migration: NORMAL selection was not saved."
+    echo "ReGa migration: COMMUNITY binary is no longer installed; selected NORMAL. Original selection saved in $backup"
+  )
+}
+
 function reload_udev {
   udevadm control --reload-rules && udevadm trigger || throw "Could not reload udev rules"
 }
@@ -67,6 +179,10 @@ function run_postinst_hooks {
 
 case "$1" in
   configure|abort-upgrade)
+    if [ "$1" = configure ]; then
+      restore_tcl_interpreter "${2:-}"
+      migrate_rega_selection "${2:-}" || throw "ReGa migration failed; debmatic will not be started."
+    fi
     run "Reload loader config"         ldconfig
     run "Fix TCL symlinks"             fix_tcl_symlink
     IS_LXC=`cat "/proc/1/environ" | tr '\000' '\n' | grep -q "container=lxc" && echo 1 || echo 0`
