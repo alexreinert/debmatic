@@ -9,6 +9,7 @@ Before=debmatic-rega.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+ExecStartPre=/bin/mkdir -p -m 700 /etc/config/addons/xmlapi
 ExecStart=/bin/ln -sf /usr/local/addons/xmlapi /usr/local/etc/config/addons/www
 
 [Install]

@@ -5,6 +5,6 @@ Maintainer: Alexander Reinert <alex@areinert.de>
 Pre-Depends: debmatic (>= 3.43.15-11)
 Section: debmatic-addons
 Priority: extra
-Homepage: https://github.com/hobbyquaker/XML-API
+Homepage: https://github.com/homematic-community/XML-API
 Description: XML-API addon for debmatic
 

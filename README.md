@@ -82,6 +82,16 @@ Addons können per apt installiert werden. Aktuell exitieren folgende Addons:
 * [HB-TM-Devices](https://github.com/TomMajor/SmartHome) (Ist bereits in debmatic enthalten)
 * [XML-API](https://github.com/jens-maus/XML-API) (Paketname xml-api)
 
+#### XML-API ab Version 2
+Beim Upgrade von XML-API 1.x auf 2.x benötigen bestehende Zugriffe ein API-Token
+oder eine gültige WebUI-Sitzung. Ein Token kann mit einer gültigen WebUI-Sitzung
+über `tokenregister.cgi` erstellt und anschließend als `sid`-Parameter verwendet
+werden. Weitere Informationen stehen in der [XML-API-Dokumentation](https://github.com/homematic-community/XML-API/tree/2.3#use).
+
+Auch lokale Anfragen an geschützte XML-API-Funktionen benötigen bei debmatic eine
+Authentifizierung: Der Webserver leitet externe Anfragen über localhost weiter. Die Token-Datei unter
+`/etc/config/addons/xmlapi/` bleibt bei Paketupdates erhalten.
+
 ### Restore
 Backups können über die WebUI eingespielt werden.
 
