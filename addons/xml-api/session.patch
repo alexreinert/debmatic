@@ -1,0 +1,23 @@
+--- a/xmlapi/session.tcl
++++ b/xmlapi/session.tcl
+@@ -32,6 +32,5 @@ proc save_tokens tokenlist {
+   array set tokens $tokenlist
+-  if {! [catch {set fd [open $filename w] } errmsg]} {
+-    puts $fd [array get tokens]
+-    close $fd
+-  }
++  set fd [open $filename w]
++  puts $fd [array get tokens]
++  close $fd
+ }
+@@ -86,10 +85,6 @@ proc check_session session_id {
+     if {$res != ""} {
+       return 1
+     }
+-  } elseif {$raddr == "127.0.0.1"} {
+-    # allow all xmlapi requests from localhost without
+-    # any sid
+-    return 1
+   }
+   return 0
+ }
